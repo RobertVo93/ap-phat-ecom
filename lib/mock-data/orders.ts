@@ -1,8 +1,8 @@
 import { Order } from '@/lib/types';
 
 export const mockOrders: Order[] = [{
-    id: orderId,
-    orderNumber: `ORD-${orderId}`,
+    id: 1,
+    orderNumber: `ORD-${1}`,
     date: '2024-01-15T10:30:00Z',
     status: 'shipping',
     estimatedDelivery: '2024-01-17',
