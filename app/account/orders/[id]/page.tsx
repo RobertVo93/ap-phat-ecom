@@ -4,7 +4,9 @@ import { mockOrders } from '@/lib/mock-data/orders';
 import { OrderDetailClient } from '@/components/order/order-detail-client';
 
 export async function generateStaticParams() {
-  return ["ORD-001"];
+  return [{
+    id: "ORD-001"
+  }];
 }
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
