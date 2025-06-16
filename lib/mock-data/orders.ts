@@ -1,5 +1,6 @@
-import { Order } from
-export const mockProducts: Product[] = [const order = {
+import { Order } from '@/lib/types';
+
+export const mockOrders: Order[] = [{
     id: orderId,
     orderNumber: `ORD-${orderId}`,
     date: '2024-01-15T10:30:00Z',
@@ -77,4 +78,4 @@ export const mockProducts: Product[] = [const order = {
         completed: false
       }
     ]
-  };
+  }];
