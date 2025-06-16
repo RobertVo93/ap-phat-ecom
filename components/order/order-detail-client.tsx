@@ -29,8 +29,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Order } from '@/lib/types';
 
-export default function OrderDetailPage() {
+interface OrderDetailClientProps {
+  order: Order;
+}
+
+export function OrderDetailClient({ order }: OrderDetailClientProps) {
   const { t } = useLanguage();
   const params = useParams();
   const orderId = params.id as string;
