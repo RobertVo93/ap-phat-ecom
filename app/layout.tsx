@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { CartProvider } from '@/lib/contexts/cart-context';
+import { AuthProvider } from '@/lib/contexts/auth-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,15 +23,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <LanguageProvider>
-          <CartProvider>
-            <div className="min-h-screen flex flex-col">
-              <Header />
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <div className="min-h-screen flex flex-col">
+                <Header />
+                <main className="flex-1">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </CartProvider>
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>

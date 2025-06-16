@@ -63,6 +63,7 @@ const translations = {
     'checkout.placeOrder': 'Đặt hàng',
     
     // Account
+    'account.dashboard': 'Bảng điều khiển',
     'account.profile': 'Hồ sơ',
     'account.orders': 'Đơn hàng',
     'account.addresses': 'Địa chỉ',
@@ -139,6 +140,7 @@ const translations = {
     'checkout.placeOrder': 'Place Order',
     
     // Account
+    'account.dashboard': 'Dashboard',
     'account.profile': 'Profile',
     'account.orders': 'Orders',
     'account.addresses': 'Addresses',
