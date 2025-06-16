@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Filter, Grid, List, SlidersHorizontal } from 'lucide-react';
+import { Filter, Grid, List, SlidersHorizontal, X } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { mockProducts } from '@/lib/mock-data/products';
 import { ProductCard } from '@/components/product/product-card';
@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export default function ProductsPage() {
   const { language, t } = useLanguage();
@@ -74,6 +75,108 @@ export default function ProductsPage() {
     return filtered;
   }, [mockProducts, searchQuery, selectedCategory, priceRange, sortBy, language]);
 
+  // Filter Component
+  const FilterContent = () => (
+    <div className="space-y-6">
+      {/* Category Filter */}
+      <div>
+        <h3 className="font-semibold text-[#573e1c] mb-4 text-lg">Danh mục</h3>
+        <div className="space-y-3">
+          {categories.map((category) => (
+            <div key={category.id} className="flex items-center space-x-3">
+              <Checkbox
+                id={category.id}
+                checked={selectedCategory === category.id}
+                onCheckedChange={(checked) => {
+                  if (checked) setSelectedCategory(category.id);
+                }}
+                className="border-[#8b6a42] data-[state=checked]:bg-[#573e1c] data-[state=checked]:border-[#573e1c]"
+              />
+              <label 
+                htmlFor={category.id} 
+                className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
+              >
+                {language === 'vi' ? category.nameVi : category.nameEn}
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Separator className="bg-[#d4c5a0]" />
+
+      {/* Price Range */}
+      <div>
+        <h3 className="font-semibold text-[#573e1c] mb-4 text-lg">Khoảng giá</h3>
+        <div className="space-y-3">
+          <div className="flex items-center space-x-3">
+            <Checkbox
+              id="price-under-20k"
+              checked={priceRange[1] <= 20000}
+              onCheckedChange={(checked) => {
+                if (checked) setPriceRange([0, 20000]);
+              }}
+              className="border-[#8b6a42] data-[state=checked]:bg-[#573e1c] data-[state=checked]:border-[#573e1c]"
+            />
+            <label 
+              htmlFor="price-under-20k" 
+              className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
+            >
+              Dưới 20.000đ
+            </label>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Checkbox
+              id="price-20k-50k"
+              checked={priceRange[0] >= 20000 && priceRange[1] <= 50000}
+              onCheckedChange={(checked) => {
+                if (checked) setPriceRange([20000, 50000]);
+              }}
+              className="border-[#8b6a42] data-[state=checked]:bg-[#573e1c] data-[state=checked]:border-[#573e1c]"
+            />
+            <label 
+              htmlFor="price-20k-50k" 
+              className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
+            >
+              20.000đ - 50.000đ
+            </label>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Checkbox
+              id="price-above-50k"
+              checked={priceRange[0] >= 50000}
+              onCheckedChange={(checked) => {
+                if (checked) setPriceRange([50000, 100000]);
+              }}
+              className="border-[#8b6a42] data-[state=checked]:bg-[#573e1c] data-[state=checked]:border-[#573e1c]"
+            />
+            <label 
+              htmlFor="price-above-50k" 
+              className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
+            >
+              Trên 50.000đ
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <Separator className="bg-[#d4c5a0]" />
+
+      {/* Clear Filters */}
+      <Button
+        variant="outline"
+        onClick={() => {
+          setSelectedCategory('all');
+          setPriceRange([0, 100000]);
+          setSearchQuery('');
+        }}
+        className="w-full border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
+      >
+        Xóa bộ lọc
+      </Button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -88,158 +191,174 @@ export default function ProductsPage() {
         </div>
 
         {/* Search and Controls */}
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-[#d4c5a0] mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 items-center">
-            <div className="flex-1 max-w-md">
-              <Input
-                type="text"
-                placeholder={t('home.search.placeholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-[#8b6a42] focus:border-[#573e1c]"
-              />
-            </div>
-            
-            <div className="flex items-center gap-4 flex-wrap">
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48 border-[#8b6a42]">
-                  <SelectValue placeholder="Sắp xếp theo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="name">Tên A-Z</SelectItem>
-                  <SelectItem value="price-low">Giá thấp đến cao</SelectItem>
-                  <SelectItem value="price-high">Giá cao đến thấp</SelectItem>
-                  <SelectItem value="rating">Đánh giá cao nhất</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <div className="flex items-center bg-[#efe1c1] rounded-lg p-1">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' ? 'bg-[#573e1c] text-[#efe1c1]' : 'text-[#573e1c]'}
-                >
-                  <Grid className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className={viewMode === 'list' ? 'bg-[#573e1c] text-[#efe1c1]' : 'text-[#573e1c]'}
-                >
-                  <List className="w-4 h-4" />
-                </Button>
+        <Card className="bg-white border-[#d4c5a0] mb-8 shadow-sm">
+          <CardContent className="p-6">
+            <div className="flex flex-col gap-4">
+              {/* Search Bar */}
+              <div className="w-full">
+                <Input
+                  type="text"
+                  placeholder={t('home.search.placeholder')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="border-[#8b6a42] focus:border-[#573e1c] h-12"
+                />
               </div>
+              
+              {/* Controls Row */}
+              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                <div className="flex items-center gap-4 flex-wrap">
+                  {/* Sort Dropdown */}
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-48 border-[#8b6a42] h-10">
+                      <SelectValue placeholder="Sắp xếp theo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="name">Tên A-Z</SelectItem>
+                      <SelectItem value="price-low">Giá thấp đến cao</SelectItem>
+                      <SelectItem value="price-high">Giá cao đến thấp</SelectItem>
+                      <SelectItem value="rating">Đánh giá cao nhất</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-              <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="lg:hidden border-[#573e1c] text-[#573e1c]"
-              >
-                <SlidersHorizontal className="w-4 h-4 mr-2" />
-                Bộ lọc
-              </Button>
+                  {/* Mobile Filter Button */}
+                  <Sheet open={showFilters} onOpenChange={setShowFilters}>
+                    <SheetTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="lg:hidden border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1] h-10"
+                      >
+                        <SlidersHorizontal className="w-4 h-4 mr-2" />
+                        Bộ lọc
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-80 bg-white">
+                      <SheetHeader>
+                        <SheetTitle className="text-[#573e1c] flex items-center">
+                          <Filter className="w-5 h-5 mr-2" />
+                          Bộ lọc sản phẩm
+                        </SheetTitle>
+                      </SheetHeader>
+                      <div className="mt-6">
+                        <FilterContent />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+
+                {/* View Mode Toggle */}
+                <div className="flex items-center bg-[#efe1c1] rounded-lg p-1">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className={`h-8 w-8 p-0 ${
+                      viewMode === 'grid' 
+                        ? 'bg-[#573e1c] text-[#efe1c1] hover:bg-[#8b6a42]' 
+                        : 'text-[#573e1c] hover:bg-[#d4c5a0]'
+                    }`}
+                  >
+                    <Grid className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className={`h-8 w-8 p-0 ${
+                      viewMode === 'list' 
+                        ? 'bg-[#573e1c] text-[#efe1c1] hover:bg-[#8b6a42]' 
+                        : 'text-[#573e1c] hover:bg-[#d4c5a0]'
+                    }`}
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         <div className="flex gap-8">
-          {/* Filters Sidebar */}
-          <aside className={`w-80 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <Card className="bg-white border-[#d4c5a0]">
-              <CardHeader>
-                <CardTitle className="text-[#573e1c] flex items-center">
-                  <Filter className="w-4 h-4 mr-2" />
-                  Bộ lọc
+          {/* Desktop Filters Sidebar */}
+          <aside className="hidden lg:block w-80 flex-shrink-0">
+            <Card className="bg-white border-[#d4c5a0] shadow-sm sticky top-8">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-[#573e1c] flex items-center text-xl">
+                  <Filter className="w-5 h-5 mr-2" />
+                  Bộ lọc sản phẩm
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Category Filter */}
-                <div>
-                  <h3 className="font-semibold text-[#573e1c] mb-3">Danh mục</h3>
-                  <div className="space-y-2">
-                    {categories.map((category) => (
-                      <div key={category.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={category.id}
-                          checked={selectedCategory === category.id}
-                          onCheckedChange={(checked) => {
-                            if (checked) setSelectedCategory(category.id);
-                          }}
-                        />
-                        <label htmlFor={category.id} className="text-sm text-[#8b6a42]">
-                          {language === 'vi' ? category.nameVi : category.nameEn}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Price Range */}
-                <div>
-                  <h3 className="font-semibold text-[#573e1c] mb-3">Khoảng giá</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="price-under-20k"
-                        checked={priceRange[1] <= 20000}
-                        onCheckedChange={(checked) => {
-                          if (checked) setPriceRange([0, 20000]);
-                        }}
-                      />
-                      <label htmlFor="price-under-20k" className="text-sm text-[#8b6a42]">
-                        Dưới 20.000đ
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="price-20k-50k"
-                        checked={priceRange[0] >= 20000 && priceRange[1] <= 50000}
-                        onCheckedChange={(checked) => {
-                          if (checked) setPriceRange([20000, 50000]);
-                        }}
-                      />
-                      <label htmlFor="price-20k-50k" className="text-sm text-[#8b6a42]">
-                        20.000đ - 50.000đ
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="price-above-50k"
-                        checked={priceRange[0] >= 50000}
-                        onCheckedChange={(checked) => {
-                          if (checked) setPriceRange([50000, 100000]);
-                        }}
-                      />
-                      <label htmlFor="price-above-50k" className="text-sm text-[#8b6a42]">
-                        Trên 50.000đ
-                      </label>
-                    </div>
-                  </div>
-                </div>
+              <CardContent>
+                <FilterContent />
               </CardContent>
             </Card>
           </aside>
 
           {/* Products Grid */}
-          <main className="flex-1">
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-[#8b6a42]">
+          <main className="flex-1 min-w-0">
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-[#8b6a42] font-medium">
                 Hiển thị {filteredProducts.length} sản phẩm
               </p>
+              
+              {/* Active Filters Display */}
+              {(selectedCategory !== 'all' || searchQuery) && (
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm text-[#8b6a42]">Bộ lọc:</span>
+                  {selectedCategory !== 'all' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setSelectedCategory('all')}
+                      className="h-7 text-xs bg-[#efe1c1] text-[#573e1c] hover:bg-[#d4c5a0]"
+                    >
+                      {categories.find(c => c.id === selectedCategory)?.nameVi}
+                      <X className="w-3 h-3 ml-1" />
+                    </Button>
+                  )}
+                  {searchQuery && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setSearchQuery('')}
+                      className="h-7 text-xs bg-[#efe1c1] text-[#573e1c] hover:bg-[#d4c5a0]"
+                    >
+                      "{searchQuery}"
+                      <X className="w-3 h-3 ml-1" />
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
 
             {filteredProducts.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-[#8b6a42] text-lg">Không tìm thấy sản phẩm nào.</p>
-              </div>
+              <Card className="bg-white border-[#d4c5a0]">
+                <CardContent className="p-12 text-center">
+                  <div className="w-16 h-16 bg-[#efe1c1] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Filter className="w-8 h-8 text-[#8b6a42]" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-[#573e1c] mb-2">
+                    Không tìm thấy sản phẩm
+                  </h3>
+                  <p className="text-[#8b6a42] mb-6">
+                    Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc
+                  </p>
+                  <Button
+                    onClick={() => {
+                      setSelectedCategory('all');
+                      setPriceRange([0, 100000]);
+                      setSearchQuery('');
+                    }}
+                    className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
+                  >
+                    Xóa tất cả bộ lọc
+                  </Button>
+                </CardContent>
+              </Card>
             ) : (
               <div className={`grid gap-6 ${
                 viewMode === 'grid' 
-                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
+                  ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' 
                   : 'grid-cols-1'
               }`}>
                 {filteredProducts.map((product) => (
