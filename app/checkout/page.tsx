@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, CreditCard, Truck, MapPin, Calendar, Clock, FileText } from 'lucide-react';
+import { ArrowLeft, CreditCard, Truck, MapPin, Calendar, Clock, FileText, Copy, CheckCircle, Building, Smartphone } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
 import { Button } from '@/components/ui/button';
@@ -44,6 +44,7 @@ export default function CheckoutPage() {
   });
 
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -65,6 +66,29 @@ export default function CheckoutPage() {
     
     // Here you would typically send the order to your backend
     alert('Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.');
+  };
+
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
+  // Bank and MoMo account information
+  const bankInfo = {
+    bankName: 'Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)',
+    accountNumber: '0123456789',
+    accountName: 'CONG TY TNHH RICE & NOODLES',
+    branch: 'Chi nhánh Sài Gòn'
+  };
+
+  const momoInfo = {
+    phoneNumber: '0901234567',
+    accountName: 'Rice & Noodles Store'
   };
 
   if (items.length === 0) {
@@ -312,6 +336,171 @@ export default function CheckoutPage() {
                   </div>
                 </RadioGroup>
 
+                {/* Bank Transfer Information */}
+                {paymentMethod === 'banking' && (
+                  <div className="space-y-4 mt-4 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <Building className="w-5 h-5 text-blue-600" />
+                      <h3 className="font-semibold text-blue-800">Thông tin chuyển khoản</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-blue-700 font-medium">Ngân hàng:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-blue-900 font-medium">{bankInfo.bankName}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-blue-700 font-medium">Số tài khoản:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-blue-900 font-mono text-lg font-bold">{bankInfo.accountNumber}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(bankInfo.accountNumber, 'accountNumber')}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
+                          >
+                            {copiedField === 'accountNumber' ? (
+                              <CheckCircle className="w-4 h-4" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-blue-700 font-medium">Tên tài khoản:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-blue-900 font-medium">{bankInfo.accountName}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(bankInfo.accountName, 'accountName')}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
+                          >
+                            {copiedField === 'accountName' ? (
+                              <CheckCircle className="w-4 h-4" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-blue-700 font-medium">Chi nhánh:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-blue-900">{bankInfo.branch}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-blue-700 font-medium">Số tiền cần chuyển:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-blue-900 font-bold text-lg">{formatPrice(total)}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(total.toString(), 'amount')}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
+                          >
+                            {copiedField === 'amount' ? (
+                              <CheckCircle className="w-4 h-4" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 p-3 bg-blue-100 rounded border-l-4 border-blue-500">
+                      <p className="text-blue-800 text-sm">
+                        <strong>Lưu ý:</strong> Vui lòng ghi rõ họ tên và số điện thoại trong nội dung chuyển khoản để chúng tôi có thể xác nhận đơn hàng nhanh chóng.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* MoMo Information */}
+                {paymentMethod === 'momo' && (
+                  <div className="space-y-4 mt-4 p-6 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <Smartphone className="w-5 h-5 text-pink-600" />
+                      <h3 className="font-semibold text-pink-800">Thông tin ví MoMo</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-pink-700 font-medium">Số điện thoại MoMo:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-pink-900 font-mono text-lg font-bold">{momoInfo.phoneNumber}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(momoInfo.phoneNumber, 'momoPhone')}
+                            className="text-pink-600 hover:text-pink-800 hover:bg-pink-100"
+                          >
+                            {copiedField === 'momoPhone' ? (
+                              <CheckCircle className="w-4 h-4" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-pink-700 font-medium">Tên tài khoản:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-pink-900 font-medium">{momoInfo.accountName}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(momoInfo.accountName, 'momoName')}
+                            className="text-pink-600 hover:text-pink-800 hover:bg-pink-100"
+                          >
+                            {copiedField === 'momoName' ? (
+                              <CheckCircle className="w-4 h-4" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-pink-700 font-medium">Số tiền cần chuyển:</Label>
+                        <div className="flex items-center justify-between p-3 bg-white rounded border">
+                          <span className="text-pink-900 font-bold text-lg">{formatPrice(total)}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(total.toString(), 'momoAmount')}
+                            className="text-pink-600 hover:text-pink-800 hover:bg-pink-100"
+                          >
+                            {copiedField === 'momoAmount' ? (
+                              <CheckCircle className="w-4 h-4" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 p-3 bg-pink-100 rounded border-l-4 border-pink-500">
+                      <p className="text-pink-800 text-sm">
+                        <strong>Hướng dẫn:</strong> Mở ứng dụng MoMo → Chọn "Chuyển tiền" → Nhập số điện thoại trên → Nhập số tiền và ghi rõ họ tên trong tin nhắn.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Credit Card Information */}
                 {paymentMethod === 'card' && (
                   <div className="space-y-4 mt-4 p-4 bg-[#f8f5f0] rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
