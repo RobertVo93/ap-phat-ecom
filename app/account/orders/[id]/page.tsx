@@ -1,20 +1,18 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { mockProducts } from '@/lib/mock-data/products';
-import { ProductDetailClient } from '@/components/product/product-detail-client';
+import { mockOrders } from '@/lib/mock-data/orders';
+import { OrderDetailClient } from '@/components/order/order-detail-client';
 
 export async function generateStaticParams() {
-  return mockProducts.map((product) => ({
-    id: product.id,
-  }));
+  return [1];
 }
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = mockProducts.find(p => p.id === params.id);
+  const order = mockOrders.find(p => p.id === params.id);
 
-  if (!product) {
+  if (!order) {
     notFound();
   }
 
-  return <ProductDetailClient product={product} />;
+  return <OrderDetailClient order={order} />;
 }
