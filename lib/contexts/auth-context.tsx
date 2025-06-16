@@ -21,6 +21,7 @@ const mockUser: Customer = {
   name: 'Nguyễn Văn A',
   email: 'user@example.com',
   phone: '0901234567',
+  avatar: '',
   addresses: [
     {
       id: '1',
@@ -94,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       name,
       email,
       phone,
+      avatar: '',
       addresses: [],
       preferredLanguage: 'vi',
       joinDate: new Date().toISOString(),

@@ -58,6 +58,7 @@ export interface Customer {
   name: string;
   email: string;
   phone: string;
+  avatar?: string;
   addresses: Address[];
   preferredLanguage: 'vi' | 'en';
   joinDate: string;

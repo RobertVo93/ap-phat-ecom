@@ -117,11 +117,21 @@ export default function AccountPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  <div className="w-20 h-20 bg-[#573e1c] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-[#efe1c1] text-2xl font-bold">
-                      {user.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
+                  {user.avatar ? (
+                    <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-4 border-2 border-[#573e1c]">
+                      <img
+                        src={user.avatar}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-20 h-20 bg-[#573e1c] rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-[#efe1c1] text-2xl font-bold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
                   <h3 className="font-semibold text-[#573e1c] text-lg">{user.name}</h3>
                   <p className="text-[#8b6a42] text-sm">{user.email}</p>
                   <p className="text-[#8b6a42] text-sm">{user.phone}</p>

@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AvatarUpload } from '@/components/ui/avatar-upload';
 
 export default function ProfilePage() {
   const { language, setLanguage, t } = useLanguage();
@@ -19,7 +20,8 @@ export default function ProfilePage() {
     name: user?.name || '',
     email: user?.email || '',
     phone: user?.phone || '',
-    preferredLanguage: user?.preferredLanguage || 'vi'
+    preferredLanguage: user?.preferredLanguage || 'vi',
+    avatar: user?.avatar || ''
   });
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -46,6 +48,11 @@ export default function ProfilePage() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleAvatarChange = (avatarUrl: string) => {
+    setFormData(prev => ({ ...prev, avatar: avatarUrl }));
+    setMessage('Ảnh đại diện đã được cập nhật!');
   };
 
   return (
@@ -78,21 +85,48 @@ export default function ProfilePage() {
           <div className="lg:col-span-1">
             <Card className="bg-white border-[#d4c5a0]">
               <CardContent className="p-6 text-center">
-                <div className="w-32 h-32 bg-[#573e1c] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-[#efe1c1] text-4xl font-bold">
-                    {user.name.charAt(0).toUpperCase()}
-                  </span>
+                <div className="relative inline-block mb-4">
+                  {formData.avatar ? (
+                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#573e1c] mx-auto">
+                      <img
+                        src={formData.avatar}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-32 h-32 bg-[#573e1c] rounded-full flex items-center justify-center mx-auto">
+                      <span className="text-[#efe1c1] text-4xl font-bold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Upload indicator */}
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#573e1c] rounded-full flex items-center justify-center border-2 border-white">
+                    <User className="w-4 h-4 text-[#efe1c1]" />
+                  </div>
                 </div>
+
                 <h3 className="font-semibold text-[#573e1c] text-xl mb-2">{user.name}</h3>
                 <p className="text-[#8b6a42] text-sm mb-4">
                   Thành viên từ {new Date(user.joinDate).toLocaleDateString('vi-VN')}
                 </p>
-                <Button
-                  variant="outline"
-                  className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
-                >
-                  Thay đổi ảnh đại diện
-                </Button>
+                
+                <AvatarUpload
+                  currentAvatar={formData.avatar}
+                  onAvatarChange={handleAvatarChange}
+                />
+
+                {/* Avatar Tips */}
+                <div className="mt-4 p-3 bg-[#efe1c1] rounded-lg">
+                  <p className="text-xs text-[#8b6a42] text-left">
+                    <strong>Lưu ý:</strong>
+                    <br />• Kích thước tối đa: 5MB
+                    <br />• Định dạng: JPG, PNG, GIF
+                    <br />• Ảnh sẽ được cắt thành hình vuông
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -193,7 +227,8 @@ export default function ProfilePage() {
                         name: user.name,
                         email: user.email,
                         phone: user.phone,
-                        preferredLanguage: user.preferredLanguage
+                        preferredLanguage: user.preferredLanguage,
+                        avatar: user.avatar || ''
                       })}
                     >
                       Hủy thay đổi
