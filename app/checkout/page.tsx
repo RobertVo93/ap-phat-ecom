@@ -494,7 +494,7 @@ export default function CheckoutPage() {
                     
                     <div className="mt-4 p-3 bg-pink-100 rounded border-l-4 border-pink-500">
                       <p className="text-pink-800 text-sm">
-                        <strong>Hướng dẫn:</strong> Mở ứng dụng MoMo → Chọn "Chuyển tiền" → Nhập số điện thoại trên → Nhập số tiền và ghi rõ họ tên trong tin nhắn.
+                        <strong>Hướng dẫn:</strong> Mở ứng dụng MoMo → Chọn &quot;Chuyển tiền&quot; → Nhập số điện thoại trên → Nhập số tiền và ghi rõ họ tên trong tin nhắn.
                       </p>
                     </div>
                   </div>
@@ -625,7 +625,7 @@ export default function CheckoutPage() {
                   <Checkbox
                     id="terms"
                     checked={agreeTerms}
-                    onCheckedChange={setAgreeTerms}
+                    onCheckedChange={(checked) => setAgreeTerms(checked === true)}
                   />
                   <Label htmlFor="terms" className="text-sm text-[#8b6a42] leading-relaxed">
                     Tôi đồng ý với{' '}

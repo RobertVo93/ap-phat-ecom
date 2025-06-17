@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Package, MapPin, Settings, LogOut, Edit, Eye } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -10,14 +10,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function AccountPage() {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const { user, logout } = useAuth();
   const router = useRouter();
 
+  useEffect(() => {
+    if (!user) {
+      router.push('/auth/login');
+    }
+  }, [user, router]);
+
   if (!user) {
-    router.push('/auth/login');
     return null;
   }
 
@@ -119,7 +125,7 @@ export default function AccountPage() {
                 <div className="text-center">
                   {user.avatar ? (
                     <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-4 border-2 border-[#573e1c]">
-                      <img
+                      <Image
                         src={user.avatar}
                         alt="Avatar"
                         className="w-full h-full object-cover"

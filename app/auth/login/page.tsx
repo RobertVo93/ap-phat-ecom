@@ -140,7 +140,7 @@ export default function LoginPage() {
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={setRememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
                   />
                   <Label htmlFor="remember" className="text-sm text-[#8b6a42]">
                     Ghi nhớ đăng nhập

@@ -210,7 +210,7 @@ export default function RegisterPage() {
                 <Checkbox
                   id="terms"
                   checked={agreeTerms}
-                  onCheckedChange={setAgreeTerms}
+                  onCheckedChange={(checked) => setAgreeTerms(checked === true)}
                 />
                 <Label htmlFor="terms" className="text-sm text-[#8b6a42] leading-relaxed">
                   Tôi đồng ý với{' '}

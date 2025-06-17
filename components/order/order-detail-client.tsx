@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { 
   ArrowLeft, 
@@ -23,12 +23,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { Progress } from '@/components/ui/progress';
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Order } from '@/lib/types';
+import Image from 'next/image';
 
 interface OrderDetailClientProps {
   order: Order;
@@ -79,10 +80,11 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
     }
   };
 
-  const getProgressPercentage = () => {
-    const completedSteps = order.timeline.filter(step => step.completed).length;
-    return (completedSteps / order.timeline.length) * 100;
-  };
+  const getProgressPercentage = useMemo(() => {
+    // const completedSteps = order.timeline.filter(step => step.completed).length;
+    // return (completedSteps / order.timeline.length) * 100;
+    return 0;
+  }, []);
 
   const copyToClipboard = async (text: string, field: string) => {
     try {
@@ -139,7 +141,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 Chi tiết đơn hàng #{order.orderNumber}
               </h1>
               <p className="text-[#8b6a42] mt-2">
-                Đặt ngày {formatDate(order.date)}
+                Đặt ngày {formatDate(order.createdAt)}
               </p>
             </div>
             
@@ -149,7 +151,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
               </Badge>
               {order.status === 'shipping' && (
                 <Badge variant="outline" className="border-blue-500 text-blue-600">
-                  Dự kiến giao: {new Date(order.estimatedDelivery).toLocaleDateString('vi-VN')}
+                  Dự kiến giao: {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString('vi-VN') : ''}
                 </Badge>
               )}
             </div>
@@ -168,18 +170,18 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-[#8b6a42]">Tiến độ</span>
                     <span className="text-[#573e1c] font-medium">
-                      {Math.round(getProgressPercentage())}%
+                      {Math.round(getProgressPercentage)}%
                     </span>
                   </div>
-                  <Progress value={getProgressPercentage()} className="h-2" />
-                </div>
+                  <Progress value={0} className="h-2" />
+                </div> */}
 
                 <div className="space-y-4">
-                  {order.timeline.map((step, index) => (
+                  {order.timeline?.map((step, index) => (
                     <div key={index} className="flex items-start space-x-4">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                         step.completed 
@@ -232,7 +234,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => copyToClipboard(order.trackingNumber, 'tracking')}
+                            onClick={() => copyToClipboard(order?.trackingNumber || '', 'tracking')}
                             className="h-6 w-6 p-0 text-[#8b6a42] hover:text-[#573e1c]"
                           >
                             {copiedField === 'tracking' ? (
@@ -266,20 +268,22 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 <div className="space-y-4">
                   {order.items.map((item, index) => (
                     <div key={index} className="flex items-start space-x-4 p-4 border border-[#efe1c1] rounded-lg">
-                      <img
-                        src={item.image}
-                        alt={item.name}
+                      <Image
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
                       />
                       <div className="flex-1">
-                        <h4 className="font-semibold text-[#573e1c]">{item.name}</h4>
-                        <p className="text-sm text-[#8b6a42] mt-1">{item.variant}</p>
+                        <h4 className="font-semibold text-[#573e1c]">{item.product.name}</h4>
+                        <p className="text-sm text-[#8b6a42] mt-1">{item.selectedVariant?.name}</p>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-sm text-[#8b6a42]">
                             Số lượng: {item.quantity}
                           </span>
                           <span className="font-semibold text-[#573e1c]">
-                            {formatPrice(item.price * item.quantity)}
+                            {formatPrice(item.product.price * item.quantity)}
                           </span>
                         </div>
                       </div>
@@ -409,19 +413,19 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">Tạm tính</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {formatPrice(order.pricing.subtotal)}
+                      {formatPrice(order.subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">Thuế VAT</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {formatPrice(order.pricing.tax)}
+                      {formatPrice(order.tax)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">Phí vận chuyển</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {order.pricing.shipping === 0 ? 'Miễn phí' : formatPrice(order.pricing.shipping)}
+                      {order.shipping === 0 ? 'Miễn phí' : formatPrice(order.shipping)}
                     </span>
                   </div>
                 </div>
@@ -430,7 +434,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
 
                 <div className="flex justify-between text-lg font-bold">
                   <span className="text-[#573e1c]">Tổng cộng</span>
-                  <span className="text-[#573e1c]">{formatPrice(order.pricing.total)}</span>
+                  <span className="text-[#573e1c]">{formatPrice(order.total)}</span>
                 </div>
 
                 <div className="text-sm text-[#8b6a42]">

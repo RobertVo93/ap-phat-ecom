@@ -2,6 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { mockOrders } from '@/lib/mock-data/orders';
 import { OrderDetailClient } from '@/components/order/order-detail-client';
+import { Order } from '@/lib/types';
 
 export async function generateStaticParams() {
   return [{
@@ -16,5 +17,5 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     notFound();
   }
 
-  return <OrderDetailClient order={order} />;
+  return <OrderDetailClient order={order as unknown as Order} />;
 }

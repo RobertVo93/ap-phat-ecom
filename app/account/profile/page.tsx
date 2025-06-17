@@ -206,7 +206,7 @@ export default function ProfilePage() {
                     </Label>
                     <Select 
                       value={formData.preferredLanguage} 
-                      onValueChange={(value) => setFormData({...formData, preferredLanguage: value})}
+                      onValueChange={(value) => setFormData({...formData, preferredLanguage: value as 'vi' | 'en'})}
                     >
                       <SelectTrigger className="border-[#8b6a42]">
                         <SelectValue />

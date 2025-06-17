@@ -77,8 +77,18 @@ export interface Address {
   isDefault: boolean;
 }
 
+export interface OrderTimelineStep {
+  status: string;
+  title: string;
+  description: string;
+  timestamp: string | null;
+  completed: boolean;
+  current?: boolean;
+}
+
 export interface Order {
   id: string;
+  orderNumber?: string;
   customerId: string;
   items: CartItem[];
   subtotal: number;
@@ -93,6 +103,9 @@ export interface Order {
   paymentMethod: string;
   createdAt: string;
   updatedAt: string;
+  timeline?: OrderTimelineStep[];
+  carrier?: string;
+  trackingNumber?: string;
 }
 
 export interface StoreLocation {
