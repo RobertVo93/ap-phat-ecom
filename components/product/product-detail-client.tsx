@@ -35,6 +35,26 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   };
 
   const handleAddToCart = () => {
+    // If product has 0 variants, add directly to cart
+    if (product.variants.length === 0) {
+      addToCart(product, quantity);
+      return;
+    }
+
+    // If product has 1 variant, auto-select it and add to cart
+    if (product.variants.length === 1) {
+      const variant = product.variants[0];
+      addToCart(product, quantity, variant);
+      return;
+    }
+
+    // If product has multiple variants, require selection
+    if (product.variants.length > 1 && !selectedVariant) {
+      // Don't add to cart, user must select variant first
+      return;
+    }
+
+    // Add to cart with selected variant
     const variant = product.variants.find(v => v.id === selectedVariant);
     addToCart(product, quantity, variant);
   };
@@ -65,6 +85,21 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const currentPrice = selectedVariant 
     ? product.variants.find(v => v.id === selectedVariant)?.price || product.price
     : product.price;
+
+  // Determine if Add to Cart button should be disabled
+  const isAddToCartDisabled = !product.inStock || 
+    (product.variants.length > 1 && !selectedVariant);
+
+  // Get button text based on state
+  const getAddToCartButtonText = () => {
+    if (!product.inStock) {
+      return t('product.outOfStock');
+    }
+    if (product.variants.length > 1 && !selectedVariant) {
+      return 'Vui lòng chọn loại sản phẩm';
+    }
+    return t('product.addToCart');
+  };
 
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
@@ -235,10 +270,10 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               </div>
             </div>
 
-            {/* Variants */}
-            {product.variants.length > 0 && (
+            {/* Variants - Only show if more than 1 variant */}
+            {product.variants.length > 1 && (
               <div className="space-y-4">
-                <h3 className="font-semibold text-[#573e1c]">{t('product.variants')}</h3>
+                <h3 className="font-semibold text-[#573e1c]">{t('product.variants')} *</h3>
                 <Select value={selectedVariant} onValueChange={setSelectedVariant}>
                   <SelectTrigger className="border-[#8b6a42]">
                     <SelectValue placeholder="Chọn loại sản phẩm" />
@@ -269,6 +304,36 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     ))}
                   </SelectContent>
                 </Select>
+                {product.variants.length > 1 && !selectedVariant && (
+                  <p className="text-sm text-red-600">
+                    * Vui lòng chọn loại sản phẩm trước khi thêm vào giỏ hàng
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Show selected variant info for single variant products */}
+            {product.variants.length === 1 && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-[#573e1c]">Thông tin sản phẩm</h3>
+                <div className="p-4 bg-[#f8f5f0] rounded-lg border border-[#d4c5a0]">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-[#8b6a42]">Loại:</span>
+                      <span className="font-medium text-[#573e1c]">
+                        {language === 'vi' ? product.variants[0].name : product.variants[0].nameEn}
+                      </span>
+                    </div>
+                    {product.variants[0].options.map((option, index) => (
+                      <div key={index} className="flex justify-between">
+                        <span className="text-[#8b6a42] capitalize">{option.type}:</span>
+                        <span className="font-medium text-[#573e1c]">
+                          {language === 'vi' ? option.value : option.valueEn}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -302,11 +367,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   onClick={handleAddToCart}
-                  disabled={!product.inStock}
+                  disabled={isAddToCartDisabled}
                   className="flex-1 bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1] h-12 text-lg font-semibold disabled:bg-gray-300 disabled:text-gray-500"
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  {product.inStock ? t('product.addToCart') : t('product.outOfStock')}
+                  {getAddToCartButtonText()}
                 </Button>
                 
                 <div className="flex gap-2">
