@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Star, ShoppingCart, X, Plus, Minus } from 'lucide-react';
@@ -62,6 +62,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const selectedVariantData = product.variants.find(v => v.id === selectedVariant);
   const currentPrice = selectedVariantData?.price || product.price;
+
+  useEffect(() => {
+    if (product.variants.length === 1 && isVariantModalOpen) {
+      setSelectedVariant(product.variants[0].id);
+    }
+  }, [product.variants, isVariantModalOpen]);
 
   return (
     <>

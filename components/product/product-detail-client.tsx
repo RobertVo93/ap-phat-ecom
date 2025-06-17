@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Star, ShoppingCart, Heart, Share2, Minus, Plus, Truck, Shield, RotateCcw, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -100,6 +100,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
     }
     return t('product.addToCart');
   };
+
+  useEffect(() => {
+    if (product.variants.length === 1) {
+      setSelectedVariant(product.variants[0].id);
+    }
+  }, [product.variants]);
 
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
@@ -271,71 +277,44 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </div>
 
             {/* Variants - Only show if more than 1 variant */}
-            {product.variants.length > 1 && (
-              <div className="space-y-4">
-                <h3 className="font-semibold text-[#573e1c]">{t('product.variants')} *</h3>
-                <Select value={selectedVariant} onValueChange={setSelectedVariant}>
-                  <SelectTrigger className="border-[#8b6a42]">
-                    <SelectValue placeholder="Chọn loại sản phẩm" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {product.variants.map((variant) => (
-                      <SelectItem key={variant.id} value={variant.id}>
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex flex-col">
-                            <span className="font-medium">
-                              {language === 'vi' ? variant.name : variant.nameEn}
-                            </span>
-                            <div className="flex space-x-2 text-xs text-[#8b6a42]">
-                              {variant.options.map((option, index) => (
-                                <span key={index}>
-                                  {language === 'vi' ? option.value : option.valueEn}
-                                </span>
-                              ))}
-                            </div>
+            <div className="space-y-4">
+              <h3 className="font-semibold text-[#573e1c]">{t('product.variants')} *</h3>
+              <Select value={selectedVariant} onValueChange={setSelectedVariant}>
+                <SelectTrigger className="border-[#8b6a42]">
+                  <SelectValue placeholder="Chọn loại sản phẩm" />
+                </SelectTrigger>
+                <SelectContent>
+                  {product.variants.map((variant) => (
+                    <SelectItem key={variant.id} value={variant.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-col">
+                          <span className="font-medium">
+                            {language === 'vi' ? variant.name : variant.nameEn}
+                          </span>
+                          <div className="flex space-x-2 text-xs text-[#8b6a42]">
+                            {variant.options.map((option, index) => (
+                              <span key={index}>
+                                {language === 'vi' ? option.value : option.valueEn}
+                              </span>
+                            ))}
                           </div>
-                          {variant.price && (
-                            <span className="ml-4 font-semibold text-[#573e1c]">
-                              {formatPrice(variant.price)}
-                            </span>
-                          )}
                         </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {product.variants.length > 1 && !selectedVariant && (
-                  <p className="text-sm text-red-600">
-                    * Vui lòng chọn loại sản phẩm trước khi thêm vào giỏ hàng
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* Show selected variant info for single variant products */}
-            {product.variants.length === 1 && (
-              <div className="space-y-4">
-                <h3 className="font-semibold text-[#573e1c]">Thông tin sản phẩm</h3>
-                <div className="p-4 bg-[#f8f5f0] rounded-lg border border-[#d4c5a0]">
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-[#8b6a42]">Loại:</span>
-                      <span className="font-medium text-[#573e1c]">
-                        {language === 'vi' ? product.variants[0].name : product.variants[0].nameEn}
-                      </span>
-                    </div>
-                    {product.variants[0].options.map((option, index) => (
-                      <div key={index} className="flex justify-between">
-                        <span className="text-[#8b6a42] capitalize">{option.type}:</span>
-                        <span className="font-medium text-[#573e1c]">
-                          {language === 'vi' ? option.value : option.valueEn}
-                        </span>
+                        {variant.price && (
+                          <span className="ml-4 font-semibold text-[#573e1c]">
+                            {formatPrice(variant.price)}
+                          </span>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {product.variants.length > 1 && !selectedVariant && (
+                <p className="text-sm text-red-600">
+                  * Vui lòng chọn loại sản phẩm trước khi thêm vào giỏ hàng
+                </p>
+              )}
+            </div>
 
             {/* Quantity and Add to Cart */}
             <div className="space-y-4">
