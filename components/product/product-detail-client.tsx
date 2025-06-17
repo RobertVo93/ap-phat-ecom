@@ -96,7 +96,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       return t('product.outOfStock');
     }
     if (product.variants.length > 1 && !selectedVariant) {
-      return 'Vui lòng chọn loại sản phẩm';
+      return t('product.selectVariantRequired');
     }
     return t('product.addToCart');
   };
@@ -239,7 +239,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     />
                   ))}
                   <span className="ml-2 text-[#8b6a42] font-medium">
-                    {product.rating} ({product.reviewCount} đánh giá)
+                    {product.rating} ({product.reviewCount} {t('product.reviews')})
                   </span>
                 </div>
               </div>
@@ -265,12 +265,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 {product.inStock ? (
                   <div className="flex items-center text-green-600">
                     <div className="w-2 h-2 bg-green-600 rounded-full mr-2"></div>
-                    <span className="font-medium">Còn hàng</span>
+                    <span className="font-medium">{t('product.inStock')}</span>
                   </div>
                 ) : (
                   <div className="flex items-center text-red-600">
                     <div className="w-2 h-2 bg-red-600 rounded-full mr-2"></div>
-                    <span className="font-medium">Hết hàng</span>
+                    <span className="font-medium">{t('product.outOfStock')}</span>
                   </div>
                 )}
               </div>
@@ -281,7 +281,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <h3 className="font-semibold text-[#573e1c]">{t('product.variants')} *</h3>
               <Select value={selectedVariant} onValueChange={setSelectedVariant}>
                 <SelectTrigger className="border-[#8b6a42]">
-                  <SelectValue placeholder="Chọn loại sản phẩm" />
+                  <SelectValue placeholder={t('product.selectVariantPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {product.variants.map((variant) => (
@@ -311,7 +311,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               </Select>
               {product.variants.length > 1 && !selectedVariant && (
                 <p className="text-sm text-red-600">
-                  * Vui lòng chọn loại sản phẩm trước khi thêm vào giỏ hàng
+                  * {t('product.selectVariantRequired')}
                 </p>
               )}
             </div>
@@ -377,22 +377,22 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <div className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-[#d4c5a0]">
                 <Truck className="w-6 h-6 text-[#573e1c]" />
                 <div>
-                  <p className="font-semibold text-[#573e1c] text-sm">Giao hàng nhanh</p>
-                  <p className="text-xs text-[#8b6a42]">Trong ngày tại TP.HCM</p>
+                  <p className="font-semibold text-[#573e1c] text-sm">{t('product.fastShipping')}</p>
+                  <p className="text-xs text-[#8b6a42]">{t('product.sameDayDelivery')}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-[#d4c5a0]">
                 <Shield className="w-6 h-6 text-[#573e1c]" />
                 <div>
-                  <p className="font-semibold text-[#573e1c] text-sm">Chất lượng đảm bảo</p>
-                  <p className="text-xs text-[#8b6a42]">Sản phẩm chính hãng</p>
+                  <p className="font-semibold text-[#573e1c] text-sm">{t('product.qualityGuarantee')}</p>
+                  <p className="text-xs text-[#8b6a42]">{t('product.authenticProducts')}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-[#d4c5a0]">
                 <RotateCcw className="w-6 h-6 text-[#573e1c]" />
                 <div>
-                  <p className="font-semibold text-[#573e1c] text-sm">Đổi trả dễ dàng</p>
-                  <p className="text-xs text-[#8b6a42]">Trong vòng 7 ngày</p>
+                  <p className="font-semibold text-[#573e1c] text-sm">{t('product.easyReturns')}</p>
+                  <p className="text-xs text-[#8b6a42]">{t('product.returnPolicy')}</p>
                 </div>
               </div>
             </div>
@@ -410,7 +410,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 {t('product.features')}
               </TabsTrigger>
               <TabsTrigger value="reviews" className="data-[state=active]:bg-[#573e1c] data-[state=active]:text-[#efe1c1]">
-                Đánh giá ({product.reviewCount})
+                {t('product.reviews')} ({product.reviewCount})
               </TabsTrigger>
             </TabsList>
             
@@ -462,7 +462,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                           ))}
                         </div>
                         <p className="text-[#8b6a42]">
-                          Dựa trên {product.reviewCount} đánh giá
+                          {t('product.basedOnReviews').replace('{count}', product.reviewCount.toString())}
                         </p>
                       </div>
                       
@@ -517,7 +517,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                           <span className="text-sm text-[#8b6a42]">{review.date}</span>
                           {review.verified && (
                             <Badge variant="secondary" className="ml-2 bg-green-100 text-green-800">
-                              Đã xác minh
+                              {t('product.verifiedPurchase')}
                             </Badge>
                           )}
                         </div>
@@ -533,7 +533,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     variant="outline"
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                   >
-                    Viết đánh giá
+                    {t('product.writeReview')}
                   </Button>
                 </div>
               </div>

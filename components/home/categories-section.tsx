@@ -47,7 +47,7 @@ export function CategoriesSection() {
             {t('home.categories.title')}
           </h2>
           <p className="text-[#8b6a42] text-lg max-w-2xl mx-auto">
-            Khám phá các loại bánh tráng và bún phở truyền thống với chất lượng cao nhất
+            {t('home.categories.description')}
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export function CategoriesSection() {
                       {language === 'vi' ? category.nameVi : category.nameEn}
                     </h3>
                     <p className="text-sm opacity-90">
-                      {category.count} sản phẩm
+                      {category.count} {t('home.categories.products')}
                     </p>
                   </div>
                 </div>

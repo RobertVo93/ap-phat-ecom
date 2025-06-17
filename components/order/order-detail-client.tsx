@@ -70,14 +70,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'confirmed': return 'Đã xác nhận';
-      case 'preparing': return 'Đang chuẩn bị';
-      case 'shipping': return 'Đang giao hàng';
-      case 'delivered': return 'Đã giao hàng';
-      case 'cancelled': return 'Đã hủy';
-      default: return status;
-    }
+    return t(`order.status.${status}`);
   };
 
   const getProgressPercentage = useMemo(() => {
@@ -97,22 +90,21 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
   };
 
   const handleReorder = () => {
-    // Add items back to cart
-    alert('Đã thêm sản phẩm vào giỏ hàng!');
+    alert(t('order.detail.reorderSuccess'));
   };
 
   const handleCancelOrder = () => {
-    if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
-      alert('Đơn hàng đã được hủy thành công!');
+    if (confirm(t('order.detail.cancelConfirm'))) {
+      alert(t('order.detail.cancelSuccess'));
     }
   };
 
   const handleSubmitReview = () => {
     if (rating === 0) {
-      alert('Vui lòng chọn số sao đánh giá');
+      alert(t('order.detail.reviewRatingRequired'));
       return;
     }
-    alert('Cảm ơn bạn đã đánh giá!');
+    alert(t('order.detail.reviewSuccess'));
     setReviewText('');
     setRating(0);
   };
@@ -130,7 +122,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
             >
               <Link href="/account/orders">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại đơn hàng
+                {t('order.detail.back')}
               </Link>
             </Button>
           </div>
@@ -138,10 +130,10 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-                Chi tiết đơn hàng #{order.orderNumber}
+                {t('order.detail.title')} #{order.orderNumber}
               </h1>
               <p className="text-[#8b6a42] mt-2">
-                Đặt ngày {formatDate(order.createdAt)}
+                {t('order.detail.placedOn')} {formatDate(order.createdAt)}
               </p>
             </div>
             
@@ -151,7 +143,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
               </Badge>
               {order.status === 'shipping' && (
                 <Badge variant="outline" className="border-blue-500 text-blue-600">
-                  Dự kiến giao: {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString('vi-VN') : ''}
+                  {t('order.detail.estimatedDelivery')}: {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString('vi-VN') : ''}
                 </Badge>
               )}
             </div>
@@ -166,7 +158,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
               <CardHeader>
                 <CardTitle className="text-[#573e1c] flex items-center">
                   <Package className="w-5 h-5 mr-2" />
-                  Trạng thái đơn hàng
+                  {t('order.detail.status')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -198,7 +190,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                         <h4 className={`font-semibold ${
                           step.completed ? 'text-[#573e1c]' : 'text-gray-500'
                         }`}>
-                          {step.title}
+                          {t(`order.timeline.${step.title}`)}
                         </h4>
                         <p className="text-sm text-[#8b6a42] mt-1">
                           {step.description}
@@ -219,16 +211,16 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-semibold text-[#573e1c] flex items-center">
                         <Truck className="w-4 h-4 mr-2" />
-                        Thông tin vận chuyển
+                        {t('order.detail.shippingInfo')}
                       </h4>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-[#8b6a42]">Đơn vị vận chuyển:</span>
+                        <span className="text-[#8b6a42]">{t('order.detail.carrier')}:</span>
                         <p className="font-medium text-[#573e1c]">{order.carrier}</p>
                       </div>
                       <div>
-                        <span className="text-[#8b6a42]">Mã vận đơn:</span>
+                        <span className="text-[#8b6a42]">{t('order.detail.trackingNumber')}:</span>
                         <div className="flex items-center space-x-2">
                           <p className="font-mono font-medium text-[#573e1c]">{order.trackingNumber}</p>
                           <Button
@@ -252,7 +244,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                       className="mt-3 border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                     >
                       <Truck className="w-3 h-3 mr-1" />
-                      Theo dõi chi tiết
+                      {t('order.detail.trackPackage')}
                     </Button>
                   </div>
                 )}
@@ -262,7 +254,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
             {/* Order Items */}
             <Card className="bg-white border-[#d4c5a0]">
               <CardHeader>
-                <CardTitle className="text-[#573e1c]">Sản phẩm đã đặt</CardTitle>
+                <CardTitle className="text-[#573e1c]">{t('order.detail.items')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -280,7 +272,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                         <p className="text-sm text-[#8b6a42] mt-1">{item.selectedVariant?.name}</p>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-sm text-[#8b6a42]">
-                            Số lượng: {item.quantity}
+                            {t('cart.quantity')}: {item.quantity}
                           </span>
                           <span className="font-semibold text-[#573e1c]">
                             {formatPrice(item.product.price * item.quantity)}
@@ -296,7 +288,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
             {/* Order Actions */}
             <Card className="bg-white border-[#d4c5a0]">
               <CardHeader>
-                <CardTitle className="text-[#573e1c]">Thao tác</CardTitle>
+                <CardTitle className="text-[#573e1c]">{t('order.detail.actions')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -305,7 +297,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                     className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                   >
                     <RotateCcw className="w-4 h-4 mr-2" />
-                    Mua lại
+                    {t('order.detail.reorder')}
                   </Button>
                   
                   <Button
@@ -313,7 +305,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                   >
                     <Download className="w-4 h-4 mr-2" />
-                    Tải hóa đơn
+                    {t('order.detail.downloadInvoice')}
                   </Button>
                   
                   <Button
@@ -321,7 +313,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Liên hệ hỗ trợ
+                    {t('order.detail.contactSupport')}
                   </Button>
 
                   {order.status === 'confirmed' && (
@@ -331,7 +323,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                       className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white"
                     >
                       <AlertCircle className="w-4 h-4 mr-2" />
-                      Hủy đơn hàng
+                      {t('order.detail.cancel')}
                     </Button>
                   )}
 
@@ -343,16 +335,16 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                           className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white"
                         >
                           <Star className="w-4 h-4 mr-2" />
-                          Đánh giá
+                          {t('order.detail.review')}
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle className="text-[#573e1c]">Đánh giá đơn hàng</DialogTitle>
+                          <DialogTitle className="text-[#573e1c]">{t('order.detail.review')}</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
                           <div>
-                            <Label className="text-[#573e1c]">Đánh giá của bạn</Label>
+                            <Label className="text-[#573e1c]">{t('order.detail.yourRating')}</Label>
                             <div className="flex items-center space-x-1 mt-2">
                               {[1, 2, 3, 4, 5].map((star) => (
                                 <button
@@ -368,12 +360,12 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                             </div>
                           </div>
                           <div>
-                            <Label htmlFor="review" className="text-[#573e1c]">Nhận xét</Label>
+                            <Label htmlFor="review" className="text-[#573e1c]">{t('order.detail.comments')}</Label>
                             <Textarea
                               id="review"
                               value={reviewText}
                               onChange={(e) => setReviewText(e.target.value)}
-                              placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm và dịch vụ..."
+                              placeholder={t('order.detail.reviewPlaceholder')}
                               className="mt-2 border-[#8b6a42] focus:border-[#573e1c]"
                               rows={4}
                             />
@@ -383,13 +375,13 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                               variant="outline"
                               className="border-[#573e1c] text-[#573e1c]"
                             >
-                              Hủy
+                              {t('common.cancel')}
                             </Button>
                             <Button
                               onClick={handleSubmitReview}
                               className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                             >
-                              Gửi đánh giá
+                              {t('order.detail.reviewSubmit')}
                             </Button>
                           </div>
                         </div>
@@ -406,26 +398,26 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
             {/* Order Summary */}
             <Card className="bg-white border-[#d4c5a0]">
               <CardHeader>
-                <CardTitle className="text-[#573e1c]">Tóm tắt đơn hàng</CardTitle>
+                <CardTitle className="text-[#573e1c]">{t('order.detail.summary')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Tạm tính</span>
+                    <span className="text-[#8b6a42]">{t('cart.subtotal')}</span>
                     <span className="font-semibold text-[#573e1c]">
                       {formatPrice(order.subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Thuế VAT</span>
+                    <span className="text-[#8b6a42]">{t('cart.tax')}</span>
                     <span className="font-semibold text-[#573e1c]">
                       {formatPrice(order.tax)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Phí vận chuyển</span>
+                    <span className="text-[#8b6a42]">{t('cart.shipping')}</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {order.shipping === 0 ? 'Miễn phí' : formatPrice(order.shipping)}
+                      {order.shipping === 0 ? t('cart.free') : formatPrice(order.shipping)}
                     </span>
                   </div>
                 </div>
@@ -433,14 +425,14 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 <Separator />
 
                 <div className="flex justify-between text-lg font-bold">
-                  <span className="text-[#573e1c]">Tổng cộng</span>
+                  <span className="text-[#573e1c]">{t('cart.total')}</span>
                   <span className="text-[#573e1c]">{formatPrice(order.total)}</span>
                 </div>
 
                 <div className="text-sm text-[#8b6a42]">
-                  <strong>Phương thức thanh toán:</strong>
+                  <strong>{t('order.detail.paymentMethod')}:</strong>
                   <br />
-                  {order.paymentMethod}
+                  {t(`payment.method.${order.paymentMethod}`)}
                 </div>
               </CardContent>
             </Card>
@@ -450,15 +442,15 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
               <CardHeader>
                 <CardTitle className="text-[#573e1c] flex items-center">
                   <MapPin className="w-5 h-5 mr-2" />
-                  Thông tin giao hàng
+                  {t('order.detail.deliveryInfo')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-[#573e1c] mb-2">Người nhận</h4>
+                  <h4 className="font-semibold text-[#573e1c] mb-2">{t('order.detail.recipient')}</h4>
                   <div className="space-y-1 text-sm">
                     <div className="flex items-center space-x-2">
-                      <span className="text-[#8b6a42]">Tên:</span>
+                      <span className="text-[#8b6a42]">{t('order.detail.name')}:</span>
                       <span className="font-medium text-[#573e1c]">{order.deliveryAddress.name}</span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -471,7 +463,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 <Separator />
 
                 <div>
-                  <h4 className="font-semibold text-[#573e1c] mb-2">Địa chỉ</h4>
+                  <h4 className="font-semibold text-[#573e1c] mb-2">{t('order.detail.address')}</h4>
                   <p className="text-sm text-[#8b6a42] leading-relaxed">
                     {order.deliveryAddress.street}<br />
                     {order.deliveryAddress.ward}, {order.deliveryAddress.district}<br />
@@ -483,7 +475,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                   <>
                     <Separator />
                     <div>
-                      <h4 className="font-semibold text-[#573e1c] mb-2">Ghi chú</h4>
+                      <h4 className="font-semibold text-[#573e1c] mb-2">{t('order.detail.notes')}</h4>
                       <p className="text-sm text-[#8b6a42] leading-relaxed">
                         {order.notes}
                       </p>
@@ -497,10 +489,10 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
             <Card className="bg-gradient-to-r from-[#efe1c1] to-[#d4c5a0] border-[#8b6a42]">
               <CardContent className="p-6 text-center">
                 <h3 className="font-bold text-[#573e1c] text-lg mb-3">
-                  Cần hỗ trợ?
+                  {t('order.detail.needHelp')}
                 </h3>
                 <p className="text-[#8b6a42] text-sm mb-4">
-                  Liên hệ với chúng tôi nếu bạn có bất kỳ thắc mắc nào về đơn hàng
+                  {t('order.detail.contactUs')}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-center space-x-2 text-sm">
@@ -517,7 +509,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                   className="mt-4 bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                 >
                   <MessageCircle className="w-3 h-3 mr-1" />
-                  Chat ngay
+                  {t('order.detail.chatNow')}
                 </Button>
               </CardContent>
             </Card>

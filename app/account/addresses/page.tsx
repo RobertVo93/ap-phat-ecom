@@ -93,7 +93,7 @@ export default function AddressesPage() {
   };
 
   const handleDeleteAddress = async (addressId: string) => {
-    if (confirm('Bạn có chắc chắn muốn xóa địa chỉ này?')) {
+    if (confirm(t('account.deleteConfirm'))) {
       const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
       await updateProfile({ addresses: updatedAddresses });
     }
@@ -120,17 +120,17 @@ export default function AddressesPage() {
             >
               <Link href="/account">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại tài khoản
+                {t('account.backToAccount')}
               </Link>
             </Button>
           </div>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-                Quản lý địa chỉ
+                {t('account.manageAddresses')}
               </h1>
               <p className="text-[#8b6a42] mt-2">
-                Thêm và quản lý địa chỉ giao hàng của bạn
+                {t('account.addShippingAddress')}
               </p>
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -140,19 +140,19 @@ export default function AddressesPage() {
                   className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Thêm địa chỉ mới
+                  {t('account.addNewAddress')}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle className="text-[#573e1c]">
-                    {editingAddress ? 'Chỉnh sửa địa chỉ' : 'Thêm địa chỉ mới'}
+                    {editingAddress ? t('account.editAddress') : t('account.addNewAddress')}
                   </DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-[#573e1c]">Họ và tên *</Label>
+                      <Label htmlFor="name" className="text-[#573e1c]">{t('account.fullName')}</Label>
                       <Input
                         id="name"
                         value={formData.name}
@@ -162,7 +162,7 @@ export default function AddressesPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-[#573e1c]">Số điện thoại *</Label>
+                      <Label htmlFor="phone" className="text-[#573e1c]">{t('account.phoneNumber')}</Label>
                       <Input
                         id="phone"
                         type="tel"
@@ -175,20 +175,20 @@ export default function AddressesPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="street" className="text-[#573e1c]">Địa chỉ *</Label>
+                    <Label htmlFor="street" className="text-[#573e1c]">{t('account.streetAddress')}</Label>
                     <Input
                       id="street"
                       value={formData.street}
                       onChange={(e) => setFormData({...formData, street: e.target.value})}
                       className="border-[#8b6a42] focus:border-[#573e1c]"
-                      placeholder="Số nhà, tên đường"
+                      placeholder={t('account.streetPlaceholder')}
                       required
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="ward" className="text-[#573e1c]">Phường/Xã *</Label>
+                      <Label htmlFor="ward" className="text-[#573e1c]">{t('account.ward')}</Label>
                       <Input
                         id="ward"
                         value={formData.ward}
@@ -198,7 +198,7 @@ export default function AddressesPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="district" className="text-[#573e1c]">Quận/Huyện *</Label>
+                      <Label htmlFor="district" className="text-[#573e1c]">{t('account.district')}</Label>
                       <Input
                         id="district"
                         value={formData.district}
@@ -208,7 +208,7 @@ export default function AddressesPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="city" className="text-[#573e1c]">Tỉnh/Thành phố *</Label>
+                      <Label htmlFor="city" className="text-[#573e1c]">{t('account.city')}</Label>
                       <Select value={formData.city} onValueChange={(value) => setFormData({...formData, city: value})}>
                         <SelectTrigger className="border-[#8b6a42]">
                           <SelectValue />
@@ -230,7 +230,7 @@ export default function AddressesPage() {
                       onCheckedChange={(checked) => setFormData({...formData, isDefault: !!checked})}
                     />
                     <Label htmlFor="isDefault" className="text-[#8b6a42]">
-                      Đặt làm địa chỉ mặc định
+                      {t('account.setAsDefault')}
                     </Label>
                   </div>
 
@@ -240,13 +240,13 @@ export default function AddressesPage() {
                       onClick={() => setIsDialogOpen(false)}
                       className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                     >
-                      Hủy
+                      {t('account.cancel')}
                     </Button>
                     <Button
                       onClick={handleSaveAddress}
                       className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                     >
-                      {editingAddress ? 'Cập nhật' : 'Thêm địa chỉ'}
+                      {editingAddress ? t('account.update') : t('account.addAddress')}
                     </Button>
                   </div>
                 </div>
@@ -262,17 +262,17 @@ export default function AddressesPage() {
               <CardContent className="p-12 text-center">
                 <MapPin className="w-16 h-16 text-[#8b6a42] mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-[#573e1c] mb-2">
-                  Chưa có địa chỉ nào
+                  {t('account.noAddresses')}
                 </h3>
                 <p className="text-[#8b6a42] mb-6">
-                  Thêm địa chỉ giao hàng để đặt hàng dễ dàng hơn
+                  {t('account.addFirstAddress')}
                 </p>
                 <Button
                   onClick={handleAddAddress}
                   className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Thêm địa chỉ đầu tiên
+                  {t('account.addFirstAddressBtn')}
                 </Button>
               </CardContent>
             </Card>
@@ -287,7 +287,7 @@ export default function AddressesPage() {
                         {address.isDefault && (
                           <Badge className="bg-[#573e1c] text-[#efe1c1]">
                             <Star className="w-3 h-3 mr-1" />
-                            Mặc định
+                            {t('account.default')}
                           </Badge>
                         )}
                       </div>
@@ -306,7 +306,7 @@ export default function AddressesPage() {
                           className="text-[#573e1c] hover:bg-[#efe1c1]"
                         >
                           <Star className="w-4 h-4 mr-1" />
-                          Đặt mặc định
+                          {t('account.setDefault')}
                         </Button>
                       )}
                       <Button

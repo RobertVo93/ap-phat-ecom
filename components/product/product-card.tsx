@@ -140,7 +140,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {/* Show variant info if available */}
             {product.variants.length > 0 && (
               <p className="text-xs text-[#8b6a42]">
-                {product.variants.length} lựa chọn có sẵn
+                {product.variants.length} {t('product.variantsAvailable')}
               </p>
             )}
 
@@ -162,7 +162,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#573e1c] text-xl">
-              Chọn loại sản phẩm
+              {t('product.selectVariant')}
             </DialogTitle>
           </DialogHeader>
           
@@ -207,11 +207,11 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-[#573e1c] mb-2">
-                  Chọn loại sản phẩm *
+                  {t('product.selectVariant')} *
                 </label>
                 <Select value={selectedVariant} onValueChange={setSelectedVariant}>
                   <SelectTrigger className="border-[#8b6a42] focus:border-[#573e1c]">
-                    <SelectValue placeholder="Vui lòng chọn loại sản phẩm" />
+                    <SelectValue placeholder={t('product.selectVariantPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
                     {product.variants.map((variant) => (
@@ -244,7 +244,7 @@ export function ProductCard({ product }: ProductCardProps) {
               {/* Quantity Selection */}
               <div>
                 <label className="block text-sm font-semibold text-[#573e1c] mb-2">
-                  Số lượng
+                  {t('product.quantity')}
                 </label>
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center border border-[#8b6a42] rounded-lg">
@@ -269,7 +269,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     </Button>
                   </div>
                   <span className="text-sm text-[#8b6a42]">
-                    Tổng: {formatPrice(currentPrice * quantity)}
+                    {t('product.total')}: {formatPrice(currentPrice * quantity)}
                   </span>
                 </div>
               </div>
@@ -279,11 +279,11 @@ export function ProductCard({ product }: ProductCardProps) {
             {selectedVariantData && (
               <div className="p-4 bg-[#f8f5f0] rounded-lg border border-[#d4c5a0]">
                 <h4 className="font-semibold text-[#573e1c] mb-2">
-                  Thông tin sản phẩm đã chọn:
+                  {t('product.selectedVariantInfo')}:
                 </h4>
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Loại:</span>
+                    <span className="text-[#8b6a42]">{t('product.type')}:</span>
                     <span className="font-medium text-[#573e1c]">
                       {language === 'vi' ? selectedVariantData.name : selectedVariantData.nameEn}
                     </span>
@@ -297,11 +297,11 @@ export function ProductCard({ product }: ProductCardProps) {
                     </div>
                   ))}
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Số lượng:</span>
+                    <span className="text-[#8b6a42]">{t('product.quantity')}:</span>
                     <span className="font-medium text-[#573e1c]">{quantity}</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t border-[#d4c5a0]">
-                    <span className="text-[#8b6a42] font-semibold">Tổng tiền:</span>
+                    <span className="text-[#8b6a42] font-semibold">{t('product.total')}:</span>
                     <span className="font-bold text-[#573e1c] text-lg">
                       {formatPrice(currentPrice * quantity)}
                     </span>
@@ -317,7 +317,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 onClick={() => setIsVariantModalOpen(false)}
                 className="flex-1 border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
               >
-                Hủy
+                {t('common.cancel')}
               </Button>
               <Button
                 onClick={handleConfirmAddToCart}
@@ -325,7 +325,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 className="flex-1 bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1] disabled:bg-gray-300 disabled:text-gray-500"
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                Thêm vào giỏ hàng
+                {t('product.addToCart')}
               </Button>
             </div>
           </div>

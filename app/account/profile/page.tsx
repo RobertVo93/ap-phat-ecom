@@ -37,14 +37,14 @@ export default function ProfilePage() {
 
     try {
       await updateProfile(formData);
-      setMessage('Cập nhật thông tin thành công!');
+      setMessage(t('account.updateSuccess'));
       
       // Update language context if changed
       if (formData.preferredLanguage !== language) {
         setLanguage(formData.preferredLanguage as 'vi' | 'en');
       }
     } catch (error) {
-      setMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+      setMessage(t('account.error'));
     } finally {
       setIsSaving(false);
     }
@@ -52,7 +52,7 @@ export default function ProfilePage() {
 
   const handleAvatarChange = (avatarUrl: string) => {
     setFormData(prev => ({ ...prev, avatar: avatarUrl }));
-    setMessage('Ảnh đại diện đã được cập nhật!');
+    setMessage(t('account.avatarUpdated'));
   };
 
   return (
@@ -68,15 +68,15 @@ export default function ProfilePage() {
             >
               <Link href="/account">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại tài khoản
+                {t('account.backToAccount')}
               </Link>
             </Button>
           </div>
           <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-            Chỉnh sửa hồ sơ
+            {t('account.editProfile')}
           </h1>
           <p className="text-[#8b6a42] mt-2">
-            Cập nhật thông tin cá nhân của bạn
+            {t('account.updatePersonalInfo')}
           </p>
         </div>
 
@@ -110,7 +110,7 @@ export default function ProfilePage() {
 
                 <h3 className="font-semibold text-[#573e1c] text-xl mb-2">{user.name}</h3>
                 <p className="text-[#8b6a42] text-sm mb-4">
-                  Thành viên từ {new Date(user.joinDate).toLocaleDateString('vi-VN')}
+                  {t('account.memberSince')} {new Date(user.joinDate).toLocaleDateString('vi-VN')}
                 </p>
                 
                 <AvatarUpload
@@ -121,10 +121,10 @@ export default function ProfilePage() {
                 {/* Avatar Tips */}
                 <div className="mt-4 p-3 bg-[#efe1c1] rounded-lg">
                   <p className="text-xs text-[#8b6a42] text-left">
-                    <strong>Lưu ý:</strong>
-                    <br />• Kích thước tối đa: 5MB
-                    <br />• Định dạng: JPG, PNG, GIF
-                    <br />• Ảnh sẽ được cắt thành hình vuông
+                    <strong>{t('account.avatarNote')}</strong>
+                    <br />{t('account.maxSize')}
+                    <br />{t('account.formats')}
+                    <br />{t('account.avatarCrop')}
                   </p>
                 </div>
               </CardContent>
@@ -137,13 +137,13 @@ export default function ProfilePage() {
               <CardHeader>
                 <CardTitle className="text-[#573e1c] flex items-center">
                   <User className="w-5 h-5 mr-2" />
-                  Thông tin cá nhân
+                  {t('account.personalInfo')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {message && (
                   <div className={`mb-6 p-4 rounded-lg ${
-                    message.includes('thành công') 
+                    message.includes(t('account.success')) 
                       ? 'bg-green-50 border border-green-200 text-green-600'
                       : 'bg-red-50 border border-red-200 text-red-600'
                   }`}>
@@ -154,7 +154,7 @@ export default function ProfilePage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-[#573e1c]">Họ và tên *</Label>
+                      <Label htmlFor="name" className="text-[#573e1c]">{t('account.fullName')}</Label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                         <Input
@@ -169,7 +169,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-[#573e1c]">Số điện thoại *</Label>
+                      <Label htmlFor="phone" className="text-[#573e1c]">{t('account.phoneNumber')}</Label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                         <Input
@@ -202,7 +202,7 @@ export default function ProfilePage() {
                   <div className="space-y-2">
                     <Label htmlFor="language" className="text-[#573e1c] flex items-center">
                       <Globe className="w-4 h-4 mr-1" />
-                      Ngôn ngữ ưa thích
+                      {t('account.preferredLanguage')}
                     </Label>
                     <Select 
                       value={formData.preferredLanguage} 
@@ -231,7 +231,7 @@ export default function ProfilePage() {
                         avatar: user.avatar || ''
                       })}
                     >
-                      Hủy thay đổi
+                      {t('account.cancelChanges')}
                     </Button>
                     <Button
                       type="submit"
@@ -239,7 +239,7 @@ export default function ProfilePage() {
                       className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                     >
                       <Save className="w-4 h-4 mr-2" />
-                      {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
+                      {isSaving ? t('account.saving') : t('account.saveChanges')}
                     </Button>
                   </div>
                 </form>

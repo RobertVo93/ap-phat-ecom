@@ -123,15 +123,15 @@ export default function OrdersPage() {
             >
               <Link href="/account">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại tài khoản
+                {t('account.backToAccount')}
               </Link>
             </Button>
           </div>
           <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-            {t('account.orders')}
+            {t('account.manageOrders')}
           </h1>
           <p className="text-[#8b6a42] mt-2">
-            Theo dõi và quản lý đơn hàng của bạn
+            {t('account.trackAndManage')}
           </p>
         </div>
 
@@ -144,7 +144,7 @@ export default function OrdersPage() {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
                     type="text"
-                    placeholder="Tìm kiếm theo mã đơn hàng hoặc tên sản phẩm..."
+                    placeholder={t('account.searchPlaceholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
@@ -155,15 +155,15 @@ export default function OrdersPage() {
                 <Filter className="w-4 h-4 text-[#8b6a42]" />
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-48 border-[#8b6a42]">
-                    <SelectValue placeholder="Lọc theo trạng thái" />
+                    <SelectValue placeholder={t('account.filterByStatus')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tất cả trạng thái</SelectItem>
-                    <SelectItem value="pending">Chờ xử lý</SelectItem>
-                    <SelectItem value="confirmed">Đã xác nhận</SelectItem>
-                    <SelectItem value="shipping">Đang giao</SelectItem>
-                    <SelectItem value="delivered">Đã giao</SelectItem>
-                    <SelectItem value="cancelled">Đã hủy</SelectItem>
+                    <SelectItem value="all">{t('account.allStatus')}</SelectItem>
+                    <SelectItem value="pending">{t('account.status.pending')}</SelectItem>
+                    <SelectItem value="confirmed">{t('account.status.confirmed')}</SelectItem>
+                    <SelectItem value="shipping">{t('account.status.shipping')}</SelectItem>
+                    <SelectItem value="delivered">{t('account.status.delivered')}</SelectItem>
+                    <SelectItem value="cancelled">{t('account.status.cancelled')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -178,17 +178,17 @@ export default function OrdersPage() {
               <CardContent className="p-12 text-center">
                 <Package className="w-16 h-16 text-[#8b6a42] mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-[#573e1c] mb-2">
-                  Không tìm thấy đơn hàng
+                  {t('account.noOrdersFound')}
                 </h3>
                 <p className="text-[#8b6a42] mb-6">
-                  Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc
+                  {t('account.tryDifferentSearch')}
                 </p>
                 <Button
                   asChild
                   className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                 >
                   <Link href="/products">
-                    Tiếp tục mua sắm
+                    {t('account.continueShopping')}
                   </Link>
                 </Button>
               </CardContent>
@@ -201,14 +201,14 @@ export default function OrdersPage() {
                     <div>
                       <CardTitle className="text-[#573e1c] flex items-center">
                         <Package className="w-5 h-5 mr-2" />
-                        Đơn hàng #{order.id}
+                        {t('account.orderNumber').replace('{id}', order.id)}
                       </CardTitle>
                       <p className="text-[#8b6a42] text-sm mt-1">
-                        Đặt ngày {new Date(order.date).toLocaleDateString('vi-VN')}
+                        {t('account.orderedOn').replace('{date}', new Date(order.date).toLocaleDateString('vi-VN'))}
                       </p>
                     </div>
                     <Badge className={getStatusColor(order.status)}>
-                      {getStatusText(order.status)}
+                      {t(`account.status.${order.status}`)}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -231,14 +231,14 @@ export default function OrdersPage() {
                   {/* Order Summary */}
                   <div className="flex items-center justify-between pt-4 border-t border-[#efe1c1]">
                     <div className="text-[#8b6a42]">
-                      <p>Giao đến: {order.deliveryAddress}</p>
+                      <p>{t('account.deliveredTo').replace('{address}', order.deliveryAddress)}</p>
                       {order.trackingNumber && (
-                        <p className="text-sm">Mã vận đơn: {order.trackingNumber}</p>
+                        <p className="text-sm">{t('account.trackingNumber').replace('{number}', order.trackingNumber)}</p>
                       )}
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-[#573e1c]">
-                        Tổng: {formatPrice(order.total)}
+                        {t('account.total').replace('{amount}', formatPrice(order.total))}
                       </p>
                     </div>
                   </div>
@@ -253,7 +253,7 @@ export default function OrdersPage() {
                     >
                       <Link href={`/account/orders/${order.id}`}>
                         <Eye className="w-3 h-3 mr-1" />
-                        Chi tiết
+                        {t('account.orderDetails')}
                       </Link>
                     </Button>
                     
@@ -263,7 +263,7 @@ export default function OrdersPage() {
                         className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                       >
                         <RotateCcw className="w-3 h-3 mr-1" />
-                        Mua lại
+                        {t('account.reorder')}
                       </Button>
                     )}
                     
@@ -273,7 +273,7 @@ export default function OrdersPage() {
                         variant="outline"
                         className="border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white"
                       >
-                        Theo dõi
+                        {t('account.track')}
                       </Button>
                     )}
                   </div>

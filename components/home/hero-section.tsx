@@ -50,15 +50,15 @@ export function HeroSection() {
             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-[#8b6a42]/20">
               <div className="text-center">
                 <div className="text-2xl font-bold text-[#573e1c]">500+</div>
-                <div className="text-sm text-[#8b6a42]">Sản phẩm</div>
+                <div className="text-sm text-[#8b6a42]">{t('home.stats.products')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-[#573e1c]">10k+</div>
-                <div className="text-sm text-[#8b6a42]">Khách hàng</div>
+                <div className="text-sm text-[#8b6a42]">{t('home.stats.customers')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-[#573e1c]">99%</div>
-                <div className="text-sm text-[#8b6a42]">Hài lòng</div>
+                <div className="text-sm text-[#8b6a42]">{t('home.stats.satisfaction')}</div>
               </div>
             </div>
           </div>
@@ -67,7 +67,7 @@ export function HeroSection() {
             <div className="relative z-10">
               <img
                 src="https://images.pexels.com/photos/4331491/pexels-photo-4331491.jpeg"
-                alt="Traditional Vietnamese rice paper"
+                alt={t('home.hero.title')}
                 className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
               />
             </div>

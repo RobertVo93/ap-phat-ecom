@@ -36,7 +36,7 @@ export default function LoginPage() {
       await login(formData.email, formData.password, rememberMe);
       router.push('/account');
     } catch (err) {
-      setError('Email hoặc mật khẩu không đúng');
+      setError(t('auth.login.error.invalid'));
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +50,7 @@ export default function LoginPage() {
       await loginWithGoogle();
       router.push('/account');
     } catch (err) {
-      setError('Đăng nhập Google thất bại');
+      setError(t('auth.login.error.google'));
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +68,7 @@ export default function LoginPage() {
           >
             <Link href="/">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Về trang chủ
+              {t('auth.login.backToHome')}
             </Link>
           </Button>
         </div>
@@ -82,10 +82,10 @@ export default function LoginPage() {
               <span className="text-[#573e1c] font-bold text-xl">Rice & Noodles</span>
             </div>
             <CardTitle className="text-2xl font-bold text-[#573e1c]">
-              {t('nav.login')}
+              {t('auth.login.title')}
             </CardTitle>
             <p className="text-[#8b6a42] mt-2">
-              Đăng nhập để truy cập tài khoản của bạn
+              {t('auth.login.subtitle')}
             </p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[#573e1c]">Email *</Label>
+                <Label htmlFor="email" className="text-[#573e1c]">{t('auth.login.email')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
@@ -106,14 +106,14 @@ export default function LoginPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="your@email.com"
+                    placeholder={t('auth.login.emailPlaceholder')}
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[#573e1c]">Mật khẩu *</Label>
+                <Label htmlFor="password" className="text-[#573e1c]">{t('auth.login.password')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
@@ -122,7 +122,7 @@ export default function LoginPage() {
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                     className="pl-10 pr-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="••••••••"
+                    placeholder={t('auth.login.passwordPlaceholder')}
                     required
                   />
                   <button
@@ -143,14 +143,14 @@ export default function LoginPage() {
                     onCheckedChange={(checked) => setRememberMe(checked === true)}
                   />
                   <Label htmlFor="remember" className="text-sm text-[#8b6a42]">
-                    Ghi nhớ đăng nhập
+                    {t('auth.login.rememberMe')}
                   </Label>
                 </div>
                 <Link
                   href="/auth/forgot-password"
                   className="text-sm text-[#573e1c] hover:text-[#8b6a42] underline"
                 >
-                  Quên mật khẩu?
+                  {t('auth.login.forgotPassword')}
                 </Link>
               </div>
 
@@ -159,7 +159,7 @@ export default function LoginPage() {
                 disabled={isLoading}
                 className="w-full bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1] h-12 text-lg font-semibold disabled:bg-gray-300"
               >
-                {isLoading ? 'Đang đăng nhập...' : t('nav.login')}
+                {isLoading ? t('auth.login.submitting') : t('auth.login.submit')}
               </Button>
             </form>
 
@@ -168,7 +168,7 @@ export default function LoginPage() {
                 <Separator />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-[#8b6a42]">Hoặc</span>
+                <span className="px-2 bg-white text-[#8b6a42]">{t('auth.login.or')}</span>
               </div>
             </div>
 
@@ -184,17 +184,17 @@ export default function LoginPage() {
                 <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Đăng nhập với Google
+              {t('auth.login.withGoogle')}
             </Button>
 
             <div className="text-center">
               <p className="text-[#8b6a42]">
-                Chưa có tài khoản?{' '}
+                {t('auth.login.noAccount')}{' '}
                 <Link
                   href="/auth/register"
                   className="text-[#573e1c] hover:text-[#8b6a42] font-semibold underline"
                 >
-                  Đăng ký ngay
+                  {t('auth.login.register')}
                 </Link>
               </p>
             </div>

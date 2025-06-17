@@ -36,14 +36,14 @@ export default function CartPage() {
               {t('cart.empty')}
             </h2>
             <p className="text-[#8b6a42] mb-8">
-              Hãy thêm một số sản phẩm vào giỏ hàng của bạn
+              {t('cart.empty.message')}
             </p>
             <Button
               asChild
               className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
             >
               <Link href="/products">
-                Tiếp tục mua sắm
+                {t('cart.continue.shopping')}
               </Link>
             </Button>
           </div>
@@ -65,12 +65,12 @@ export default function CartPage() {
             >
               <Link href="/products">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Tiếp tục mua sắm
+                {t('cart.continue.shopping')}
               </Link>
             </Button>
           </div>
           <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-            {t('cart.title')} ({getCartItemsCount()} sản phẩm)
+            {t('cart.title')} ({getCartItemsCount()} {t('cart.items.count')})
           </h1>
         </div>
 
@@ -166,7 +166,7 @@ export default function CartPage() {
           <div className="lg:col-span-1">
             <Card className="bg-white border-[#d4c5a0] sticky top-8">
               <CardHeader>
-                <CardTitle className="text-[#573e1c]">Tóm tắt đơn hàng</CardTitle>
+                <CardTitle className="text-[#573e1c]">{t('cart.order.summary')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -187,19 +187,19 @@ export default function CartPage() {
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('cart.shipping')}</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {shipping === 0 ? 'Miễn phí' : formatPrice(shipping)}
+                      {shipping === 0 ? t('cart.shipping.free') : formatPrice(shipping)}
                     </span>
                   </div>
                   
                   {shipping === 0 && (
                     <div className="text-sm text-green-600 bg-green-50 p-2 rounded">
-                      🎉 Bạn được miễn phí vận chuyển!
+                      {t('cart.shipping.free.message')}
                     </div>
                   )}
                   
                   {subtotal < 100000 && (
                     <div className="text-sm text-[#8b6a42] bg-[#efe1c1] p-2 rounded">
-                      Mua thêm {formatPrice(100000 - subtotal)} để được miễn phí vận chuyển
+                      {t('cart.shipping.free.threshold').replace('{amount}', formatPrice(100000 - subtotal))}
                     </div>
                   )}
                 </div>
@@ -227,7 +227,7 @@ export default function CartPage() {
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                   >
                     <Link href="/products">
-                      Tiếp tục mua sắm
+                      {t('cart.continue.shopping')}
                     </Link>
                   </Button>
                 </div>

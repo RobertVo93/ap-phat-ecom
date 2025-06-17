@@ -60,12 +60,12 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = () => {
     if (!agreeTerms) {
-      alert('Vui lòng đồng ý với điều khoản và điều kiện');
+      alert(t('checkout.termsAlert'));
       return;
     }
     
     // Here you would typically send the order to your backend
-    alert('Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.');
+    alert(t('checkout.successAlert'));
   };
 
   const copyToClipboard = async (text: string, field: string) => {
@@ -96,17 +96,17 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-[#f8f5f0] flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-[#573e1c] mb-4">
-            Giỏ hàng trống
+            {t('checkout.empty.title')}
           </h2>
           <p className="text-[#8b6a42] mb-8">
-            Vui lòng thêm sản phẩm vào giỏ hàng trước khi thanh toán
+            {t('checkout.empty.message')}
           </p>
           <Button
             asChild
             className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
           >
             <Link href="/products">
-              Tiếp tục mua sắm
+              {t('cart.continue.shopping')}
             </Link>
           </Button>
         </div>
@@ -127,7 +127,7 @@ export default function CheckoutPage() {
             >
               <Link href="/cart">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại giỏ hàng
+                {t('checkout.backToCart')}
               </Link>
             </Button>
           </div>
@@ -150,7 +150,7 @@ export default function CheckoutPage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="text-[#573e1c]">Họ và tên *</Label>
+                    <Label htmlFor="name" className="text-[#573e1c]">{t('checkout.form.fullName')} *</Label>
                     <Input
                       id="name"
                       value={customerInfo.name}
@@ -160,7 +160,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-[#573e1c]">Số điện thoại *</Label>
+                    <Label htmlFor="phone" className="text-[#573e1c]">{t('checkout.form.phone')} *</Label>
                     <Input
                       id="phone"
                       type="tel"
@@ -172,7 +172,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-[#573e1c]">Email *</Label>
+                  <Label htmlFor="email" className="text-[#573e1c]">{t('checkout.form.email')} *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -195,20 +195,20 @@ export default function CheckoutPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="address" className="text-[#573e1c]">Địa chỉ *</Label>
+                  <Label htmlFor="address" className="text-[#573e1c]">{t('checkout.form.address')} *</Label>
                   <Input
                     id="address"
                     value={deliveryInfo.address}
                     onChange={(e) => setDeliveryInfo({...deliveryInfo, address: e.target.value})}
                     className="border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="Số nhà, tên đường"
+                    placeholder={t('checkout.form.addressPlaceholder')}
                     required
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="ward" className="text-[#573e1c]">Phường/Xã *</Label>
+                    <Label htmlFor="ward" className="text-[#573e1c]">{t('checkout.form.ward')} *</Label>
                     <Input
                       id="ward"
                       value={deliveryInfo.ward}
@@ -218,7 +218,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="district" className="text-[#573e1c]">Quận/Huyện *</Label>
+                    <Label htmlFor="district" className="text-[#573e1c]">{t('checkout.form.district')} *</Label>
                     <Input
                       id="district"
                       value={deliveryInfo.district}
@@ -228,7 +228,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="city" className="text-[#573e1c]">Tỉnh/Thành phố *</Label>
+                    <Label htmlFor="city" className="text-[#573e1c]">{t('checkout.form.city')} *</Label>
                     <Select value={deliveryInfo.city} onValueChange={(value) => setDeliveryInfo({...deliveryInfo, city: value})}>
                       <SelectTrigger className="border-[#8b6a42]">
                         <SelectValue />
@@ -247,7 +247,7 @@ export default function CheckoutPage() {
                   <div className="space-y-2">
                     <Label htmlFor="deliveryDate" className="text-[#573e1c] flex items-center">
                       <Calendar className="w-4 h-4 mr-1" />
-                      Ngày giao hàng
+                      {t('checkout.form.deliveryDate')}
                     </Label>
                     <Input
                       id="deliveryDate"
@@ -261,16 +261,16 @@ export default function CheckoutPage() {
                   <div className="space-y-2">
                     <Label htmlFor="deliveryTime" className="text-[#573e1c] flex items-center">
                       <Clock className="w-4 h-4 mr-1" />
-                      Giờ giao hàng
+                      {t('checkout.form.deliveryTime')}
                     </Label>
                     <Select value={deliveryInfo.deliveryTime} onValueChange={(value) => setDeliveryInfo({...deliveryInfo, deliveryTime: value})}>
                       <SelectTrigger className="border-[#8b6a42]">
-                        <SelectValue placeholder="Chọn giờ giao hàng" />
+                        <SelectValue placeholder={t('checkout.form.deliveryTimePlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="morning">Sáng (8:00 - 12:00)</SelectItem>
-                        <SelectItem value="afternoon">Chiều (13:00 - 17:00)</SelectItem>
-                        <SelectItem value="evening">Tối (18:00 - 21:00)</SelectItem>
+                        <SelectItem value="morning">{t('checkout.form.deliveryTimeOptions.morning')}</SelectItem>
+                        <SelectItem value="afternoon">{t('checkout.form.deliveryTimeOptions.afternoon')}</SelectItem>
+                        <SelectItem value="evening">{t('checkout.form.deliveryTimeOptions.evening')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -279,14 +279,14 @@ export default function CheckoutPage() {
                 <div className="space-y-2">
                   <Label htmlFor="notes" className="text-[#573e1c] flex items-center">
                     <FileText className="w-4 h-4 mr-1" />
-                    Ghi chú
+                    {t('checkout.form.note')}
                   </Label>
                   <Textarea
                     id="notes"
                     value={deliveryInfo.notes}
                     onChange={(e) => setDeliveryInfo({...deliveryInfo, notes: e.target.value})}
                     className="border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="Ghi chú thêm cho đơn hàng (tùy chọn)"
+                    placeholder={t('checkout.form.notePlaceholder')}
                     rows={3}
                   />
                 </div>
@@ -306,32 +306,32 @@ export default function CheckoutPage() {
                   <div className="flex items-center space-x-2 p-4 border border-[#d4c5a0] rounded-lg">
                     <RadioGroupItem value="cod" id="cod" />
                     <Label htmlFor="cod" className="flex-1 cursor-pointer">
-                      <div className="font-semibold text-[#573e1c]">Thanh toán khi nhận hàng (COD)</div>
-                      <div className="text-sm text-[#8b6a42]">Thanh toán bằng tiền mặt khi nhận hàng</div>
+                      <div className="font-semibold text-[#573e1c]">{t('checkout.payment.cod')}</div>
+                      <div className="text-sm text-[#8b6a42]">{t('checkout.payment.codDesc')}</div>
                     </Label>
                   </div>
                   
                   <div className="flex items-center space-x-2 p-4 border border-[#d4c5a0] rounded-lg">
                     <RadioGroupItem value="card" id="card" />
                     <Label htmlFor="card" className="flex-1 cursor-pointer">
-                      <div className="font-semibold text-[#573e1c]">Thẻ tín dụng/ghi nợ</div>
-                      <div className="text-sm text-[#8b6a42]">Visa, Mastercard, JCB</div>
+                      <div className="font-semibold text-[#573e1c]">{t('checkout.payment.card')}</div>
+                      <div className="text-sm text-[#8b6a42]">{t('checkout.payment.cardDesc')}</div>
                     </Label>
                   </div>
                   
                   <div className="flex items-center space-x-2 p-4 border border-[#d4c5a0] rounded-lg">
                     <RadioGroupItem value="banking" id="banking" />
                     <Label htmlFor="banking" className="flex-1 cursor-pointer">
-                      <div className="font-semibold text-[#573e1c]">Chuyển khoản ngân hàng</div>
-                      <div className="text-sm text-[#8b6a42]">Chuyển khoản qua Internet Banking</div>
+                      <div className="font-semibold text-[#573e1c]">{t('checkout.payment.banking')}</div>
+                      <div className="text-sm text-[#8b6a42]">{t('checkout.payment.bankingDesc')}</div>
                     </Label>
                   </div>
                   
                   <div className="flex items-center space-x-2 p-4 border border-[#d4c5a0] rounded-lg">
                     <RadioGroupItem value="momo" id="momo" />
                     <Label htmlFor="momo" className="flex-1 cursor-pointer">
-                      <div className="font-semibold text-[#573e1c]">Ví MoMo</div>
-                      <div className="text-sm text-[#8b6a42]">Thanh toán qua ví điện tử MoMo</div>
+                      <div className="font-semibold text-[#573e1c]">{t('checkout.payment.momo')}</div>
+                      <div className="text-sm text-[#8b6a42]">{t('checkout.payment.momoDesc')}</div>
                     </Label>
                   </div>
                 </RadioGroup>
@@ -341,19 +341,19 @@ export default function CheckoutPage() {
                   <div className="space-y-4 mt-4 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
                     <div className="flex items-center space-x-2 mb-4">
                       <Building className="w-5 h-5 text-blue-600" />
-                      <h3 className="font-semibold text-blue-800">Thông tin chuyển khoản</h3>
+                      <h3 className="font-semibold text-blue-800">{t('checkout.payment.bankInfo')}</h3>
                     </div>
                     
                     <div className="grid grid-cols-1 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-blue-700 font-medium">Ngân hàng:</Label>
+                        <Label className="text-blue-700 font-medium">{t('checkout.payment.bankName')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-blue-900 font-medium">{bankInfo.bankName}</span>
                         </div>
                       </div>
                       
                       <div className="space-y-2">
-                        <Label className="text-blue-700 font-medium">Số tài khoản:</Label>
+                        <Label className="text-blue-700 font-medium">{t('checkout.payment.accountNumber')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-blue-900 font-mono text-lg font-bold">{bankInfo.accountNumber}</span>
                           <Button
@@ -372,7 +372,7 @@ export default function CheckoutPage() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label className="text-blue-700 font-medium">Tên tài khoản:</Label>
+                        <Label className="text-blue-700 font-medium">{t('checkout.payment.accountName')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-blue-900 font-medium">{bankInfo.accountName}</span>
                           <Button
@@ -391,14 +391,14 @@ export default function CheckoutPage() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label className="text-blue-700 font-medium">Chi nhánh:</Label>
+                        <Label className="text-blue-700 font-medium">{t('checkout.payment.branch')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-blue-900">{bankInfo.branch}</span>
                         </div>
                       </div>
                       
                       <div className="space-y-2">
-                        <Label className="text-blue-700 font-medium">Số tiền cần chuyển:</Label>
+                        <Label className="text-blue-700 font-medium">{t('checkout.payment.amount')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-blue-900 font-bold text-lg">{formatPrice(total)}</span>
                           <Button
@@ -419,7 +419,7 @@ export default function CheckoutPage() {
                     
                     <div className="mt-4 p-3 bg-blue-100 rounded border-l-4 border-blue-500">
                       <p className="text-blue-800 text-sm">
-                        <strong>Lưu ý:</strong> Vui lòng ghi rõ họ tên và số điện thoại trong nội dung chuyển khoản để chúng tôi có thể xác nhận đơn hàng nhanh chóng.
+                        <strong>{t('checkout.payment.bankNote')}</strong>
                       </p>
                     </div>
                   </div>
@@ -430,12 +430,12 @@ export default function CheckoutPage() {
                   <div className="space-y-4 mt-4 p-6 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200">
                     <div className="flex items-center space-x-2 mb-4">
                       <Smartphone className="w-5 h-5 text-pink-600" />
-                      <h3 className="font-semibold text-pink-800">Thông tin ví MoMo</h3>
+                      <h3 className="font-semibold text-pink-800">{t('checkout.payment.momoInfo')}</h3>
                     </div>
                     
                     <div className="grid grid-cols-1 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-pink-700 font-medium">Số điện thoại MoMo:</Label>
+                        <Label className="text-pink-700 font-medium">{t('checkout.payment.momoPhone')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-pink-900 font-mono text-lg font-bold">{momoInfo.phoneNumber}</span>
                           <Button
@@ -454,7 +454,7 @@ export default function CheckoutPage() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label className="text-pink-700 font-medium">Tên tài khoản:</Label>
+                        <Label className="text-pink-700 font-medium">{t('checkout.payment.momoName')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-pink-900 font-medium">{momoInfo.accountName}</span>
                           <Button
@@ -473,7 +473,7 @@ export default function CheckoutPage() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label className="text-pink-700 font-medium">Số tiền cần chuyển:</Label>
+                        <Label className="text-pink-700 font-medium">{t('checkout.payment.momoAmount')}</Label>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="text-pink-900 font-bold text-lg">{formatPrice(total)}</span>
                           <Button
@@ -494,7 +494,7 @@ export default function CheckoutPage() {
                     
                     <div className="mt-4 p-3 bg-pink-100 rounded border-l-4 border-pink-500">
                       <p className="text-pink-800 text-sm">
-                        <strong>Hướng dẫn:</strong> Mở ứng dụng MoMo → Chọn &quot;Chuyển tiền&quot; → Nhập số điện thoại trên → Nhập số tiền và ghi rõ họ tên trong tin nhắn.
+                        <strong>{t('checkout.payment.momoGuide')}</strong>
                       </p>
                     </div>
                   </div>
@@ -505,43 +505,43 @@ export default function CheckoutPage() {
                   <div className="space-y-4 mt-4 p-4 bg-[#f8f5f0] rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="md:col-span-2 space-y-2">
-                        <Label htmlFor="cardNumber" className="text-[#573e1c]">Số thẻ *</Label>
+                        <Label htmlFor="cardNumber" className="text-[#573e1c]">{t('checkout.payment.cardNumber')}</Label>
                         <Input
                           id="cardNumber"
                           value={cardInfo.cardNumber}
                           onChange={(e) => setCardInfo({...cardInfo, cardNumber: e.target.value})}
                           className="border-[#8b6a42] focus:border-[#573e1c]"
-                          placeholder="1234 5678 9012 3456"
+                          placeholder={t('checkout.payment.cardNumberPlaceholder')}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="expiryDate" className="text-[#573e1c]">Ngày hết hạn *</Label>
+                        <Label htmlFor="expiryDate" className="text-[#573e1c]">{t('checkout.payment.expiryDate')}</Label>
                         <Input
                           id="expiryDate"
                           value={cardInfo.expiryDate}
                           onChange={(e) => setCardInfo({...cardInfo, expiryDate: e.target.value})}
                           className="border-[#8b6a42] focus:border-[#573e1c]"
-                          placeholder="MM/YY"
+                          placeholder={t('checkout.payment.expiryDatePlaceholder')}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="cvv" className="text-[#573e1c]">CVV *</Label>
+                        <Label htmlFor="cvv" className="text-[#573e1c]">{t('checkout.payment.cvv')}</Label>
                         <Input
                           id="cvv"
                           value={cardInfo.cvv}
                           onChange={(e) => setCardInfo({...cardInfo, cvv: e.target.value})}
                           className="border-[#8b6a42] focus:border-[#573e1c]"
-                          placeholder="123"
+                          placeholder={t('checkout.payment.cvvPlaceholder')}
                         />
                       </div>
                       <div className="md:col-span-2 space-y-2">
-                        <Label htmlFor="cardName" className="text-[#573e1c]">Tên trên thẻ *</Label>
+                        <Label htmlFor="cardName" className="text-[#573e1c]">{t('checkout.payment.cardName')}</Label>
                         <Input
                           id="cardName"
                           value={cardInfo.cardName}
                           onChange={(e) => setCardInfo({...cardInfo, cardName: e.target.value})}
                           className="border-[#8b6a42] focus:border-[#573e1c]"
-                          placeholder="NGUYEN VAN A"
+                          placeholder={t('checkout.payment.cardNamePlaceholder')}
                         />
                       </div>
                     </div>
@@ -628,11 +628,11 @@ export default function CheckoutPage() {
                     onCheckedChange={(checked) => setAgreeTerms(checked === true)}
                   />
                   <Label htmlFor="terms" className="text-sm text-[#8b6a42] leading-relaxed">
-                    Tôi đồng ý với{' '}
+                    {t('checkout.terms')}{' '}
                     <Link href="/terms" className="text-[#573e1c] underline">
-                      điều khoản và điều kiện
+                      {t('checkout.terms.link')}
                     </Link>{' '}
-                    của cửa hàng
+                    {t('checkout.terms.suffix')}
                   </Label>
                 </div>
 
@@ -645,7 +645,7 @@ export default function CheckoutPage() {
                 </Button>
 
                 <div className="text-center text-xs text-[#8b6a42]">
-                  Thông tin của bạn được bảo mật và an toàn
+                  {t('checkout.security')}
                 </div>
               </CardContent>
             </Card>

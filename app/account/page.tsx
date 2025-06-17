@@ -76,14 +76,7 @@ export default function AccountPage() {
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'delivered': return 'Đã giao';
-      case 'shipping': return 'Đang giao';
-      case 'confirmed': return 'Đã xác nhận';
-      case 'pending': return 'Chờ xử lý';
-      case 'cancelled': return 'Đã hủy';
-      default: return status;
-    }
+    return t(`account.status.${status}`);
   };
 
   return (
@@ -97,7 +90,7 @@ export default function AccountPage() {
                 {t('account.dashboard')}
               </h1>
               <p className="text-[#8b6a42] mt-2">
-                Chào mừng trở lại, {user.name}!
+                {t('account.welcome')} {user.name}
               </p>
             </div>
             <Button
@@ -118,7 +111,7 @@ export default function AccountPage() {
               <CardHeader>
                 <CardTitle className="text-[#573e1c] flex items-center">
                   <User className="w-5 h-5 mr-2" />
-                  Thông tin cá nhân
+                  {t('account.personalInfo')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -147,17 +140,17 @@ export default function AccountPage() {
 
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Tổng đơn hàng:</span>
+                    <span className="text-[#8b6a42]">{t('account.totalOrders')}:</span>
                     <span className="font-semibold text-[#573e1c]">{user.totalOrders}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Tổng chi tiêu:</span>
+                    <span className="text-[#8b6a42]">{t('account.totalSpent')}:</span>
                     <span className="font-semibold text-[#573e1c]">
                       {formatPrice(user.totalSpent)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">Thành viên từ:</span>
+                    <span className="text-[#8b6a42]">{t('account.memberSince')}:</span>
                     <span className="font-semibold text-[#573e1c]">
                       {new Date(user.joinDate).toLocaleDateString('vi-VN')}
                     </span>
@@ -174,7 +167,7 @@ export default function AccountPage() {
                   >
                     <Link href="/account/profile">
                       <Edit className="w-4 h-4 mr-2" />
-                      Chỉnh sửa hồ sơ
+                      {t('account.editProfile')}
                     </Link>
                   </Button>
                   <Button
@@ -184,7 +177,7 @@ export default function AccountPage() {
                   >
                     <Link href="/account/addresses">
                       <MapPin className="w-4 h-4 mr-2" />
-                      Quản lý địa chỉ
+                      {t('account.manageAddresses')}
                     </Link>
                   </Button>
                   <Button
@@ -194,7 +187,7 @@ export default function AccountPage() {
                   >
                     <Link href="/account/settings">
                       <Settings className="w-4 h-4 mr-2" />
-                      Cài đặt tài khoản
+                      {t('account.accountSettings')}
                     </Link>
                   </Button>
                 </div>
@@ -211,7 +204,7 @@ export default function AccountPage() {
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
                     {user.totalOrders}
                   </div>
-                  <div className="text-sm text-[#8b6a42]">Tổng đơn hàng</div>
+                  <div className="text-sm text-[#8b6a42]">{t('account.totalOrders')}</div>
                 </CardContent>
               </Card>
               <Card className="bg-white border-[#d4c5a0]">
@@ -219,7 +212,7 @@ export default function AccountPage() {
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
                     {formatPrice(user.totalSpent)}
                   </div>
-                  <div className="text-sm text-[#8b6a42]">Tổng chi tiêu</div>
+                  <div className="text-sm text-[#8b6a42]">{t('account.totalSpent')}</div>
                 </CardContent>
               </Card>
               <Card className="bg-white border-[#d4c5a0]">
@@ -227,7 +220,7 @@ export default function AccountPage() {
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
                     {user.addresses.length}
                   </div>
-                  <div className="text-sm text-[#8b6a42]">Địa chỉ đã lưu</div>
+                  <div className="text-sm text-[#8b6a42]">{t('account.savedAddresses')}</div>
                 </CardContent>
               </Card>
             </div>
@@ -238,7 +231,7 @@ export default function AccountPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-[#573e1c] flex items-center">
                     <Package className="w-5 h-5 mr-2" />
-                    Đơn hàng gần đây
+                    {t('account.recentOrders')}
                   </CardTitle>
                   <Button
                     asChild
@@ -247,7 +240,7 @@ export default function AccountPage() {
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                   >
                     <Link href="/account/orders">
-                      Xem tất cả
+                      {t('account.viewAll')}
                     </Link>
                   </Button>
                 </div>
@@ -270,7 +263,7 @@ export default function AccountPage() {
                       
                       <div className="flex items-center justify-between">
                         <div className="text-sm text-[#8b6a42]">
-                          {order.items} sản phẩm • {formatPrice(order.total)}
+                          {order.items} {t('account.items')} • {formatPrice(order.total)}
                         </div>
                         <div className="flex space-x-2">
                           <Button
@@ -281,7 +274,7 @@ export default function AccountPage() {
                           >
                             <Link href={`/account/orders/${order.id}`}>
                               <Eye className="w-3 h-3 mr-1" />
-                              Chi tiết
+                              {t('account.orderDetails')}
                             </Link>
                           </Button>
                           {order.status === 'delivered' && (
@@ -289,7 +282,7 @@ export default function AccountPage() {
                               size="sm"
                               className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                             >
-                              Mua lại
+                              {t('account.reorder')}
                             </Button>
                           )}
                         </div>
@@ -303,7 +296,7 @@ export default function AccountPage() {
             {/* Quick Actions */}
             <Card className="bg-white border-[#d4c5a0]">
               <CardHeader>
-                <CardTitle className="text-[#573e1c]">Thao tác nhanh</CardTitle>
+                <CardTitle className="text-[#573e1c]">{t('account.quickActions')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -313,7 +306,7 @@ export default function AccountPage() {
                   >
                     <Link href="/products">
                       <Package className="w-4 h-4 mr-2" />
-                      Tiếp tục mua sắm
+                      {t('account.continueShopping')}
                     </Link>
                   </Button>
                   <Button
@@ -323,7 +316,7 @@ export default function AccountPage() {
                   >
                     <Link href="/account/orders">
                       <Eye className="w-4 h-4 mr-2" />
-                      Theo dõi đơn hàng
+                      {t('account.trackOrders')}
                     </Link>
                   </Button>
                 </div>

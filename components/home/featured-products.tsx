@@ -23,7 +23,7 @@ export function FeaturedProducts() {
               {t('home.featured.title')}
             </h2>
             <p className="text-[#8b6a42] text-lg">
-              Những sản phẩm được yêu thích nhất của chúng tôi
+              {t('home.featured.subtitle')}
             </p>
           </div>
           

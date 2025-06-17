@@ -50,13 +50,13 @@ export default function SettingsPage() {
     setMessage('');
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage('Mật khẩu mới không khớp');
+      setMessage(t('account.passwordMismatch'));
       setIsSaving(false);
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
-      setMessage('Mật khẩu mới phải có ít nhất 6 ký tự');
+      setMessage(t('account.passwordLength'));
       setIsSaving(false);
       return;
     }
@@ -64,14 +64,14 @@ export default function SettingsPage() {
     try {
       // In real app, validate current password with backend
       await new Promise(resolve => setTimeout(resolve, 1000));
-      setMessage('Đổi mật khẩu thành công!');
+      setMessage(t('account.passwordChanged'));
       setPasswordData({
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
       });
     } catch (error) {
-      setMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+      setMessage(t('account.error'));
     } finally {
       setIsSaving(false);
     }
@@ -81,9 +81,9 @@ export default function SettingsPage() {
     setIsSaving(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      setMessage('Cập nhật cài đặt thông báo thành công!');
+      setMessage(t('account.notificationUpdated'));
     } catch (error) {
-      setMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+      setMessage(t('account.error'));
     } finally {
       setIsSaving(false);
     }
@@ -93,9 +93,9 @@ export default function SettingsPage() {
     setIsSaving(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      setMessage('Cập nhật cài đặt bảo mật thành công!');
+      setMessage(t('account.privacyUpdated'));
     } catch (error) {
-      setMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+      setMessage(t('account.error'));
     } finally {
       setIsSaving(false);
     }
@@ -114,21 +114,21 @@ export default function SettingsPage() {
             >
               <Link href="/account">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại tài khoản
+                {t('account.backToAccount')}
               </Link>
             </Button>
           </div>
           <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-            Cài đặt tài khoản
+            {t('account.accountSettings')}
           </h1>
           <p className="text-[#8b6a42] mt-2">
-            Quản lý cài đặt bảo mật và thông báo
+            {t('account.manageSecurity')}
           </p>
         </div>
 
         {message && (
           <div className={`mb-6 p-4 rounded-lg ${
-            message.includes('thành công') 
+            message.includes(t('account.success')) 
               ? 'bg-green-50 border border-green-200 text-green-600'
               : 'bg-red-50 border border-red-200 text-red-600'
           }`}>
@@ -142,13 +142,13 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="text-[#573e1c] flex items-center">
                 <Shield className="w-5 h-5 mr-2" />
-                Đổi mật khẩu
+                {t('account.changePassword')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handlePasswordChange} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="currentPassword" className="text-[#573e1c]">Mật khẩu hiện tại *</Label>
+                  <Label htmlFor="currentPassword" className="text-[#573e1c]">{t('account.currentPassword')}</Label>
                   <div className="relative">
                     <Input
                       id="currentPassword"
@@ -170,7 +170,7 @@ export default function SettingsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="newPassword" className="text-[#573e1c]">Mật khẩu mới *</Label>
+                    <Label htmlFor="newPassword" className="text-[#573e1c]">{t('account.newPassword')}</Label>
                     <div className="relative">
                       <Input
                         id="newPassword"
@@ -191,7 +191,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-[#573e1c]">Xác nhận mật khẩu mới *</Label>
+                    <Label htmlFor="confirmPassword" className="text-[#573e1c]">{t('account.confirmPassword')}</Label>
                     <div className="relative">
                       <Input
                         id="confirmPassword"
@@ -219,7 +219,7 @@ export default function SettingsPage() {
                     className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                   >
                     <Save className="w-4 h-4 mr-2" />
-                    {isSaving ? 'Đang lưu...' : 'Đổi mật khẩu'}
+                    {isSaving ? t('account.saving') : t('account.changePassword')}
                   </Button>
                 </div>
               </form>
@@ -231,15 +231,15 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="text-[#573e1c] flex items-center">
                 <Bell className="w-5 h-5 mr-2" />
-                Cài đặt thông báo
+                {t('account.notificationSettings')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-[#573e1c] font-medium">Cập nhật đơn hàng</Label>
-                    <p className="text-sm text-[#8b6a42]">Nhận thông báo về trạng thái đơn hàng</p>
+                    <Label className="text-[#573e1c] font-medium">{t('account.orderUpdates')}</Label>
+                    <p className="text-sm text-[#8b6a42]">{t('account.orderUpdatesDesc')}</p>
                   </div>
                   <Switch
                     checked={notifications.orderUpdates}
@@ -251,8 +251,8 @@ export default function SettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-[#573e1c] font-medium">Khuyến mãi</Label>
-                    <p className="text-sm text-[#8b6a42]">Nhận thông báo về các chương trình khuyến mãi</p>
+                    <Label className="text-[#573e1c] font-medium">{t('account.promotions')}</Label>
+                    <p className="text-sm text-[#8b6a42]">{t('account.promotionsDesc')}</p>
                   </div>
                   <Switch
                     checked={notifications.promotions}
@@ -264,8 +264,8 @@ export default function SettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-[#573e1c] font-medium">Bản tin</Label>
-                    <p className="text-sm text-[#8b6a42]">Nhận bản tin hàng tuần về sản phẩm mới</p>
+                    <Label className="text-[#573e1c] font-medium">{t('account.newsletter')}</Label>
+                    <p className="text-sm text-[#8b6a42]">{t('account.newsletterDesc')}</p>
                   </div>
                   <Switch
                     checked={notifications.newsletter}
@@ -277,8 +277,8 @@ export default function SettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-[#573e1c] font-medium">Tin nhắn SMS</Label>
-                    <p className="text-sm text-[#8b6a42]">Nhận thông báo qua SMS</p>
+                    <Label className="text-[#573e1c] font-medium">{t('account.sms')}</Label>
+                    <p className="text-sm text-[#8b6a42]">{t('account.smsDesc')}</p>
                   </div>
                   <Switch
                     checked={notifications.sms}
@@ -294,7 +294,7 @@ export default function SettingsPage() {
                   className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  Lưu cài đặt
+                  {t('account.saveSettings')}
                 </Button>
               </div>
             </CardContent>
@@ -305,15 +305,15 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="text-[#573e1c] flex items-center">
                 <Settings className="w-5 h-5 mr-2" />
-                Cài đặt riêng tư
+                {t('account.privacySettings')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-[#573e1c] font-medium">Hiển thị hồ sơ công khai</Label>
-                    <p className="text-sm text-[#8b6a42]">Cho phép người khác xem thông tin cơ bản</p>
+                    <Label className="text-[#573e1c] font-medium">{t('account.publicProfile')}</Label>
+                    <p className="text-sm text-[#8b6a42]">{t('account.publicProfileDesc')}</p>
                   </div>
                   <Switch
                     checked={privacy.profileVisible}
@@ -325,8 +325,8 @@ export default function SettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-[#573e1c] font-medium">Lịch sử mua hàng</Label>
-                    <p className="text-sm text-[#8b6a42]">Hiển thị lịch sử mua hàng trong hồ sơ</p>
+                    <Label className="text-[#573e1c] font-medium">{t('account.orderHistory')}</Label>
+                    <p className="text-sm text-[#8b6a42]">{t('account.orderHistoryDesc')}</p>
                   </div>
                   <Switch
                     checked={privacy.orderHistoryVisible}
@@ -338,8 +338,8 @@ export default function SettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-[#573e1c] font-medium">Đánh giá sản phẩm</Label>
-                    <p className="text-sm text-[#8b6a42]">Hiển thị tên trong các đánh giá sản phẩm</p>
+                    <Label className="text-[#573e1c] font-medium">{t('account.productReviews')}</Label>
+                    <p className="text-sm text-[#8b6a42]">{t('account.productReviewsDesc')}</p>
                   </div>
                   <Switch
                     checked={privacy.reviewsVisible}
@@ -355,7 +355,7 @@ export default function SettingsPage() {
                   className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  Lưu cài đặt
+                  {t('account.saveSettings')}
                 </Button>
               </div>
             </CardContent>

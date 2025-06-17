@@ -63,26 +63,26 @@ export const mockOrders = [{
       shipping: 0,
       total: 148500
     },
-    paymentMethod: 'Thanh toán khi nhận hàng (COD)',
+    paymentMethod: 'cod',
     notes: 'Giao hàng vào buổi chiều, gọi trước 15 phút',
     timeline: [
       {
         status: 'confirmed',
-        title: 'Đơn hàng đã được xác nhận',
+        title: 'orderPlaced',
         description: 'Chúng tôi đã nhận và xác nhận đơn hàng của bạn',
         timestamp: '2024-01-15T10:30:00Z',
         completed: true
       },
       {
         status: 'preparing',
-        title: 'Đang chuẩn bị hàng',
+        title: 'orderPreparing',
         description: 'Đơn hàng đang được đóng gói và chuẩn bị giao',
         timestamp: '2024-01-15T14:00:00Z',
         completed: true
       },
       {
         status: 'shipping',
-        title: 'Đang giao hàng',
+        title: 'orderShipping',
         description: 'Đơn hàng đã được giao cho đơn vị vận chuyển',
         timestamp: '2024-01-16T09:00:00Z',
         completed: true,
@@ -90,7 +90,7 @@ export const mockOrders = [{
       },
       {
         status: 'delivered',
-        title: 'Đã giao hàng',
+        title: 'orderDelivered',
         description: 'Đơn hàng đã được giao thành công',
         timestamp: null,
         completed: false

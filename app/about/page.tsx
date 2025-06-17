@@ -12,83 +12,83 @@ export default function AboutPage() {
   const values = [
     {
       icon: Heart,
-      title: 'Tình yêu truyền thống',
-      description: 'Chúng tôi yêu và tôn trọng những giá trị ẩm thực truyền thống Việt Nam, từ đó tạo ra những sản phẩm chất lượng nhất.'
+      title: t('about.values.tradition.title'),
+      description: t('about.values.tradition.description')
     },
     {
       icon: Award,
-      title: 'Chất lượng hàng đầu',
-      description: 'Cam kết mang đến sản phẩm chất lượng cao nhất với quy trình sản xuất nghiêm ngặt và nguyên liệu tươi ngon.'
+      title: t('about.values.quality.title'),
+      description: t('about.values.quality.description')
     },
     {
       icon: Users,
-      title: 'Phục vụ tận tâm',
-      description: 'Đặt khách hàng làm trung tâm, chúng tôi luôn lắng nghe và cải thiện để mang đến trải nghiệm tốt nhất.'
+      title: t('about.values.service.title'),
+      description: t('about.values.service.description')
     },
     {
       icon: Leaf,
-      title: 'Tự nhiên & An toàn',
-      description: 'Sử dụng nguyên liệu tự nhiên, không chất bảo quản, đảm bảo an toàn thực phẩm cho sức khỏe gia đình bạn.'
+      title: t('about.values.natural.title'),
+      description: t('about.values.natural.description')
     }
   ];
 
   const milestones = [
     {
       year: '2018',
-      title: 'Thành lập công ty',
-      description: 'Rice & Noodles được thành lập với sứ mệnh mang bánh tráng và bún phở truyền thống đến mọi gia đình Việt.'
+      title: t('about.timeline.2018.title'),
+      description: t('about.timeline.2018.description')
     },
     {
       year: '2019',
-      title: 'Mở rộng sản xuất',
-      description: 'Đầu tư nhà máy sản xuất hiện đại tại Tây Ninh, áp dụng công nghệ tiên tiến vào quy trình sản xuất truyền thống.'
+      title: t('about.timeline.2019.title'),
+      description: t('about.timeline.2019.description')
     },
     {
       year: '2020',
-      title: 'Ra mắt cửa hàng đầu tiên',
-      description: 'Khai trương cửa hàng đầu tiên tại Quận 1, TP.HCM, đánh dấu bước tiến quan trọng trong việc tiếp cận khách hàng.'
+      title: t('about.timeline.2020.title'),
+      description: t('about.timeline.2020.description')
     },
     {
       year: '2021',
-      title: 'Chứng nhận chất lượng',
-      description: 'Đạt chứng nhận ISO 22000 về an toàn thực phẩm và nhiều giải thưởng về chất lượng sản phẩm.'
+      title: t('about.timeline.2021.title'),
+      description: t('about.timeline.2021.description')
     },
     {
       year: '2022',
-      title: 'Mở rộng thị trường',
-      description: 'Phát triển hệ thống phân phối rộng khắp, phục vụ hơn 10.000 khách hàng trên toàn quốc.'
+      title: t('about.timeline.2022.title'),
+      description: t('about.timeline.2022.description')
     },
     {
       year: '2023',
-      title: 'Đổi mới số hóa',
-      description: 'Ra mắt nền tảng thương mại điện tử, ứng dụng công nghệ để nâng cao trải nghiệm khách hàng.'
+      title: t('about.timeline.2023.title'),
+      description: t('about.timeline.2023.description')
     }
   ];
 
   const stats = [
-    { number: '10,000+', label: 'Khách hàng tin tưởng' },
-    { number: '500+', label: 'Sản phẩm đa dạng' },
-    { number: '50+', label: 'Đối tác phân phối' },
-    { number: '99%', label: 'Khách hàng hài lòng' }
+    { number: '10,000+', label: t('about.stats.trusted') },
+    { number: '500+', label: t('about.stats.products') },
+    { number: '50+', label: t('about.stats.partners') },
+    { number: '99%', label: t('about.stats.satisfaction') }
   ];
 
   const team = [
     {
-      name: 'Nguyễn Văn Minh',
-      position: 'Giám đốc điều hành',
-      description: 'Với hơn 15 năm kinh nghiệm trong ngành thực phẩm, anh Minh đã dẫn dắt Rice & Noodles trở thành thương hiệu uy tín.',
+      name: t('about.team.ceo.name'),
+      position: t('about.team.ceo.position'),
+      description: t('about.team.ceo.description'),
       image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg'
     },
     {
-      name: 'Trần Thị Lan',
-      position: 'Giám đốc sản xuất',
-      description: 'Chuyên gia về công nghệ thực phẩm, chị Lan đảm bảo chất lượng sản phẩm luôn đạt tiêu chuẩn cao nhất.',
+      name: t('about.team.production.name'),
+      position: t('about.team.production.position'),
+      description: t('about.team.production.description'),
       image: 'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg'
     },
     {
-      name: 'Lê Hoàng Nam',
-      position: 'Giám đốc kinh doanh',
-      description: 'Với tầm nhìn chiến lược, anh Nam đã xây dựng mạng lưới phân phối rộng khắp và phát triển thương hiệu.',
+      name: t('about.team.business.name'),
+      position: t('about.team.business.position'),
+      description: t('about.team.business.description'),
       image: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg'
     }
   ];
@@ -102,23 +102,23 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl lg:text-6xl font-bold text-[#efe1c1] mb-6">
-                Về Rice & Noodles
+                {t('about.hero.title')}
               </h1>
               <p className="text-xl text-[#d4c5a0] leading-relaxed mb-8">
-                Chúng tôi là những người thợ thủ công tận tâm, mang đến hương vị đậm đà của bánh tráng và bún phở truyền thống Việt Nam cho mọi gia đình.
+                {t('about.hero.subtitle')}
               </p>
               <div className="flex items-center space-x-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#efe1c1]">6+</div>
-                  <div className="text-sm text-[#d4c5a0]">Năm kinh nghiệm</div>
+                  <div className="text-sm text-[#d4c5a0]">{t('about.hero.experience')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#efe1c1]">2</div>
-                  <div className="text-sm text-[#d4c5a0]">Cửa hàng</div>
+                  <div className="text-sm text-[#d4c5a0]">{t('about.hero.stores')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#efe1c1]">100%</div>
-                  <div className="text-sm text-[#d4c5a0]">Tự nhiên</div>
+                  <div className="text-sm text-[#d4c5a0]">{t('about.hero.natural')}</div>
                 </div>
               </div>
             </div>
@@ -133,7 +133,7 @@ export default function AboutPage() {
                   <Star className="w-8 h-8 text-yellow-500 fill-current" />
                   <div>
                     <div className="font-bold text-[#573e1c] text-lg">4.9/5</div>
-                    <div className="text-sm text-[#8b6a42]">Đánh giá khách hàng</div>
+                    <div className="text-sm text-[#8b6a42]">{t('about.hero.rating')}</div>
                   </div>
                 </div>
               </div>
@@ -150,12 +150,12 @@ export default function AboutPage() {
               <CardHeader>
                 <CardTitle className="text-[#573e1c] flex items-center text-2xl">
                   <Target className="w-6 h-6 mr-3" />
-                  Sứ mệnh
+                  {t('about.mission.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-[#8b6a42] leading-relaxed text-lg">
-                  Bảo tồn và phát triển những giá trị ẩm thực truyền thống Việt Nam, mang đến cho mọi gia đình những sản phẩm bánh tráng và bún phở chất lượng cao, an toàn và đậm đà hương vị quê hương.
+                  {t('about.mission.content')}
                 </p>
               </CardContent>
             </Card>
@@ -164,12 +164,12 @@ export default function AboutPage() {
               <CardHeader>
                 <CardTitle className="text-[#573e1c] flex items-center text-2xl">
                   <Globe className="w-6 h-6 mr-3" />
-                  Tầm nhìn
+                  {t('about.vision.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-[#8b6a42] leading-relaxed text-lg">
-                  Trở thành thương hiệu hàng đầu Việt Nam về bánh tráng và bún phở truyền thống, được khách hàng tin tưởng và lựa chọn, đồng thời lan tỏa văn hóa ẩm thực Việt ra thế giới.
+                  {t('about.vision.content')}
                 </p>
               </CardContent>
             </Card>
@@ -180,10 +180,10 @@ export default function AboutPage() {
         <section className="mb-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-[#573e1c] mb-4">
-              Giá trị cốt lõi
+              {t('about.values.title')}
             </h2>
             <p className="text-[#8b6a42] text-lg max-w-3xl mx-auto">
-              Những giá trị này định hướng mọi hoạt động của chúng tôi và tạo nên sự khác biệt trong từng sản phẩm
+              {t('about.values.subtitle')}
             </p>
           </div>
 
@@ -226,10 +226,10 @@ export default function AboutPage() {
         <section className="mb-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-[#573e1c] mb-4">
-              Hành trình phát triển
+              {t('about.timeline.title')}
             </h2>
             <p className="text-[#8b6a42] text-lg max-w-3xl mx-auto">
-              Từ những ngày đầu khởi nghiệp đến hôm nay, chúng tôi không ngừng phát triển và hoàn thiện
+              {t('about.timeline.subtitle')}
             </p>
           </div>
 
@@ -267,10 +267,10 @@ export default function AboutPage() {
         <section className="mb-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-[#573e1c] mb-4">
-              Đội ngũ lãnh đạo
+              {t('about.team.title')}
             </h2>
             <p className="text-[#8b6a42] text-lg max-w-3xl mx-auto">
-              Những con người tài năng và tận tâm đã xây dựng nên thành công của Rice & Noodles
+              {t('about.team.subtitle')}
             </p>
           </div>
 
@@ -302,23 +302,23 @@ export default function AboutPage() {
           <Card className="bg-gradient-to-r from-[#efe1c1] to-[#d4c5a0] border-[#8b6a42] shadow-lg">
             <CardContent className="p-8 text-center">
               <h2 className="text-3xl font-bold text-[#573e1c] mb-4">
-                Cùng Rice & Noodles tạo nên những bữa cơm gia đình ấm cúng
+                {t('about.cta.title')}
               </h2>
               <p className="text-[#8b6a42] text-lg mb-8 max-w-2xl mx-auto">
-                Hãy để chúng tôi đồng hành cùng bạn trong việc mang đến những món ăn truyền thống, ngon miệng và bổ dưỡng cho gia đình.
+                {t('about.cta.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href="/products"
                   className="inline-flex items-center justify-center px-8 py-3 bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1] font-semibold rounded-lg transition-colors duration-200"
                 >
-                  Khám phá sản phẩm
+                  {t('about.cta.explore')}
                 </a>
                 <a
                   href="/contact"
                   className="inline-flex items-center justify-center px-8 py-3 border-2 border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1] font-semibold rounded-lg transition-colors duration-200"
                 >
-                  Liên hệ với chúng tôi
+                  {t('about.cta.contact')}
                 </a>
               </div>
             </CardContent>

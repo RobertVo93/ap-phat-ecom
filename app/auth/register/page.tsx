@@ -37,13 +37,13 @@ export default function RegisterPage() {
     setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp');
+      setError(t('auth.register.error.passwordMismatch'));
       setIsLoading(false);
       return;
     }
 
     if (!agreeTerms) {
-      setError('Vui lòng đồng ý với điều khoản và điều kiện');
+      setError(t('auth.register.error.termsRequired'));
       setIsLoading(false);
       return;
     }
@@ -52,7 +52,7 @@ export default function RegisterPage() {
       await register(formData.name, formData.email, formData.phone, formData.password);
       router.push('/account');
     } catch (err) {
-      setError('Đăng ký thất bại. Vui lòng thử lại.');
+      setError(t('auth.register.error.failed'));
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +66,7 @@ export default function RegisterPage() {
       await loginWithGoogle();
       router.push('/account');
     } catch (err) {
-      setError('Đăng nhập Google thất bại');
+      setError(t('auth.register.error.google'));
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +84,7 @@ export default function RegisterPage() {
           >
             <Link href="/">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Về trang chủ
+              {t('auth.register.backToHome')}
             </Link>
           </Button>
         </div>
@@ -98,10 +98,10 @@ export default function RegisterPage() {
               <span className="text-[#573e1c] font-bold text-xl">Rice & Noodles</span>
             </div>
             <CardTitle className="text-2xl font-bold text-[#573e1c]">
-              {t('nav.register')}
+              {t('auth.register.title')}
             </CardTitle>
             <p className="text-[#8b6a42] mt-2">
-              Tạo tài khoản mới để bắt đầu mua sắm
+              {t('auth.register.subtitle')}
             </p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -113,7 +113,7 @@ export default function RegisterPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-[#573e1c]">Họ và tên *</Label>
+                <Label htmlFor="name" className="text-[#573e1c]">{t('auth.register.fullName')}</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
@@ -122,14 +122,14 @@ export default function RegisterPage() {
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="Nguyễn Văn A"
+                    placeholder={t('auth.register.fullNamePlaceholder')}
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[#573e1c]">Email *</Label>
+                <Label htmlFor="email" className="text-[#573e1c]">{t('auth.register.email')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
@@ -138,14 +138,14 @@ export default function RegisterPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="your@email.com"
+                    placeholder={t('auth.register.emailPlaceholder')}
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-[#573e1c]">Số điện thoại *</Label>
+                <Label htmlFor="phone" className="text-[#573e1c]">{t('auth.register.phone')}</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
@@ -154,14 +154,14 @@ export default function RegisterPage() {
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="0901234567"
+                    placeholder={t('auth.register.phonePlaceholder')}
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[#573e1c]">Mật khẩu *</Label>
+                <Label htmlFor="password" className="text-[#573e1c]">{t('auth.register.password')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
@@ -170,7 +170,7 @@ export default function RegisterPage() {
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                     className="pl-10 pr-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="••••••••"
+                    placeholder={t('auth.register.passwordPlaceholder')}
                     required
                   />
                   <button
@@ -184,7 +184,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-[#573e1c]">Xác nhận mật khẩu *</Label>
+                <Label htmlFor="confirmPassword" className="text-[#573e1c]">{t('auth.register.confirmPassword')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
@@ -193,7 +193,7 @@ export default function RegisterPage() {
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                     className="pl-10 pr-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="••••••••"
+                    placeholder={t('auth.register.confirmPasswordPlaceholder')}
                     required
                   />
                   <button
@@ -213,13 +213,13 @@ export default function RegisterPage() {
                   onCheckedChange={(checked) => setAgreeTerms(checked === true)}
                 />
                 <Label htmlFor="terms" className="text-sm text-[#8b6a42] leading-relaxed">
-                  Tôi đồng ý với{' '}
+                  {t('auth.register.terms')}{' '}
                   <Link href="/terms" className="text-[#573e1c] underline">
-                    điều khoản và điều kiện
+                    {t('auth.register.termsLink')}
                   </Link>{' '}
-                  và{' '}
+                  {t('auth.register.and')}{' '}
                   <Link href="/privacy" className="text-[#573e1c] underline">
-                    chính sách bảo mật
+                    {t('auth.register.privacyLink')}
                   </Link>
                 </Label>
               </div>
@@ -229,7 +229,7 @@ export default function RegisterPage() {
                 disabled={isLoading}
                 className="w-full bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1] h-12 text-lg font-semibold disabled:bg-gray-300"
               >
-                {isLoading ? 'Đang đăng ký...' : t('nav.register')}
+                {isLoading ? t('auth.register.submitting') : t('auth.register.submit')}
               </Button>
             </form>
 
@@ -238,7 +238,7 @@ export default function RegisterPage() {
                 <Separator />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-[#8b6a42]">Hoặc</span>
+                <span className="px-2 bg-white text-[#8b6a42]">{t('auth.register.or')}</span>
               </div>
             </div>
 
@@ -254,17 +254,17 @@ export default function RegisterPage() {
                 <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Đăng ký với Google
+              {t('auth.register.withGoogle')}
             </Button>
 
             <div className="text-center">
               <p className="text-[#8b6a42]">
-                Đã có tài khoản?{' '}
+                {t('auth.register.haveAccount')}{' '}
                 <Link
                   href="/auth/login"
                   className="text-[#573e1c] hover:text-[#8b6a42] font-semibold underline"
                 >
-                  Đăng nhập ngay
+                  {t('auth.register.login')}
                 </Link>
               </p>
             </div>

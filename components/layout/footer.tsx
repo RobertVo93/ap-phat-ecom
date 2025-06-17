@@ -18,7 +18,7 @@ export function Footer() {
               <div className="w-8 h-8 bg-[#efe1c1] rounded-full flex items-center justify-center">
                 <span className="text-[#573e1c] font-bold text-sm">RT</span>
               </div>
-              <span className="font-bold text-xl">Rice & Noodles</span>
+              <span className="font-bold text-xl">{t('footer.companyName')}</span>
             </div>
             <p className="text-[#d4c5a0] text-sm leading-relaxed">
               {t('home.hero.subtitle')}
@@ -42,17 +42,17 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link href="/products?category=rice-paper" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  Bánh Tráng
+                  {t('footer.categories.ricePaper')}
                 </Link>
               </li>
               <li>
                 <Link href="/products?category=pho-noodles" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  Bánh Phở
+                  {t('footer.categories.phoNoodles')}
                 </Link>
               </li>
               <li>
                 <Link href="/products?category=vermicelli" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  Bún
+                  {t('footer.categories.vermicelli')}
                 </Link>
               </li>
               <li>
@@ -96,17 +96,16 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-[#d4c5a0]" />
-                <span className="text-[#d4c5a0] text-sm">028 3823 4567</span>
+                <span className="text-[#d4c5a0] text-sm">{t('footer.contact.phone')}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-[#d4c5a0]" />
-                <span className="text-[#d4c5a0] text-sm">contact@ricepaperstore.vn</span>
+                <span className="text-[#d4c5a0] text-sm">{t('footer.contact.email')}</span>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-[#d4c5a0] mt-0.5" />
-                <span className="text-[#d4c5a0] text-sm leading-relaxed">
-                  123 Đường Lê Lợi, Phường Bến Nghé<br />
-                  Quận 1, TP.HCM
+                <span className="text-[#d4c5a0] text-sm leading-relaxed whitespace-pre-line">
+                  {t('footer.contact.address')}
                 </span>
               </div>
             </div>
@@ -116,14 +115,14 @@ export function Footer() {
         <div className="border-t border-[#8b6a42] mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-[#d4c5a0] text-sm">
-              © 2024 Rice & Noodles. All rights reserved.
+              {t('footer.copyright')}
             </p>
             <div className="flex space-x-6">
               <Link href="/privacy" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                Privacy Policy
+                {t('footer.privacyPolicy')}
               </Link>
               <Link href="/terms" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                Terms of Service
+                {t('footer.termsOfService')}
               </Link>
             </div>
           </div>

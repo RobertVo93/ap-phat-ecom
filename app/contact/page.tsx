@@ -31,7 +31,7 @@ export default function ContactPage() {
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    setSubmitMessage('Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong vòng 24 giờ.');
+    setSubmitMessage(t('contact.form.success'));
     setFormData({
       name: '',
       email: '',
@@ -46,38 +46,38 @@ export default function ContactPage() {
   const contactInfo = [
     {
       icon: Phone,
-      title: 'Điện thoại',
+      title: t('contact.info.phone'),
       details: ['028 3823 4567', '0901 234 567'],
-      description: 'Thứ 2 - Chủ nhật: 7:00 - 21:00'
+      description: t('contact.info.phone.hours')
     },
     {
       icon: Mail,
-      title: 'Email',
+      title: t('contact.info.email'),
       details: ['contact@ricepaperstore.vn', 'support@ricepaperstore.vn'],
-      description: 'Phản hồi trong vòng 24 giờ'
+      description: t('contact.info.email.response')
     },
     {
       icon: MapPin,
-      title: 'Địa chỉ',
+      title: t('contact.info.address'),
       details: ['123 Đường Lê Lợi, Phường Bến Nghé', 'Quận 1, TP. Hồ Chí Minh'],
-      description: 'Cửa hàng chính'
+      description: t('contact.info.address.main')
     },
     {
       icon: Clock,
-      title: 'Giờ làm việc',
-      details: ['Thứ 2 - Thứ 6: 7:00 - 21:00', 'Thứ 7 - Chủ nhật: 7:00 - 22:00'],
-      description: 'Mở cửa tất cả các ngày trong tuần'
+      title: t('contact.info.hours'),
+      details: [t('contact.info.hours.weekdays'), t('contact.info.hours.weekend')],
+      description: t('contact.info.hours.description')
     }
   ];
 
   const inquiryTypes = [
-    { value: 'general', label: 'Thông tin chung' },
-    { value: 'product', label: 'Sản phẩm' },
-    { value: 'order', label: 'Đơn hàng' },
-    { value: 'wholesale', label: 'Bán sỉ' },
-    { value: 'partnership', label: 'Hợp tác kinh doanh' },
-    { value: 'complaint', label: 'Khiếu nại' },
-    { value: 'other', label: 'Khác' }
+    { value: 'general', label: t('contact.form.inquiryType.options.general') },
+    { value: 'product', label: t('contact.form.inquiryType.options.product') },
+    { value: 'order', label: t('contact.form.inquiryType.options.order') },
+    { value: 'wholesale', label: t('contact.form.inquiryType.options.wholesale') },
+    { value: 'partnership', label: t('contact.form.inquiryType.options.partnership') },
+    { value: 'complaint', label: t('contact.form.inquiryType.options.complaint') },
+    { value: 'other', label: t('contact.form.inquiryType.options.other') }
   ];
 
   return (
@@ -90,7 +90,7 @@ export default function ContactPage() {
             {t('nav.contact')}
           </h1>
           <p className="text-xl text-[#d4c5a0] max-w-3xl mx-auto leading-relaxed">
-            Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn. Hãy liên hệ với chúng tôi để được tư vấn về sản phẩm hoặc dịch vụ tốt nhất.
+            {t('contact.hero.subtitle')}
           </p>
         </div>
       </section>
@@ -122,10 +122,10 @@ export default function ContactPage() {
             <CardHeader>
               <CardTitle className="text-[#573e1c] flex items-center text-2xl">
                 <MessageCircle className="w-6 h-6 mr-3" />
-                Gửi tin nhắn cho chúng tôi
+                {t('contact.form.title')}
               </CardTitle>
               <p className="text-[#8b6a42]">
-                Điền thông tin bên dưới và chúng tôi sẽ liên hệ lại với bạn sớm nhất có thể.
+                {t('contact.form.subtitle')}
               </p>
             </CardHeader>
             <CardContent>
@@ -140,7 +140,7 @@ export default function ContactPage() {
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-[#573e1c] flex items-center">
                       <User className="w-4 h-4 mr-1" />
-                      Họ và tên *
+                      {t('contact.form.name')}
                     </Label>
                     <Input
                       id="name"
@@ -153,7 +153,7 @@ export default function ContactPage() {
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="text-[#573e1c] flex items-center">
                       <Phone className="w-4 h-4 mr-1" />
-                      Số điện thoại
+                      {t('contact.form.phone')}
                     </Label>
                     <Input
                       id="phone"
@@ -168,7 +168,7 @@ export default function ContactPage() {
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-[#573e1c] flex items-center">
                     <Mail className="w-4 h-4 mr-1" />
-                    Email *
+                    {t('contact.form.email')}
                   </Label>
                   <Input
                     id="email"
@@ -183,11 +183,11 @@ export default function ContactPage() {
                 <div className="space-y-2">
                   <Label htmlFor="inquiryType" className="text-[#573e1c] flex items-center">
                     <Building className="w-4 h-4 mr-1" />
-                    Loại yêu cầu
+                    {t('contact.form.inquiryType')}
                   </Label>
                   <Select value={formData.inquiryType} onValueChange={(value) => setFormData({...formData, inquiryType: value})}>
                     <SelectTrigger className="border-[#8b6a42]">
-                      <SelectValue placeholder="Chọn loại yêu cầu" />
+                      <SelectValue placeholder={t('contact.form.inquiryType.placeholder')} />
                     </SelectTrigger>
                     <SelectContent>
                       {inquiryTypes.map((type) => (
@@ -200,25 +200,25 @@ export default function ContactPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-[#573e1c]">Tiêu đề *</Label>
+                  <Label htmlFor="subject" className="text-[#573e1c]">{t('contact.form.subject')}</Label>
                   <Input
                     id="subject"
                     value={formData.subject}
                     onChange={(e) => setFormData({...formData, subject: e.target.value})}
                     className="border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder="Nhập tiêu đề tin nhắn"
+                    placeholder={t('contact.form.subject.placeholder')}
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="text-[#573e1c]">Nội dung *</Label>
+                  <Label htmlFor="message" className="text-[#573e1c]">{t('contact.form.message')}</Label>
                   <Textarea
                     id="message"
                     value={formData.message}
                     onChange={(e) => setFormData({...formData, message: e.target.value})}
                     className="border-[#8b6a42] focus:border-[#573e1c] min-h-[120px]"
-                    placeholder="Nhập nội dung tin nhắn của bạn..."
+                    placeholder={t('contact.form.message.placeholder')}
                     required
                   />
                 </div>
@@ -229,7 +229,7 @@ export default function ContactPage() {
                   className="w-full bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1] h-12 text-lg font-semibold disabled:bg-gray-300"
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  {isSubmitting ? 'Đang gửi...' : 'Gửi tin nhắn'}
+                  {isSubmitting ? t('contact.form.submitting') : t('contact.form.submit')}
                 </Button>
               </form>
             </CardContent>
@@ -242,23 +242,23 @@ export default function ContactPage() {
               <CardHeader>
                 <CardTitle className="text-[#573e1c] flex items-center">
                   <MapPin className="w-5 h-5 mr-2" />
-                  Vị trí cửa hàng
+                  {t('contact.map.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="aspect-video bg-gradient-to-br from-[#efe1c1] to-[#d4c5a0] rounded-lg flex items-center justify-center">
                   <div className="text-center text-[#573e1c]">
                     <MapPin className="w-16 h-16 mx-auto mb-4" />
-                    <p className="font-semibold">Bản đồ cửa hàng</p>
-                    <p className="text-sm text-[#8b6a42]">123 Đường Lê Lợi, Quận 1, TP.HCM</p>
+                    <p className="font-semibold">{t('contact.map.placeholder')}</p>
+                    <p className="text-sm text-[#8b6a42]">{t('contact.map.address')}</p>
                   </div>
                 </div>
                 <div className="mt-4 p-4 bg-[#f8f5f0] rounded-lg">
-                  <h4 className="font-semibold text-[#573e1c] mb-2">Hướng dẫn đến cửa hàng:</h4>
+                  <h4 className="font-semibold text-[#573e1c] mb-2">{t('contact.map.directions')}</h4>
                   <ul className="text-sm text-[#8b6a42] space-y-1">
-                    <li>• Từ sân bay Tân Sơn Nhất: 30 phút bằng taxi</li>
-                    <li>• Gần ga tàu điện ngầm Bến Thành (200m)</li>
-                    <li>• Có chỗ đậu xe máy và ô tô</li>
+                    <li>• {t('contact.map.directions.airport')}</li>
+                    <li>• {t('contact.map.directions.metro')}</li>
+                    <li>• {t('contact.map.directions.parking')}</li>
                   </ul>
                 </div>
               </CardContent>
@@ -267,24 +267,24 @@ export default function ContactPage() {
             {/* FAQ Section */}
             <Card className="bg-white border-[#d4c5a0] shadow-lg">
               <CardHeader>
-                <CardTitle className="text-[#573e1c]">Câu hỏi thường gặp</CardTitle>
+                <CardTitle className="text-[#573e1c]">{t('contact.faq.title')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="border-l-4 border-[#573e1c] pl-4">
-                  <h4 className="font-semibold text-[#573e1c] mb-1">Thời gian giao hàng?</h4>
-                  <p className="text-sm text-[#8b6a42]">Trong ngày tại TP.HCM, 1-2 ngày cho các tỉnh khác.</p>
+                  <h4 className="font-semibold text-[#573e1c] mb-1">{t('contact.faq.delivery.question')}</h4>
+                  <p className="text-sm text-[#8b6a42]">{t('contact.faq.delivery.answer')}</p>
                 </div>
                 <div className="border-l-4 border-[#573e1c] pl-4">
-                  <h4 className="font-semibold text-[#573e1c] mb-1">Có giao hàng miễn phí không?</h4>
-                  <p className="text-sm text-[#8b6a42]">Miễn phí giao hàng cho đơn hàng từ 100.000đ trở lên.</p>
+                  <h4 className="font-semibold text-[#573e1c] mb-1">{t('contact.faq.freeShipping.question')}</h4>
+                  <p className="text-sm text-[#8b6a42]">{t('contact.faq.freeShipping.answer')}</p>
                 </div>
                 <div className="border-l-4 border-[#573e1c] pl-4">
-                  <h4 className="font-semibold text-[#573e1c] mb-1">Có bán sỉ không?</h4>
-                  <p className="text-sm text-[#8b6a42]">Có, vui lòng liên hệ để được báo giá sỉ tốt nhất.</p>
+                  <h4 className="font-semibold text-[#573e1c] mb-1">{t('contact.faq.wholesale.question')}</h4>
+                  <p className="text-sm text-[#8b6a42]">{t('contact.faq.wholesale.answer')}</p>
                 </div>
                 <div className="border-l-4 border-[#573e1c] pl-4">
-                  <h4 className="font-semibold text-[#573e1c] mb-1">Chính sách đổi trả?</h4>
-                  <p className="text-sm text-[#8b6a42]">Đổi trả trong vòng 7 ngày nếu sản phẩm có lỗi.</p>
+                  <h4 className="font-semibold text-[#573e1c] mb-1">{t('contact.faq.return.question')}</h4>
+                  <p className="text-sm text-[#8b6a42]">{t('contact.faq.return.answer')}</p>
                 </div>
               </CardContent>
             </Card>

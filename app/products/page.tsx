@@ -80,7 +80,7 @@ export default function ProductsPage() {
     <div className="space-y-6">
       {/* Category Filter */}
       <div>
-        <h3 className="font-semibold text-[#573e1c] mb-4 text-lg">Danh mục</h3>
+        <h3 className="font-semibold text-[#573e1c] mb-4 text-lg">{t('product.filter.categories')}</h3>
         <div className="space-y-3">
           {categories.map((category) => (
             <div key={category.id} className="flex items-center space-x-3">
@@ -107,7 +107,7 @@ export default function ProductsPage() {
 
       {/* Price Range */}
       <div>
-        <h3 className="font-semibold text-[#573e1c] mb-4 text-lg">Khoảng giá</h3>
+        <h3 className="font-semibold text-[#573e1c] mb-4 text-lg">{t('product.filter.priceRange')}</h3>
         <div className="space-y-3">
           <div className="flex items-center space-x-3">
             <Checkbox
@@ -122,7 +122,7 @@ export default function ProductsPage() {
               htmlFor="price-under-20k" 
               className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
             >
-              Dưới 20.000đ
+              {t('product.filter.priceUnder')}
             </label>
           </div>
           <div className="flex items-center space-x-3">
@@ -138,7 +138,7 @@ export default function ProductsPage() {
               htmlFor="price-20k-50k" 
               className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
             >
-              20.000đ - 50.000đ
+              {t('product.filter.priceBetween')}
             </label>
           </div>
           <div className="flex items-center space-x-3">
@@ -154,7 +154,7 @@ export default function ProductsPage() {
               htmlFor="price-above-50k" 
               className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
             >
-              Trên 50.000đ
+              {t('product.filter.priceAbove')}
             </label>
           </div>
         </div>
@@ -172,7 +172,7 @@ export default function ProductsPage() {
         }}
         className="w-full border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
       >
-        Xóa bộ lọc
+        {t('product.filter.clear')}
       </Button>
     </div>
   );
@@ -186,7 +186,7 @@ export default function ProductsPage() {
             {t('nav.products')}
           </h1>
           <p className="text-[#8b6a42] text-lg">
-            Khám phá bộ sưu tập bánh tráng và bún phở truyền thống của chúng tôi
+            {t('product.collection.explore')}
           </p>
         </div>
 
@@ -211,13 +211,13 @@ export default function ProductsPage() {
                   {/* Sort Dropdown */}
                   <Select value={sortBy} onValueChange={setSortBy}>
                     <SelectTrigger className="w-48 border-[#8b6a42] h-10">
-                      <SelectValue placeholder="Sắp xếp theo" />
+                      <SelectValue placeholder={t('product.sort.title')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="name">Tên A-Z</SelectItem>
-                      <SelectItem value="price-low">Giá thấp đến cao</SelectItem>
-                      <SelectItem value="price-high">Giá cao đến thấp</SelectItem>
-                      <SelectItem value="rating">Đánh giá cao nhất</SelectItem>
+                      <SelectItem value="name">{t('product.sort.name')}</SelectItem>
+                      <SelectItem value="price-low">{t('product.sort.priceLow')}</SelectItem>
+                      <SelectItem value="price-high">{t('product.sort.priceHigh')}</SelectItem>
+                      <SelectItem value="rating">{t('product.sort.rating')}</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -229,14 +229,14 @@ export default function ProductsPage() {
                         className="lg:hidden border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1] h-10"
                       >
                         <SlidersHorizontal className="w-4 h-4 mr-2" />
-                        Bộ lọc
+                        {t('product.filter.button')}
                       </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="w-80 bg-white">
                       <SheetHeader>
                         <SheetTitle className="text-[#573e1c] flex items-center">
                           <Filter className="w-5 h-5 mr-2" />
-                          Bộ lọc sản phẩm
+                          {t('product.filter.title')}
                         </SheetTitle>
                       </SheetHeader>
                       <div className="mt-6">
@@ -285,7 +285,7 @@ export default function ProductsPage() {
               <CardHeader className="pb-4">
                 <CardTitle className="text-[#573e1c] flex items-center text-xl">
                   <Filter className="w-5 h-5 mr-2" />
-                  Bộ lọc sản phẩm
+                  {t('product.filter.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -298,13 +298,13 @@ export default function ProductsPage() {
           <main className="flex-1 min-w-0">
             <div className="mb-6 flex items-center justify-between">
               <p className="text-[#8b6a42] font-medium">
-                Hiển thị {filteredProducts.length} sản phẩm
+                {t('product.results.count').replace('{count}', filteredProducts.length.toString())}
               </p>
               
               {/* Active Filters Display */}
               {(selectedCategory !== 'all' || searchQuery) && (
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm text-[#8b6a42]">Bộ lọc:</span>
+                  <span className="text-sm text-[#8b6a42]">{t('product.filter.active')}</span>
                   {selectedCategory !== 'all' && (
                     <Button
                       variant="secondary"
@@ -323,7 +323,7 @@ export default function ProductsPage() {
                       onClick={() => setSearchQuery('')}
                       className="h-7 text-xs bg-[#efe1c1] text-[#573e1c] hover:bg-[#d4c5a0]"
                     >
-                      "{searchQuery}"
+                      {searchQuery}
                       <X className="w-3 h-3 ml-1" />
                     </Button>
                   )}
@@ -338,10 +338,10 @@ export default function ProductsPage() {
                     <Filter className="w-8 h-8 text-[#8b6a42]" />
                   </div>
                   <h3 className="text-xl font-semibold text-[#573e1c] mb-2">
-                    Không tìm thấy sản phẩm
+                    {t('product.noResults.title')}
                   </h3>
                   <p className="text-[#8b6a42] mb-6">
-                    Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc
+                    {t('product.noResults.message')}
                   </p>
                   <Button
                     onClick={() => {
@@ -351,7 +351,7 @@ export default function ProductsPage() {
                     }}
                     className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
                   >
-                    Xóa tất cả bộ lọc
+                    {t('product.noResults.clear')}
                   </Button>
                 </CardContent>
               </Card>
