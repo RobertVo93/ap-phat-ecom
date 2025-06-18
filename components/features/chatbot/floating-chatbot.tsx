@@ -42,75 +42,73 @@ export function FloatingChatbot() {
   ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {/* Contact Options Panel */}
-      {isOpen && (
-        <div className="mb-4 animate-in slide-in-from-bottom-2 duration-300">
-          <Card className="bg-white border-[#d4c5a0] shadow-xl">
-            <CardContent className="p-4 space-y-3 min-w-[280px]">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-[#573e1c]">
-                  {t('chatbot.title')}
-                </h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                  className="h-6 w-6 p-0 text-[#8b6a42] hover:text-[#573e1c]"
+      <div className={`absolute bottom-20 right-0 transition-all duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} style={{ minWidth: 280 }}>
+        <Card className="bg-white border-[#d4c5a0] shadow-xl">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-[#573e1c]">
+                {t('chatbot.title')}
+              </h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsOpen(false)}
+                className="h-6 w-6 p-0 text-[#8b6a42] hover:text-[#573e1c]"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <p className="text-sm text-[#8b6a42] mb-4">
+              {t('chatbot.subtitle')}
+            </p>
+            <div className="space-y-2">
+              {contactOptions.map((option, index) => (
+                <a
+                  key={index}
+                  href={option.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center space-x-3 p-3 rounded-lg transition-colors duration-200 ${option.color} ${option.textColor}`}
                 >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              <p className="text-sm text-[#8b6a42] mb-4">
-                {t('chatbot.subtitle')}
+                  <option.icon className="w-5 h-5" />
+                  <span className="font-medium">{option.label}</span>
+                </a>
+              ))}
+            </div>
+            <div className="mt-4 pt-3 border-t border-[#efe1c1]">
+              <p className="text-xs text-[#8b6a42] text-center">
+                {t('chatbot.hours')}
               </p>
-
-              <div className="space-y-2">
-                {contactOptions.map((option, index) => (
-                  <a
-                    key={index}
-                    href={option.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center space-x-3 p-3 rounded-lg transition-colors duration-200 ${option.color} ${option.textColor}`}
-                  >
-                    <option.icon className="w-5 h-5" />
-                    <span className="font-medium">{option.label}</span>
-                  </a>
-                ))}
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-[#efe1c1]">
-                <p className="text-xs text-[#8b6a42] text-center">
-                  {t('chatbot.hours')}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
+            </div>
+          </CardContent>
+        </Card>
+      </div>
       {/* Main Chat Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`h-14 w-14 rounded-full shadow-lg transition-all duration-300 ${
-          isOpen 
-            ? 'bg-[#8b6a42] hover:bg-[#573e1c]' 
-            : 'bg-[#573e1c] hover:bg-[#8b6a42]'
-        } text-[#efe1c1]`}
-      >
-        {isOpen ? (
-          <X className="w-6 h-6" />
-        ) : (
-          <MessageCircle className="w-6 h-6" />
+      <div className="relative">
+        {/* Pulse Animation */}
+        {!isOpen && (
+          <div className="absolute inset-0 rounded-full bg-[#fbbf24] animate-ping opacity-30"></div>
         )}
-      </Button>
-
-      {/* Pulse Animation */}
-      {!isOpen && (
-        <div className="absolute inset-0 rounded-full bg-[#573e1c] animate-ping opacity-20"></div>
-      )}
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`relative h-14 w-14 rounded-full shadow-lg transition-all duration-300 border-4 border-white ${
+            isOpen 
+              ? 'bg-[#fbbf24] hover:bg-[#f59e42]' // Highlighted gold/yellow
+              : 'bg-[#fbbf24] hover:bg-[#f59e42]' // Highlighted gold/yellow
+          } text-[#573e1c]`}
+          style={{
+            boxShadow: '0 4px 24px 0 rgba(251,191,36,0.25), 0 1.5px 6px 0 rgba(87,62,28,0.10)'
+          }}
+        >
+          {isOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <MessageCircle className="w-6 h-6" />
+          )}
+        </Button>
+      </div>
     </div>
   );
 }
