@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Gift, Star, Clock, TrendingUp, TrendingDown, Calendar, Award } from 'lucide-react';
+import { ArrowLeft, Gift, Star, Clock, TrendingUp, TrendingDown, Calendar, Award, Copy, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { useRewards } from '@/lib/contexts/rewards-context';
@@ -16,6 +16,7 @@ export default function RewardsPage() {
   const { language, t } = useLanguage();
   const { user } = useAuth();
   const { loyaltyPoints, vouchers, pointTransactions } = useRewards();
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   if (!user) {
     return null;
@@ -40,6 +41,16 @@ export default function RewardsPage() {
     if (voucher.isUsed) return { text: t('rewards.voucher.used'), color: 'bg-gray-100 text-gray-600' };
     if (new Date(voucher.expiryDate) < new Date()) return { text: t('rewards.voucher.expired'), color: 'bg-red-100 text-red-600' };
     return { text: t('rewards.voucher.available'), color: 'bg-green-100 text-green-600' };
+  };
+
+  const handleCopy = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(null), 2000);
+    } catch (err) {
+      // Optionally handle error
+    }
   };
 
   const availableVouchers = vouchers.filter(v => !v.isUsed && new Date(v.expiryDate) > new Date());
@@ -155,9 +166,23 @@ export default function RewardsPage() {
                             </div>
 
                             <div className="space-y-2 mb-4">
-                              <div className="flex justify-between text-sm">
+                              <div className="flex justify-between text-sm items-center">
                                 <span className="text-[#8b6a42]">{t('rewards.voucher.code')}:</span>
-                                <span className="font-mono font-bold text-[#573e1c]">{voucher.code}</span>
+                                <span className="flex items-center gap-2">
+                                  <span className="font-mono font-bold text-[#573e1c]">{voucher.code}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleCopy(voucher.code)}
+                                    className="p-1 rounded hover:bg-[#efe1c1] focus:outline-none"
+                                    title={copiedCode === voucher.code ? t('common.copied') : t('common.copy')}
+                                  >
+                                    {copiedCode === voucher.code ? (
+                                      <CheckCircle className="w-4 h-4 text-green-500" />
+                                    ) : (
+                                      <Copy className="w-4 h-4 text-[#8b6a42]" />
+                                    )}
+                                  </button>
+                                </span>
                               </div>
                               <div className="flex justify-between text-sm">
                                 <span className="text-[#8b6a42]">{t('rewards.voucher.discount')}:</span>
@@ -221,9 +246,23 @@ export default function RewardsPage() {
                             </div>
 
                             <div className="space-y-2">
-                              <div className="flex justify-between text-sm">
+                              <div className="flex justify-between text-sm items-center">
                                 <span className="text-gray-500">{t('rewards.voucher.code')}:</span>
-                                <span className="font-mono font-bold text-gray-600">{voucher.code}</span>
+                                <span className="flex items-center gap-2">
+                                  <span className="font-mono font-bold text-gray-600">{voucher.code}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleCopy(voucher.code)}
+                                    className="p-1 rounded hover:bg-gray-200 focus:outline-none"
+                                    title={copiedCode === voucher.code ? t('common.copied') : t('common.copy')}
+                                  >
+                                    {copiedCode === voucher.code ? (
+                                      <CheckCircle className="w-4 h-4 text-green-500" />
+                                    ) : (
+                                      <Copy className="w-4 h-4 text-gray-500" />
+                                    )}
+                                  </button>
+                                </span>
                               </div>
                               <div className="flex justify-between text-sm">
                                 <span className="text-gray-500">{t('rewards.voucher.expiry')}:</span>
