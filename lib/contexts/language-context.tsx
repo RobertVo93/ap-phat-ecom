@@ -14,6 +14,8 @@ import { footerTranslations } from "@/locales/footer"
 import { aboutTranslations } from '@/locales/about'
 import { authTranslations } from '@/locales/auth'
 import { orderTranslations } from '@/locales/order'
+import { chatbotTranslations } from '@/locales/chatbot'
+import { rewardsTranslations } from '@/locales/rewards'
 
 type Language = "en" | "vi"
 
@@ -37,6 +39,8 @@ const translations: Translations = {
   ...aboutTranslations,
   ...authTranslations,
   ...orderTranslations,
+  ...chatbotTranslations,
+  ...rewardsTranslations,
 }
 
 interface LanguageContextType {

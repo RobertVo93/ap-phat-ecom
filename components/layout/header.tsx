@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingCart, User, Menu, X, Globe } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Globe, Gift } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
+import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,11 +13,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { getCartItemsCount } = useCart();
+  const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -28,6 +31,10 @@ export function Header() {
     { name: t('nav.about'), href: '/about' },
     { name: t('nav.contact'), href: '/contact' },
   ];
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <header className="bg-[#efe1c1] shadow-md sticky top-0 z-50">
@@ -108,15 +115,32 @@ export function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem asChild>
-                  <Link href="/account">{t('nav.account')}</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/auth/login">{t('nav.login')}</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/auth/register">{t('nav.register')}</Link>
-                </DropdownMenuItem>
+                {user ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/account">{t('nav.account')}</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/account/rewards">
+                        <Gift className="w-4 h-4 mr-2" />
+                        {t('rewards.title')}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      {t('nav.logout')}
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/auth/login">{t('nav.login')}</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/auth/register">{t('nav.register')}</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -161,6 +185,16 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
+            {user && (
+              <Link
+                href="/account/rewards"
+                className="block px-3 py-2 text-[#573e1c] hover:text-[#8b6a42] hover:bg-[#d4c5a0] rounded-md font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Gift className="w-4 h-4 mr-2 inline" />
+                {t('rewards.title')}
+              </Link>
+            )}
           </div>
         </div>
       )}

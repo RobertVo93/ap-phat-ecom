@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, CreditCard, Truck, MapPin, Calendar, Clock, FileText, Copy, CheckCircle, Building, Smartphone } from 'lucide-react';
+import { ArrowLeft, CreditCard, Truck, MapPin, Calendar, Clock, FileText, Copy, CheckCircle, Building, Smartphone, Gift, Star, Minus, Plus } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
+import { useRewards } from '@/lib/contexts/rewards-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,10 +15,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 
 export default function CheckoutPage() {
   const { language, t } = useLanguage();
   const { items, getCartTotal } = useCart();
+  const { loyaltyPoints, vouchers, calculateDiscount, useVoucher, redeemPoints, addPoints } = useRewards();
   
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
@@ -46,6 +49,12 @@ export default function CheckoutPage() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
+  // Rewards state
+  const [voucherCode, setVoucherCode] = useState('');
+  const [pointsToRedeem, setPointsToRedeem] = useState(0);
+  const [appliedVoucher, setAppliedVoucher] = useState<string | null>(null);
+  const [voucherError, setVoucherError] = useState('');
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -56,7 +65,45 @@ export default function CheckoutPage() {
   const subtotal = getCartTotal();
   const tax = subtotal * 0.1;
   const shipping = subtotal > 100000 ? 0 : 25000;
-  const total = subtotal + tax + shipping;
+  
+  // Calculate discounts
+  const discountCalculation = calculateDiscount(subtotal, appliedVoucher || undefined, pointsToRedeem);
+  const total = subtotal + tax + shipping - discountCalculation.totalDiscount;
+
+  const handleApplyVoucher = () => {
+    setVoucherError('');
+    
+    if (!voucherCode.trim()) {
+      setVoucherError(t('checkout.voucher.enterCode'));
+      return;
+    }
+
+    const voucher = vouchers.find(v => 
+      v.code.toUpperCase() === voucherCode.toUpperCase() && 
+      !v.isUsed && 
+      v.isActive && 
+      subtotal >= v.minOrderAmount &&
+      new Date(v.expiryDate) > new Date()
+    );
+
+    if (!voucher) {
+      setVoucherError(t('checkout.voucher.invalid'));
+      return;
+    }
+
+    setAppliedVoucher(voucherCode.toUpperCase());
+    setVoucherCode('');
+  };
+
+  const handleRemoveVoucher = () => {
+    setAppliedVoucher(null);
+    setVoucherError('');
+  };
+
+  const handlePointsChange = (change: number) => {
+    const newPoints = Math.max(0, Math.min(loyaltyPoints, pointsToRedeem + change));
+    setPointsToRedeem(newPoints);
+  };
 
   const handlePlaceOrder = () => {
     if (!agreeTerms) {
@@ -64,7 +111,23 @@ export default function CheckoutPage() {
       return;
     }
     
-    // Here you would typically send the order to your backend
+    // Use voucher if applied
+    if (appliedVoucher) {
+      const voucher = vouchers.find(v => v.code === appliedVoucher);
+      if (voucher) {
+        useVoucher(voucher.id);
+      }
+    }
+
+    // Redeem points if used
+    if (pointsToRedeem > 0) {
+      redeemPoints(pointsToRedeem, `Sử dụng điểm cho đơn hàng`);
+    }
+
+    // Add points for this order (5% of subtotal)
+    const orderId = `ORD-${Date.now()}`;
+    addPoints(subtotal, orderId);
+    
     alert(t('checkout.successAlert'));
   };
 
@@ -589,6 +652,104 @@ export default function CheckoutPage() {
 
                 <Separator />
 
+                {/* Voucher Section */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-[#573e1c] flex items-center">
+                    <Gift className="w-4 h-4 mr-2" />
+                    {t('checkout.voucher.title')}
+                  </h4>
+                  
+                  {!appliedVoucher ? (
+                    <div className="space-y-2">
+                      <div className="flex space-x-2">
+                        <Input
+                          value={voucherCode}
+                          onChange={(e) => setVoucherCode(e.target.value)}
+                          placeholder={t('checkout.voucher.placeholder')}
+                          className="border-[#8b6a42] focus:border-[#573e1c]"
+                        />
+                        <Button
+                          onClick={handleApplyVoucher}
+                          variant="outline"
+                          className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
+                        >
+                          {t('checkout.voucher.apply')}
+                        </Button>
+                      </div>
+                      {voucherError && (
+                        <p className="text-sm text-red-600">{voucherError}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-green-800">{appliedVoucher}</p>
+                          <p className="text-sm text-green-600">
+                            -{formatPrice(discountCalculation.voucherDiscount)}
+                          </p>
+                        </div>
+                        <Button
+                          onClick={handleRemoveVoucher}
+                          variant="ghost"
+                          size="sm"
+                          className="text-green-600 hover:text-green-800"
+                        >
+                          ×
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Loyalty Points Section */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-[#573e1c] flex items-center">
+                    <Star className="w-4 h-4 mr-2" />
+                    {t('checkout.points.title')}
+                  </h4>
+                  
+                  <div className="text-sm text-[#8b6a42]">
+                    {t('checkout.points.available')}: {loyaltyPoints.toLocaleString()} {t('checkout.points.unit')}
+                  </div>
+                  
+                  {loyaltyPoints > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePointsChange(-100)}
+                          disabled={pointsToRedeem <= 0}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </Button>
+                        <div className="flex-1 text-center">
+                          <span className="font-medium">{pointsToRedeem.toLocaleString()}</span>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePointsChange(100)}
+                          disabled={pointsToRedeem >= loyaltyPoints}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </Button>
+                      </div>
+                      
+                      {pointsToRedeem > 0 && (
+                        <div className="p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+                          {t('checkout.points.discount')}: -{formatPrice(discountCalculation.pointsDiscount)}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <Separator />
+
                 {/* Price Breakdown */}
                 <div className="space-y-3">
                   <div className="flex justify-between">
@@ -597,6 +758,24 @@ export default function CheckoutPage() {
                       {formatPrice(subtotal)}
                     </span>
                   </div>
+                  
+                  {discountCalculation.voucherDiscount > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-green-600">{t('checkout.voucher.discount')}</span>
+                      <span className="font-semibold text-green-600">
+                        -{formatPrice(discountCalculation.voucherDiscount)}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {discountCalculation.pointsDiscount > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-blue-600">{t('checkout.points.discount')}</span>
+                      <span className="font-semibold text-blue-600">
+                        -{formatPrice(discountCalculation.pointsDiscount)}
+                      </span>
+                    </div>
+                  )}
                   
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('cart.tax')} (10%)</span>
@@ -618,6 +797,16 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-lg font-bold">
                   <span className="text-[#573e1c]">{t('cart.total')}</span>
                   <span className="text-[#573e1c]">{formatPrice(total)}</span>
+                </div>
+
+                {/* Points to Earn */}
+                <div className="p-3 bg-[#efe1c1] rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <Star className="w-4 h-4 text-[#573e1c]" />
+                    <span className="text-sm text-[#573e1c]">
+                      {t('checkout.points.earn')}: +{Math.floor(subtotal * 0.05).toLocaleString()} {t('checkout.points.unit')}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Terms and Conditions */}

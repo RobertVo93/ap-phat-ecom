@@ -3,9 +3,11 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { FloatingChatbot } from '@/components/features/chatbot/floating-chatbot';
 import { LanguageProvider } from '@/lib/contexts/language-context';
 import { CartProvider } from '@/lib/contexts/cart-context';
 import { AuthProvider } from '@/lib/contexts/auth-context';
+import { RewardsProvider } from '@/lib/contexts/rewards-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,15 +29,18 @@ export default function RootLayout({
       <body className={inter.className}>
         <LanguageProvider>
           <AuthProvider>
-            <CartProvider>
-              <div className="min-h-screen flex flex-col">
-                <Header />
-                <main className="flex-1">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-            </CartProvider>
+            <RewardsProvider>
+              <CartProvider>
+                <div className="min-h-screen flex flex-col">
+                  <Header />
+                  <main className="flex-1">
+                    {children}
+                  </main>
+                  <Footer />
+                  <FloatingChatbot />
+                </div>
+              </CartProvider>
+            </RewardsProvider>
           </AuthProvider>
         </LanguageProvider>
       </body>
