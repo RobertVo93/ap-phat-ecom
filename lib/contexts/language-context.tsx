@@ -16,6 +16,7 @@ import { authTranslations } from '@/locales/auth'
 import { orderTranslations } from '@/locales/order'
 import { chatbotTranslations } from '@/locales/chatbot'
 import { rewardsTranslations } from '@/locales/rewards'
+import { batchTranslations } from '@/locales/batch'
 
 type Language = "en" | "vi"
 
@@ -41,6 +42,7 @@ const translations: Translations = {
   ...orderTranslations,
   ...chatbotTranslations,
   ...rewardsTranslations,
+  ...batchTranslations,
 }
 
 interface LanguageContextType {
