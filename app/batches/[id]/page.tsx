@@ -11,19 +11,21 @@ export async function generateStaticParams() {
   ];
 }
 
-export default function BatchDetailPage({ params }: { params: { id: string } }) {
+export default async function BatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   // In a real application, you might want to validate the batch ID format here
-  if (!params.id || !params.id.match(/^BT-\d{8}-\d{3}$/)) {
+  if (!id || !id.match(/^BT-\d{8}-\d{3}$/)) {
     notFound();
   }
 
-  return <BatchDetailClient batchId={params.id} />;
+  return <BatchDetailClient batchId={id} />;
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   // In a real application, you would fetch batch details for metadata
   return {
-    title: `Batch ${params.id} - Rice Paper Traceability`,
-    description: `Complete traceability information for rice paper batch ${params.id}`,
+    title: `Batch ${id} - Rice Paper Traceability`,
+    description: `Complete traceability information for rice paper batch ${id}`,
   };
 }
