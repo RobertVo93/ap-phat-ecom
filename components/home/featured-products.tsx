@@ -4,15 +4,16 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { mockProducts } from '@/lib/mock-data/products';
 import { ProductCard } from '@/components/product/product-card';
 import { Button } from '@/components/ui/button';
+import { IProduct } from '@/types';
 
-export function FeaturedProducts() {
+interface Props {
+  featuredProducts: IProduct[]
+}
+
+export function FeaturedProducts({featuredProducts}: Props) {
   const { t } = useLanguage();
-  
-  // Get first 4 products as featured
-  const featuredProducts = mockProducts.slice(0, 4);
 
   return (
     <section className="py-16 bg-[#f8f5f0]">
@@ -39,7 +40,7 @@ export function FeaturedProducts() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           {featuredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
