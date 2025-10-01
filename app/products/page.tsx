@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import { Filter, Grid, List, SlidersHorizontal, X } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { mockProducts } from '@/lib/mock-data/products';
 import { ProductCard } from '@/components/product/product-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { IProduct } from '@/types';
 
 export default function ProductsPage() {
   const { language, t } = useLanguage();
@@ -21,6 +21,7 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState('name');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
+  const [products, setProducts] = useState<IProduct[]>([])
 
   const categories = [
     { id: 'all', nameVi: 'Tất cả', nameEn: 'All Categories' },
@@ -30,50 +31,46 @@ export default function ProductsPage() {
   ];
 
   const filteredProducts = useMemo(() => {
-    let filtered = mockProducts;
+    let filtered = products;
 
     // Search filter
     if (searchQuery) {
       filtered = filtered.filter(product => {
-        const name = language === 'vi' ? product.name : product.nameEn;
-        const description = language === 'vi' ? product.description : product.descriptionEn;
-        return name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               description.toLowerCase().includes(searchQuery.toLowerCase());
+        return product.name!.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               product.description!.toLowerCase().includes(searchQuery.toLowerCase());
       });
     }
 
     // Category filter
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(product => {
-        const categoryId = product.category.toLowerCase().replace(' ', '-');
+        const categoryId = product.sku!.toLowerCase().replace(' ', '-');
         return categoryId.includes(selectedCategory) || selectedCategory.includes(categoryId);
       });
     }
 
     // Price filter
     filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
+      product.price! >= priceRange[0] && product.price! <= priceRange[1]
     );
 
     // Sort
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price-low':
-          return a.price - b.price;
+          return a.price! - b.price!;
         case 'price-high':
-          return b.price - a.price;
-        case 'rating':
-          return b.rating - a.rating;
+          return b.price! - a.price!;
         case 'name':
         default:
-          const aName = language === 'vi' ? a.name : a.nameEn;
-          const bName = language === 'vi' ? b.name : b.nameEn;
-          return aName.localeCompare(bName);
+          const aName = a.name
+          const bName = b.name
+          return aName!.localeCompare(bName!);
       }
     });
 
     return filtered;
-  }, [mockProducts, searchQuery, selectedCategory, priceRange, sortBy, language]);
+  }, [products, searchQuery, selectedCategory, priceRange, sortBy, language]);
 
   // Filter Component
   const FilterContent = () => (

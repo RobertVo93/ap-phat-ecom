@@ -15,7 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 
 export default function CheckoutPage() {
   const { language, t } = useLanguage();
@@ -624,26 +623,25 @@ export default function CheckoutPage() {
                 {/* Order Items */}
                 <div className="space-y-3 max-h-60 overflow-y-auto">
                   {items.map((item) => {
-                    const itemPrice = item.selectedVariant?.price || item.product.price;
-                    const productName = language === 'vi' ? item.product.name : item.product.nameEn;
+                    const itemPrice = item.product?.price || 0
                     
                     return (
                       <div key={item.id} className="flex items-center space-x-3">
                         <img
-                          src={item.product.images[0]}
-                          alt={productName}
+                          src={item.product?.image}
+                          alt={item.product?.name}
                           className="w-12 h-12 object-cover rounded"
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-[#573e1c] truncate">
-                            {productName}
+                            {item.product?.name}
                           </p>
                           <p className="text-xs text-[#8b6a42]">
                             {formatPrice(itemPrice)} x {item.quantity}
                           </p>
                         </div>
                         <div className="text-sm font-semibold text-[#573e1c]">
-                          {formatPrice(itemPrice * item.quantity)}
+                          {formatPrice(itemPrice * item.quantity!)}
                         </div>
                       </div>
                     );
