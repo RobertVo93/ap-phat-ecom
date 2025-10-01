@@ -1,57 +1,57 @@
-export interface Product {
-  id: string;
-  name: string;
-  nameEn: string;
-  description: string;
-  descriptionEn: string;
-  price: number;
-  originalPrice?: number;
-  discount?: number;
-  images: string[];
-  category: string;
-  categoryEn: string;
-  variants: ProductVariant[];
-  reviews: Review[];
-  rating: number;
-  reviewCount: number;
-  inStock: boolean;
-  features: string[];
-  featuresEn: string[];
-}
+// export interface Product {
+//   id: string;
+//   name: string;
+//   nameEn: string;
+//   description: string;
+//   descriptionEn: string;
+//   price: number;
+//   originalPrice?: number;
+//   discount?: number;
+//   images: string[];
+//   category: string;
+//   categoryEn: string;
+//   variants: ProductVariant[];
+//   reviews: Review[];
+//   rating: number;
+//   reviewCount: number;
+//   inStock: boolean;
+//   features: string[];
+//   featuresEn: string[];
+// }
 
-export interface ProductVariant {
-  id: string;
-  name: string;
-  nameEn: string;
-  price?: number;
-  inStock: boolean;
-  options: VariantOption[];
-}
+// export interface ProductVariant {
+//   id: string;
+//   name: string;
+//   nameEn: string;
+//   price?: number;
+//   inStock: boolean;
+//   options: VariantOption[];
+// }
 
-export interface VariantOption {
-  type: 'size' | 'weight' | 'quantity';
-  value: string;
-  valueEn: string;
-  priceModifier?: number;
-}
+// export interface VariantOption {
+//   type: 'size' | 'weight' | 'quantity';
+//   value: string;
+//   valueEn: string;
+//   priceModifier?: number;
+// }
 
-export interface Review {
-  id: string;
-  customerName: string;
-  rating: number;
-  comment: string;
-  date: string;
-  verified: boolean;
-}
+// export interface Review {
+//   id: string;
+//   customerName: string;
+//   rating: number;
+//   comment: string;
+//   date: string;
+//   verified: boolean;
+// }
 
-export interface CartItem {
-  id: string;
-  productId: string;
-  product: Product;
-  quantity: number;
-  selectedVariant?: ProductVariant;
-  selectedOptions: Record<string, string>;
-}
+// export interface CartItem {
+//   id: string;
+//   productId: string;
+//   product: Product;
+//   quantity: number;
+//   selectedVariant?: ProductVariant;
+//   selectedOptions: Record<string, string>;
+// }
 
 export interface Customer {
   id: string;
@@ -77,49 +77,36 @@ export interface Address {
   isDefault: boolean;
 }
 
-export interface OrderTimelineStep {
-  status: string;
-  title: string;
-  description: string;
-  timestamp: string | null;
-  completed: boolean;
-  current?: boolean;
-}
+// export interface Order {
+//   id: string;
+//   customerId: string;
+//   items: CartItem[];
+//   subtotal: number;
+//   tax: number;
+//   shipping: number;
+//   total: number;
+//   status: 'pending' | 'confirmed' | 'preparing' | 'shipping' | 'delivered' | 'cancelled';
+//   deliveryAddress: Address;
+//   deliveryDate?: string;
+//   deliveryTime?: string;
+//   notes?: string;
+//   paymentMethod: string;
+//   createdAt: string;
+//   updatedAt: string;
+// }
 
-export interface Order {
-  id: string;
-  orderNumber?: string;
-  customerId: string;
-  items: CartItem[];
-  subtotal: number;
-  tax: number;
-  shipping: number;
-  total: number;
-  status: 'pending' | 'confirmed' | 'preparing' | 'shipping' | 'delivered' | 'cancelled';
-  deliveryAddress: Address;
-  deliveryDate?: string;
-  deliveryTime?: string;
-  notes?: string;
-  paymentMethod: string;
-  createdAt: string;
-  updatedAt: string;
-  timeline?: OrderTimelineStep[];
-  carrier?: string;
-  trackingNumber?: string;
-}
-
-export interface StoreLocation {
-  id: string;
-  name: string;
-  nameEn: string;
-  address: string;
-  addressEn: string;
-  phone: string;
-  email: string;
-  hours: string;
-  hoursEn: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-}
+// export interface StoreLocation {
+//   id: string;
+//   name: string;
+//   nameEn: string;
+//   address: string;
+//   addressEn: string;
+//   phone: string;
+//   email: string;
+//   hours: string;
+//   hoursEn: string;
+//   coordinates: {
+//     lat: number;
+//     lng: number;
+//   };
+// }
