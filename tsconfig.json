@@ -16,6 +16,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "types": ["node", "d3-path"],
     "plugins": [
       {
         "name": "next"

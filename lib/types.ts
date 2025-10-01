@@ -95,18 +95,18 @@ export interface Address {
 //   updatedAt: string;
 // }
 
-// export interface StoreLocation {
-//   id: string;
-//   name: string;
-//   nameEn: string;
-//   address: string;
-//   addressEn: string;
-//   phone: string;
-//   email: string;
-//   hours: string;
-//   hoursEn: string;
-//   coordinates: {
-//     lat: number;
-//     lng: number;
-//   };
-// }
+export interface StoreLocation {
+  id: string;
+  name: string;
+  nameEn: string;
+  address: string;
+  addressEn: string;
+  phone: string;
+  email: string;
+  hours: string;
+  hoursEn: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+}

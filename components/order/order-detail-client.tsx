@@ -4,14 +4,10 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { 
   ArrowLeft, 
-  Package, 
-  Truck, 
-  CheckCircle, 
-  Clock, 
+  Package,
   MapPin, 
   Phone, 
-  Mail, 
-  Copy, 
+  Mail,
   Download,
   MessageCircle,
   Star,
@@ -23,16 +19,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-// import { Progress } from '@/components/ui/progress';
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Order } from '@/lib/types';
+import { IOrder, OrderStatus } from '@/types';
 import Image from 'next/image';
+import { formatDate } from '@/lib/utils.date';
+import { getOrderStatusColor } from '@/lib/utils.style';
+import { formatCurrencyVND } from '@/lib/utils.currency';
 
 interface OrderDetailClientProps {
-  order: Order;
+  order: IOrder;
 }
 
 export function OrderDetailClient({ order }: OrderDetailClientProps) {
@@ -40,34 +37,6 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [reviewText, setReviewText] = useState('');
   const [rating, setRating] = useState(0);
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'confirmed': return 'bg-blue-100 text-blue-800';
-      case 'preparing': return 'bg-yellow-100 text-yellow-800';
-      case 'shipping': return 'bg-purple-100 text-purple-800';
-      case 'delivered': return 'bg-green-100 text-green-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
 
   const getStatusText = (status: string) => {
     return t(`order.status.${status}`);
@@ -130,18 +99,18 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-                {t('order.detail.title')} #{order.orderNumber}
+                {t('order.detail.title')} #{order.number}
               </h1>
               <p className="text-[#8b6a42] mt-2">
-                {t('order.detail.placedOn')} {formatDate(order.createdAt)}
+                {t('order.detail.placedOn')} {formatDate(order.createdAt!)}
               </p>
             </div>
             
             <div className="flex items-center space-x-3">
-              <Badge className={getStatusColor(order.status)}>
-                {getStatusText(order.status)}
+              <Badge className={getOrderStatusColor(order.status!)}>
+                {getStatusText(order.status!)}
               </Badge>
-              {order.status === 'shipping' && (
+              {order.status === OrderStatus.shipped && (
                 <Badge variant="outline" className="border-blue-500 text-blue-600">
                   {t('order.detail.estimatedDelivery')}: {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString('vi-VN') : ''}
                 </Badge>
@@ -162,17 +131,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-[#8b6a42]">Tiến độ</span>
-                    <span className="text-[#573e1c] font-medium">
-                      {Math.round(getProgressPercentage)}%
-                    </span>
-                  </div>
-                  <Progress value={0} className="h-2" />
-                </div> */}
-
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   {order.timeline?.map((step, index) => (
                     <div key={index} className="flex items-start space-x-4">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
@@ -203,10 +162,10 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                       </div>
                     </div>
                   ))}
-                </div>
+                </div> */}
 
                 {/* Tracking Information */}
-                {order.status === 'shipping' && (
+                {/* {order.status === 'shipping' && (
                   <div className="mt-6 p-4 bg-[#f8f5f0] rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-semibold text-[#573e1c] flex items-center">
@@ -247,7 +206,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                       {t('order.detail.trackPackage')}
                     </Button>
                   </div>
-                )}
+                )} */}
               </CardContent>
             </Card>
 
@@ -258,24 +217,23 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {order.items.map((item, index) => (
+                  {order.items?.map((item, index) => (
                     <div key={index} className="flex items-start space-x-4 p-4 border border-[#efe1c1] rounded-lg">
                       <Image
-                        src={item.product.images[0]}
-                        alt={item.product.name}
+                        src={item.name!}
+                        alt={item.name!}
                         width={64}
                         height={64}
                         className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
                       />
                       <div className="flex-1">
-                        <h4 className="font-semibold text-[#573e1c]">{item.product.name}</h4>
-                        <p className="text-sm text-[#8b6a42] mt-1">{item.selectedVariant?.name}</p>
+                        <h4 className="font-semibold text-[#573e1c]">{item.name}</h4>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-sm text-[#8b6a42]">
                             {t('cart.quantity')}: {item.quantity}
                           </span>
                           <span className="font-semibold text-[#573e1c]">
-                            {formatPrice(item.product.price * item.quantity)}
+                            {formatCurrencyVND(item.totalCost!)}
                           </span>
                         </div>
                       </div>
@@ -316,7 +274,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                     {t('order.detail.contactSupport')}
                   </Button>
 
-                  {order.status === 'confirmed' && (
+                  {order.status === OrderStatus.pending && (
                     <Button
                       variant="outline"
                       onClick={handleCancelOrder}
@@ -405,19 +363,19 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('cart.subtotal')}</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {formatPrice(order.subtotal)}
+                      {formatCurrencyVND(order.totalAmount!)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('cart.tax')}</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {formatPrice(order.tax)}
+                      {formatCurrencyVND(order.tax!)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('cart.shipping')}</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {order.shipping === 0 ? t('cart.free') : formatPrice(order.shipping)}
+                      {formatCurrencyVND(order.shippingFee!)}
                     </span>
                   </div>
                 </div>
@@ -426,7 +384,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
 
                 <div className="flex justify-between text-lg font-bold">
                   <span className="text-[#573e1c]">{t('cart.total')}</span>
-                  <span className="text-[#573e1c]">{formatPrice(order.total)}</span>
+                  <span className="text-[#573e1c]">{formatCurrencyVND(order.totalAmount!)}</span>
                 </div>
 
                 <div className="text-sm text-[#8b6a42]">
@@ -451,11 +409,11 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                   <div className="space-y-1 text-sm">
                     <div className="flex items-center space-x-2">
                       <span className="text-[#8b6a42]">{t('order.detail.name')}:</span>
-                      <span className="font-medium text-[#573e1c]">{order.deliveryAddress.name}</span>
+                      <span className="font-medium text-[#573e1c]">{order.shippingAddress}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Phone className="w-3 h-3 text-[#8b6a42]" />
-                      <span className="text-[#573e1c]">{order.deliveryAddress.phone}</span>
+                      <span className="text-[#573e1c]">{order.customer?.phone}</span>
                     </div>
                   </div>
                 </div>
@@ -465,9 +423,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 <div>
                   <h4 className="font-semibold text-[#573e1c] mb-2">{t('order.detail.address')}</h4>
                   <p className="text-sm text-[#8b6a42] leading-relaxed">
-                    {order.deliveryAddress.street}<br />
-                    {order.deliveryAddress.ward}, {order.deliveryAddress.district}<br />
-                    {order.deliveryAddress.city}
+                    {order.shippingAddress}
                   </p>
                 </div>
 
