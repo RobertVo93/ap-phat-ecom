@@ -8,7 +8,6 @@ import { useCart } from '@/lib/contexts/cart-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 
 export default function CartPage() {
   const { language, t } = useLanguage();
@@ -77,45 +76,36 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => {
-              const itemPrice = item.selectedVariant?.price || item.product.price;
-              const productName = language === 'vi' ? item.product.name : item.product.nameEn;
-              const variantName = item.selectedVariant 
-                ? (language === 'vi' ? item.selectedVariant.name : item.selectedVariant.nameEn)
-                : null;
+            {items.map((item, index) => {
+              const itemPrice = item.product?.price!;
 
               return (
-                <Card key={item.id} className="bg-white border-[#d4c5a0]">
+                <Card key={index} className="bg-white border-[#d4c5a0]">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
                       <div className="flex-shrink-0">
                         <img
-                          src={item.product.images[0]}
-                          alt={productName}
+                          src={item.product?.image}
+                          alt={item.product?.name}
                           className="w-20 h-20 object-cover rounded-lg"
                         />
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between">
                           <div className="space-y-1">
                             <h3 className="font-semibold text-[#573e1c] text-lg">
-                              {productName}
+                              {item.product?.name}
                             </h3>
-                            {variantName && (
-                              <Badge variant="secondary" className="bg-[#efe1c1] text-[#573e1c]">
-                                {variantName}
-                              </Badge>
-                            )}
                             <p className="text-sm text-[#8b6a42]">
-                              {language === 'vi' ? item.product.category : item.product.categoryEn}
+                              {item.product?.description}
                             </p>
                           </div>
-                          
+
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => removeFromCart(item.id!)}
                             className="text-red-500 hover:text-red-700 hover:bg-red-50"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -127,7 +117,7 @@ export default function CartPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              onClick={() => updateQuantity(item.id!, item.quantity! - 1)}
                               className="text-[#573e1c] hover:bg-[#efe1c1]"
                             >
                               <Minus className="w-4 h-4" />
@@ -138,16 +128,16 @@ export default function CartPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              onClick={() => updateQuantity(item.id!, item.quantity! + 1)}
                               className="text-[#573e1c] hover:bg-[#efe1c1]"
                             >
                               <Plus className="w-4 h-4" />
                             </Button>
                           </div>
-                          
+
                           <div className="text-right">
                             <div className="font-bold text-[#573e1c] text-lg">
-                              {formatPrice(itemPrice * item.quantity)}
+                              {formatPrice(itemPrice * item.quantity!)}
                             </div>
                             <div className="text-sm text-[#8b6a42]">
                               {formatPrice(itemPrice)} x {item.quantity}
@@ -176,27 +166,27 @@ export default function CartPage() {
                       {formatPrice(subtotal)}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('cart.tax')} (10%)</span>
                     <span className="font-semibold text-[#573e1c]">
                       {formatPrice(tax)}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('cart.shipping')}</span>
                     <span className="font-semibold text-[#573e1c]">
                       {shipping === 0 ? t('cart.shipping.free') : formatPrice(shipping)}
                     </span>
                   </div>
-                  
+
                   {shipping === 0 && (
                     <div className="text-sm text-green-600 bg-green-50 p-2 rounded">
                       {t('cart.shipping.free.message')}
                     </div>
                   )}
-                  
+
                   {subtotal < 100000 && (
                     <div className="text-sm text-[#8b6a42] bg-[#efe1c1] p-2 rounded">
                       {t('cart.shipping.free.threshold').replace('{amount}', formatPrice(100000 - subtotal))}
