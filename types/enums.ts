@@ -16,3 +16,41 @@ export enum ProductUnit {
   piece = "piece",
   other = "other"
 }
+
+export enum OrderStatus {
+  pending = "pending",
+  processing = "processing",
+  shipped = "shipped",
+  delivered = "delivered",
+  completed = "completed",
+  cancelled = "cancelled",
+  lackProduct = "lackProduct"
+}
+
+export enum PaymentStatus {
+  pending = "pending",
+  paid = "paid",
+  partial = "partial",
+  failed = "failed",
+  refunded = "refunded"
+}
+
+export enum PaymentMethod {
+  creditCard = "creditCard",
+  debitCard = "debitCard",
+  bankTransfer = "bankTransfer",
+  cash = "cash",
+  paypal = "paypal"
+}
+
+export enum CustomerStatus {
+  active = "active",
+  inactive = "inactive",
+  pending = "pending"
+}
+
+export enum CustomerType {
+  vip = "vip",
+  premium = "premium",
+  regular = "regular"
+}

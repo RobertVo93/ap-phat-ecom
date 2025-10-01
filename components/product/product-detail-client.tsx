@@ -1,21 +1,18 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Star, ShoppingCart, Heart, Share2, Minus, Plus, Truck, Shield, RotateCcw, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShoppingCart, Heart, Share2, Minus, Plus, Truck, Shield, RotateCcw, ZoomIn} from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
-import { Product } from '@/lib/types';
+import { IProduct, ProductStatus } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { formatCurrencyVND } from '@/lib/utils.currency';
 
 interface ProductDetailClientProps {
-  product: Product;
+  product: IProduct;
 }
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
@@ -27,36 +24,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
-
   const handleAddToCart = () => {
-    // If product has 0 variants, add directly to cart
-    if (product.variants.length === 0) {
-      addToCart(product, quantity);
-      return;
-    }
-
-    // If product has 1 variant, auto-select it and add to cart
-    if (product.variants.length === 1) {
-      const variant = product.variants[0];
-      addToCart(product, quantity, variant);
-      return;
-    }
-
-    // If product has multiple variants, require selection
-    if (product.variants.length > 1 && !selectedVariant) {
-      // Don't add to cart, user must select variant first
-      return;
-    }
-
-    // Add to cart with selected variant
-    const variant = product.variants.find(v => v.id === selectedVariant);
-    addToCart(product, quantity, variant);
+    addToCart(product, quantity);
   };
 
   const handleImageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -67,45 +36,25 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   };
 
   const nextImage = () => {
-    setSelectedImageIndex((prev) => 
-      prev === product.images.length - 1 ? 0 : prev + 1
-    );
+    setSelectedImageIndex(0);
   };
 
   const prevImage = () => {
-    setSelectedImageIndex((prev) => 
-      prev === 0 ? product.images.length - 1 : prev - 1
-    );
+    setSelectedImageIndex(0);
   };
 
-  const productName = language === 'vi' ? product.name : product.nameEn;
-  const productDescription = language === 'vi' ? product.description : product.descriptionEn;
-  const productFeatures = language === 'vi' ? product.features : product.featuresEn;
-
-  const currentPrice = selectedVariant 
-    ? product.variants.find(v => v.id === selectedVariant)?.price || product.price
-    : product.price;
+  const currentPrice = product.price;
 
   // Determine if Add to Cart button should be disabled
-  const isAddToCartDisabled = !product.inStock || 
-    (product.variants.length > 1 && !selectedVariant);
+  const isAddToCartDisabled = product.stock! < product.minStock!
 
   // Get button text based on state
   const getAddToCartButtonText = () => {
-    if (!product.inStock) {
+    if (product.status === ProductStatus.outOfStock) {
       return t('product.outOfStock');
-    }
-    if (product.variants.length > 1 && !selectedVariant) {
-      return t('product.selectVariantRequired');
     }
     return t('product.addToCart');
   };
-
-  useEffect(() => {
-    if (product.variants.length === 1) {
-      setSelectedVariant(product.variants[0].id);
-    }
-  }, [product.variants]);
 
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
@@ -121,8 +70,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 onMouseLeave={() => setIsZoomed(false)}
               >
                 <img
-                  src={product.images[selectedImageIndex]}
-                  alt={productName}
+                  src={product.image}
+                  alt={product.name}
                   className={`w-full h-full object-cover transition-transform duration-300 ${
                     isZoomed ? 'scale-150' : 'scale-100'
                   }`}
@@ -139,33 +88,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                   <ZoomIn className="w-4 h-4" />
                 </div>
-
-                {/* Navigation Arrows */}
-                {product.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-opacity-70"
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-opacity-70"
-                    >
-                      <ChevronRight className="w-5 h-5" />
-                    </button>
-                  </>
-                )}
               </div>
-
-              {/* Discount Badge */}
-              {product.discount && (
-                <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  -{product.discount}%
-                </div>
-              )}
-
               {/* Full Screen Zoom Dialog */}
               <Dialog>
                 <DialogTrigger asChild>
@@ -176,8 +99,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <DialogContent className="max-w-4xl w-full h-[80vh] p-0">
                   <div className="relative w-full h-full">
                     <img
-                      src={product.images[selectedImageIndex]}
-                      alt={productName}
+                      src={product.image}
+                      alt={product.name}
                       className="w-full h-full object-contain"
                     />
                   </div>
@@ -186,7 +109,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </div>
             
             {/* Thumbnail Images */}
-            {product.images.length > 1 && (
+            {/* {product.images.length > 1 && (
               <div className="flex space-x-2 overflow-x-auto pb-2">
                 {product.images.map((image, index) => (
                   <button
@@ -206,63 +129,36 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   </button>
                 ))}
               </div>
-            )}
+            )} */}
 
             {/* Image Counter */}
-            {product.images.length > 1 && (
+            {/* {product.images.length > 1 && (
               <div className="text-center text-sm text-[#8b6a42]">
                 {selectedImageIndex + 1} / {product.images.length}
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Product Info */}
           <div className="space-y-6">
             <div>
               <p className="text-sm text-[#8b6a42] font-medium uppercase tracking-wide mb-2">
-                {language === 'vi' ? product.category : product.categoryEn}
+                {product.sku}
               </p>
               <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c] mb-4">
-                {productName}
+                {product.name}
               </h1>
               
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-5 h-5 ${
-                        i < Math.floor(product.rating)
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                  <span className="ml-2 text-[#8b6a42] font-medium">
-                    {product.rating} ({product.reviewCount} {t('product.reviews')})
-                  </span>
-                </div>
-              </div>
 
               <div className="flex items-center space-x-4 mb-6">
                 <span className="text-3xl font-bold text-[#573e1c]">
-                  {formatPrice(currentPrice)}
+                  {formatCurrencyVND(product.price!)}
                 </span>
-                {product.originalPrice && (
-                  <span className="text-xl text-gray-500 line-through">
-                    {formatPrice(product.originalPrice)}
-                  </span>
-                )}
-                {product.discount && (
-                  <Badge variant="destructive" className="bg-red-500">
-                    -{product.discount}%
-                  </Badge>
-                )}
               </div>
 
               {/* Stock Status */}
               <div className="mb-6">
-                {product.inStock ? (
+                {product.status !== ProductStatus.outOfStock ? (
                   <div className="flex items-center text-green-600">
                     <div className="w-2 h-2 bg-green-600 rounded-full mr-2"></div>
                     <span className="font-medium">{t('product.inStock')}</span>
@@ -274,46 +170,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   </div>
                 )}
               </div>
-            </div>
-
-            {/* Variants - Only show if more than 1 variant */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-[#573e1c]">{t('product.variants')} *</h3>
-              <Select value={selectedVariant} onValueChange={setSelectedVariant}>
-                <SelectTrigger className="border-[#8b6a42]">
-                  <SelectValue placeholder={t('product.selectVariantPlaceholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {product.variants.map((variant) => (
-                    <SelectItem key={variant.id} value={variant.id}>
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex flex-col">
-                          <span className="font-medium">
-                            {language === 'vi' ? variant.name : variant.nameEn}
-                          </span>
-                          <div className="flex space-x-2 text-xs text-[#8b6a42]">
-                            {variant.options.map((option, index) => (
-                              <span key={index}>
-                                {language === 'vi' ? option.value : option.valueEn}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        {variant.price && (
-                          <span className="ml-4 font-semibold text-[#573e1c]">
-                            {formatPrice(variant.price)}
-                          </span>
-                        )}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {product.variants.length > 1 && !selectedVariant && (
-                <p className="text-sm text-red-600">
-                  * {t('product.selectVariantRequired')}
-                </p>
-              )}
             </div>
 
             {/* Quantity and Add to Cart */}
@@ -402,15 +258,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         {/* Product Details Tabs */}
         <div className="mt-16">
           <Tabs defaultValue="description" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-[#efe1c1]">
+            <TabsList className="grid w-full grid-cols-2 bg-[#efe1c1]">
               <TabsTrigger value="description" className="data-[state=active]:bg-[#573e1c] data-[state=active]:text-[#efe1c1]">
                 {t('product.description')}
               </TabsTrigger>
               <TabsTrigger value="features" className="data-[state=active]:bg-[#573e1c] data-[state=active]:text-[#efe1c1]">
                 {t('product.features')}
-              </TabsTrigger>
-              <TabsTrigger value="reviews" className="data-[state=active]:bg-[#573e1c] data-[state=active]:text-[#efe1c1]">
-                {t('product.reviews')} ({product.reviewCount})
               </TabsTrigger>
             </TabsList>
             
@@ -418,7 +271,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <Card className="border-[#d4c5a0]">
                 <CardContent className="p-6">
                   <p className="text-[#8b6a42] leading-relaxed text-lg">
-                    {productDescription}
+                    {product.description}
                   </p>
                 </CardContent>
               </Card>
@@ -428,115 +281,15 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <Card className="border-[#d4c5a0]">
                 <CardContent className="p-6">
                   <ul className="space-y-3">
-                    {productFeatures.map((feature, index) => (
+                    {/* {productFeatures.map((feature, index) => (
                       <li key={index} className="flex items-start space-x-3">
                         <div className="w-2 h-2 bg-[#573e1c] rounded-full mt-2 flex-shrink-0"></div>
                         <span className="text-[#8b6a42]">{feature}</span>
                       </li>
-                    ))}
+                    ))} */}
                   </ul>
                 </CardContent>
               </Card>
-            </TabsContent>
-            
-            <TabsContent value="reviews" className="mt-6">
-              <div className="space-y-6">
-                {/* Review Summary */}
-                <Card className="border-[#d4c5a0]">
-                  <CardContent className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="text-center">
-                        <div className="text-4xl font-bold text-[#573e1c] mb-2">
-                          {product.rating}
-                        </div>
-                        <div className="flex items-center justify-center mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-5 h-5 ${
-                                i < Math.floor(product.rating)
-                                  ? 'text-yellow-400 fill-current'
-                                  : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-[#8b6a42]">
-                          {t('product.basedOnReviews').replace('{count}', product.reviewCount.toString())}
-                        </p>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        {[5, 4, 3, 2, 1].map((stars) => {
-                          const count = Math.floor(Math.random() * 50) + 10; // Mock data
-                          const percentage = (count / product.reviewCount) * 100;
-                          
-                          return (
-                            <div key={stars} className="flex items-center space-x-2">
-                              <span className="text-sm text-[#8b6a42] w-8">
-                                {stars}★
-                              </span>
-                              <div className="flex-1 bg-gray-200 rounded-full h-2">
-                                <div
-                                  className="bg-yellow-400 h-2 rounded-full"
-                                  style={{ width: `${percentage}%` }}
-                                ></div>
-                              </div>
-                              <span className="text-sm text-[#8b6a42] w-8">
-                                {count}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Individual Reviews */}
-                {product.reviews.map((review) => (
-                  <Card key={review.id} className="border-[#d4c5a0]">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h4 className="font-semibold text-[#573e1c]">{review.customerName}</h4>
-                          <div className="flex items-center mt-1">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < review.rating
-                                    ? 'text-yellow-400 fill-current'
-                                    : 'text-gray-300'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-sm text-[#8b6a42]">{review.date}</span>
-                          {review.verified && (
-                            <Badge variant="secondary" className="ml-2 bg-green-100 text-green-800">
-                              {t('product.verifiedPurchase')}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                      <p className="text-[#8b6a42] leading-relaxed">{review.comment}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-
-                {/* Write Review Button */}
-                <div className="text-center">
-                  <Button
-                    variant="outline"
-                    className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
-                  >
-                    {t('product.writeReview')}
-                  </Button>
-                </div>
-              </div>
             </TabsContent>
           </Tabs>
         </div>
