@@ -147,9 +147,13 @@ export const productTranslations = {
     en: 'Sort by',
     vi: 'Sắp xếp theo',
   },
-  'product.sort.name': {
+  'product.sort.nameHigh': {
     en: 'Name A-Z',
     vi: 'Tên A-Z',
+  },
+  'product.sort.nameLow': {
+    en: 'Name Z-A',
+    vi: 'Tên Z-A',
   },
   'product.sort.priceLow': {
     en: 'Price: Low to High',
@@ -186,5 +190,9 @@ export const productTranslations = {
   'product.noResults.clear': {
     en: 'Clear All Filters',
     vi: 'Xóa tất cả bộ lọc',
+  },
+  'product.noImageAvailable': {
+    en: 'No Image Available',
+    vi: 'Không Có Ảnh',
   },
 } 
