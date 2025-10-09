@@ -1,6 +1,7 @@
 import { AppDataSource } from "@/lib/database/typeorm";
 import { CollectionEntity } from "@/lib/database/entities/collection.entity";
 import { ProductEntity } from "@/lib/database/entities";
+import { ProductSortBy } from "@/types";
 
 export async function getAllProducts({
   page = 1,
@@ -41,7 +42,28 @@ export async function getAllProducts({
   if (filters.search) qb.andWhere("(product.name ILIKE :search OR product.description ILIKE :search OR product.sku ILIKE :search OR product.barcode ILIKE :search)", { search: `%${filters.search}%` });
 
   // Sorting
-  qb.orderBy(`product.${sortBy}`, sortOrder.toUpperCase() as "ASC" | "DESC");
+  switch (sortBy) {
+    case (ProductSortBy.nameHigh): {
+      qb.orderBy(`product.name`, "ASC");
+      break
+    }
+    case (ProductSortBy.nameLow): {
+      qb.orderBy(`product.name`, "DESC");
+      break
+    }
+    case (ProductSortBy.priceHigh): {
+      qb.orderBy(`product.price`, "DESC");
+      break
+    }
+    case (ProductSortBy.priceLow): {
+      qb.orderBy(`product.price`, "ASC");
+      break
+    }
+    default: {
+      qb.orderBy(`product.${sortBy}`, sortOrder.toUpperCase() as "ASC" | "DESC");
+      break
+    }
+  }
 
   // Pagination
   qb.skip((page - 1) * limit).take(limit);

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart } from 'lucide-react';
+import { ImageIcon, ShoppingCart } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
 import { Button } from '@/components/ui/button';
@@ -31,18 +31,24 @@ export function ProductCard({ product }: ProductCardProps) {
     addToCart(product);
   };
 
-  if(!product) return null
+  if (!product) return null
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 bg-white border-[#d4c5a0] overflow-hidden">
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-square overflow-hidden">
-          <Image
-            src={product.image!}
-            alt={product.name!}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          {product.image ?
+            <Image
+              src={product.image!}
+              alt={product.name!}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+            /> :
+            <div className="w-full h-full flex flex-col items-center justify-center">
+              <ImageIcon className="w-20 h-20 text-gray-400" />
+              <p>{t("product.noImageAvailable")}</p>
+            </div>
+          }
           {!product.stock && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
               <span className="text-white font-semibold bg-gray-800 px-3 py-1 rounded">

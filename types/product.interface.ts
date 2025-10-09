@@ -1,4 +1,4 @@
-import { ProductStatus, ProductUnit } from "@/types/enums";
+import { ProductSortBy, ProductStatus, ProductUnit } from "@/types/enums";
 import { IBase, IBaseFilters } from "./base.interface";
 import { ICollection } from "./collection.interface";
 
@@ -21,6 +21,7 @@ export interface IProduct extends IBase {
 
 export interface IProductFilters extends IBaseFilters {
   collectionId?: string
+  sortBy?: ProductSortBy
   status?: string
   search?: string
   priceRange?: {

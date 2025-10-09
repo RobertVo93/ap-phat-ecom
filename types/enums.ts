@@ -54,3 +54,15 @@ export enum CustomerType {
   premium = "premium",
   regular = "regular"
 }
+
+export enum ViewMode {
+  grid = "grid",
+  list = "list"
+}
+
+export enum ProductSortBy {
+  nameHigh = "nameHigh",
+  nameLow = "nameLow",
+  priceHigh = "priceHigh",
+  priceLow = "priceLow",
+}
