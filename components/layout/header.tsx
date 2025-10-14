@@ -134,10 +134,10 @@ export function Header() {
                 ) : (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/auth/login">{t('nav.login')}</Link>
+                      <Link href="/login">{t('nav.login')}</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/auth/register">{t('nav.register')}</Link>
+                      <Link href="/register">{t('nav.register')}</Link>
                     </DropdownMenuItem>
                   </>
                 )}

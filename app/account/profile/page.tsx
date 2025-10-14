@@ -17,11 +17,11 @@ export default function ProfilePage() {
   const { user, updateProfile, isLoading } = useAuth();
   
   const [formData, setFormData] = useState({
-    name: user?.name || '',
+    name: user?.username || '',
     email: user?.email || '',
     phone: user?.phone || '',
-    preferredLanguage: user?.preferredLanguage || 'vi',
-    avatar: user?.avatar || ''
+    preferredLanguage:'vi',
+    avatar: ''
   });
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -97,7 +97,7 @@ export default function ProfilePage() {
                   ) : (
                     <div className="w-32 h-32 bg-[#573e1c] rounded-full flex items-center justify-center mx-auto">
                       <span className="text-[#efe1c1] text-4xl font-bold">
-                        {user.name.charAt(0).toUpperCase()}
+                        {user.username!.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   )}
@@ -108,9 +108,9 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-[#573e1c] text-xl mb-2">{user.name}</h3>
+                <h3 className="font-semibold text-[#573e1c] text-xl mb-2">{user.username}</h3>
                 <p className="text-[#8b6a42] text-sm mb-4">
-                  {t('account.memberSince')} {new Date(user.joinDate).toLocaleDateString('vi-VN')}
+                  {t('account.memberSince')} {new Date(user.createdAt!).toLocaleDateString('vi-VN')}
                 </p>
                 
                 <AvatarUpload
@@ -224,11 +224,11 @@ export default function ProfilePage() {
                       variant="outline"
                       className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                       onClick={() => setFormData({
-                        name: user.name,
-                        email: user.email,
-                        phone: user.phone,
-                        preferredLanguage: user.preferredLanguage,
-                        avatar: user.avatar || ''
+                        name: user.username!,
+                        email: user.email!,
+                        phone: user.phone!,
+                        preferredLanguage: 'vi',
+                        avatar: ''
                       })}
                     >
                       {t('account.cancelChanges')}
