@@ -15,9 +15,17 @@ export const authTranslations = {
     en: 'Email *',
     vi: 'Email *',
   },
+    'auth.login.phone': {
+    en: 'Phone *',
+    vi:  'Số điện thoại *',
+  },
   'auth.login.emailPlaceholder': {
     en: 'your@email.com',
     vi: 'your@email.com',
+  },
+  'auth.login.phonePlaceholder': {
+    en: '0328...',
+    vi: '0328...',
   },
   'auth.login.password': {
     en: 'Password *',
@@ -88,8 +96,8 @@ export const authTranslations = {
     vi: 'Nguyễn Văn A',
   },
   'auth.register.email': {
-    en: 'Email *',
-    vi: 'Email *',
+    en: 'Email',
+    vi: 'Email',
   },
   'auth.register.emailPlaceholder': {
     en: 'your@email.com',
@@ -175,4 +183,12 @@ export const authTranslations = {
     en: 'Google registration failed',
     vi: 'Đăng ký Google thất bại',
   },
+  'auth.register.account.alert': {
+    en: "Register alert!",
+    vi: "Cảnh báo đăng ký tài khoản!"
+  },
+  'auth.register.account.existed': {
+    en: "Phone number is registed",
+    vi: "Số điện thoại này đã được đăng ký",
+  }
 }; 

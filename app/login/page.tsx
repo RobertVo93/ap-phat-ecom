@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
@@ -16,10 +15,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 export default function LoginPage() {
   const { t } = useLanguage();
   const { login, loginWithGoogle } = useAuth();
-  const router = useRouter();
   
   const [formData, setFormData] = useState({
-    email: '',
+    phone: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -33,8 +31,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      await login(formData.email, formData.password, rememberMe);
-      router.push('/account');
+      await login(formData.phone, formData.password, rememberMe);
     } catch (err) {
       setError(t('auth.login.error.invalid'));
     } finally {
@@ -48,7 +45,6 @@ export default function LoginPage() {
 
     try {
       await loginWithGoogle();
-      router.push('/account');
     } catch (err) {
       setError(t('auth.login.error.google'));
     } finally {
@@ -97,16 +93,16 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[#573e1c]">{t('auth.login.email')}</Label>
+                <Label htmlFor="phone" className="text-[#573e1c]">{t('auth.login.phone')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    id="phone"
+                    type="phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder={t('auth.login.emailPlaceholder')}
+                    placeholder={t('auth.login.phonePlaceholder')}
                     required
                   />
                 </div>
@@ -191,7 +187,7 @@ export default function LoginPage() {
               <p className="text-[#8b6a42]">
                 {t('auth.login.noAccount')}{' '}
                 <Link
-                  href="/auth/register"
+                  href="/register"
                   className="text-[#573e1c] hover:text-[#8b6a42] font-semibold underline"
                 >
                   {t('auth.login.register')}

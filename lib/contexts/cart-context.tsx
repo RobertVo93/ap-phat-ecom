@@ -38,8 +38,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const init = async () => {
       if (user) {
         // sync from backend
-        const res = await syncCartFromBackend(user.id);
-        setItems(res.items);
+        const res = await syncCartFromBackend(user.id!);
+        if(res.items) {
+          setItems(res.items);
+        }
       } else {
         // load from localStorage if didn't login
         if (typeof window !== 'undefined') {
@@ -72,8 +74,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         quantity,
         price: product.price,
       };
-      await apiAddToCart(user.id, cartItem);
-      const res = await syncCartFromBackend(user.id);
+      await apiAddToCart(user.id!, cartItem);
+      const res = await syncCartFromBackend(user.id!);
       setItems(res.items);
     } else {
       setItems(prevItems => {
@@ -103,7 +105,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeFromCart = async (cartItemId: string) => {
     if (user) {
       await deleteCartItem(cartItemId);
-      const res = await syncCartFromBackend(user.id);
+      const res = await syncCartFromBackend(user.id!);
       setItems(res.items);
     } else {
       setItems(prevItems => prevItems.filter(item => item.id !== cartItemId));
@@ -113,7 +115,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = async (cartItemId: string, quantity: number) => {
     if (user) {
       await apiUpdateCartItem(cartItemId, quantity);
-      const res = await syncCartFromBackend(user.id);
+      const res = await syncCartFromBackend(user.id!);
       setItems(res.items);
     } else {
       setItems(prevItems =>

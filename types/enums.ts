@@ -66,3 +66,11 @@ export enum ProductSortBy {
   priceHigh = "priceHigh",
   priceLow = "priceLow",
 }
+
+export enum UserRole {
+  super_admin = "super_admin",
+  admin = "admin",
+  manager = "manager",
+  staff = "staff",
+  customer = "customer",
+}

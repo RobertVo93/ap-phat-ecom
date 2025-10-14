@@ -37,8 +37,8 @@ export default function AddressesPage() {
   const handleAddAddress = () => {
     setEditingAddress(null);
     setFormData({
-      name: user.name,
-      phone: user.phone,
+      name: user.username!,
+      phone: user.phone!,
       street: '',
       ward: '',
       district: '',
@@ -63,48 +63,48 @@ export default function AddressesPage() {
   };
 
   const handleSaveAddress = async () => {
-    const newAddress: Address = {
-      id: editingAddress?.id || Date.now().toString(),
-      ...formData
-    };
+    // const newAddress: Address = {
+    //   id: editingAddress?.id || Date.now().toString(),
+    //   ...formData
+    // };
 
-    let updatedAddresses = [...user.addresses];
+    // let updatedAddresses = [...user.addresses];
 
-    if (editingAddress) {
-      // Update existing address
-      updatedAddresses = updatedAddresses.map(addr => 
-        addr.id === editingAddress.id ? newAddress : addr
-      );
-    } else {
-      // Add new address
-      updatedAddresses.push(newAddress);
-    }
+    // if (editingAddress) {
+    //   // Update existing address
+    //   updatedAddresses = updatedAddresses.map(addr => 
+    //     addr.id === editingAddress.id ? newAddress : addr
+    //   );
+    // } else {
+    //   // Add new address
+    //   updatedAddresses.push(newAddress);
+    // }
 
-    // If this is set as default, remove default from others
-    if (formData.isDefault) {
-      updatedAddresses = updatedAddresses.map(addr => ({
-        ...addr,
-        isDefault: addr.id === newAddress.id
-      }));
-    }
+    // // If this is set as default, remove default from others
+    // if (formData.isDefault) {
+    //   updatedAddresses = updatedAddresses.map(addr => ({
+    //     ...addr,
+    //     isDefault: addr.id === newAddress.id
+    //   }));
+    // }
 
-    await updateProfile({ addresses: updatedAddresses });
-    setIsDialogOpen(false);
+    // await updateProfile({ addresses: updatedAddresses });
+    // setIsDialogOpen(false);
   };
 
   const handleDeleteAddress = async (addressId: string) => {
-    if (confirm(t('account.deleteConfirm'))) {
-      const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
-      await updateProfile({ addresses: updatedAddresses });
-    }
+    // if (confirm(t('account.deleteConfirm'))) {
+    //   const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
+    //   await updateProfile({ addresses: updatedAddresses });
+    // }
   };
 
   const handleSetDefault = async (addressId: string) => {
-    const updatedAddresses = user.addresses.map(addr => ({
-      ...addr,
-      isDefault: addr.id === addressId
-    }));
-    await updateProfile({ addresses: updatedAddresses });
+    // const updatedAddresses = user.addresses.map(addr => ({
+    //   ...addr,
+    //   isDefault: addr.id === addressId
+    // }));
+    // await updateProfile({ addresses: updatedAddresses });
   };
 
   return (
@@ -257,7 +257,7 @@ export default function AddressesPage() {
 
         {/* Addresses List */}
         <div className="space-y-4">
-          {user.addresses.length === 0 ? (
+          {/* {user.addresses.length === 0 ? (
             <Card className="bg-white border-[#d4c5a0]">
               <CardContent className="p-12 text-center">
                 <MapPin className="w-16 h-16 text-[#8b6a42] mx-auto mb-4" />
@@ -330,7 +330,7 @@ export default function AddressesPage() {
                 </CardContent>
               </Card>
             ))
-          )}
+          )} */}
         </div>
       </div>
     </div>

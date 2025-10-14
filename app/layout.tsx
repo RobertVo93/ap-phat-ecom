@@ -8,6 +8,7 @@ import { LanguageProvider } from '@/lib/contexts/language-context';
 import { CartProvider } from '@/lib/contexts/cart-context';
 import { AuthProvider } from '@/lib/contexts/auth-context';
 import { RewardsProvider } from '@/lib/contexts/rewards-context';
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
                   </main>
                   <Footer />
                   <FloatingChatbot />
+                  <Toaster />
                 </div>
               </CartProvider>
             </RewardsProvider>
