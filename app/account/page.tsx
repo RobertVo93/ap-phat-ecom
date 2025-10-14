@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Package, MapPin, Settings, LogOut, Edit, Eye } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
@@ -16,12 +16,6 @@ export default function AccountPage() {
   const { t } = useLanguage();
   const { user, logout } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/auth/login');
-    }
-  }, [user, router]);
 
   if (!user) {
     return null;
@@ -90,7 +84,7 @@ export default function AccountPage() {
                 {t('account.dashboard')}
               </h1>
               <p className="text-[#8b6a42] mt-2">
-                {t('account.welcome')} {user.name}
+                {t('account.welcome')} {user.username}
               </p>
             </div>
             <Button
@@ -115,7 +109,7 @@ export default function AccountPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="text-center">
+                {/* <div className="text-center">
                   {user.avatar ? (
                     <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-4 border-2 border-[#573e1c]">
                       <Image
@@ -134,25 +128,25 @@ export default function AccountPage() {
                   <h3 className="font-semibold text-[#573e1c] text-lg">{user.name}</h3>
                   <p className="text-[#8b6a42] text-sm">{user.email}</p>
                   <p className="text-[#8b6a42] text-sm">{user.phone}</p>
-                </div>
+                </div> */}
 
                 <Separator />
 
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('account.totalOrders')}:</span>
-                    <span className="font-semibold text-[#573e1c]">{user.totalOrders}</span>
+                    {/* <span className="font-semibold text-[#573e1c]">{user.totalOrders}</span> */}
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('account.totalSpent')}:</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {formatPrice(user.totalSpent)}
+                      {/* {formatPrice(user.totalSpent)} */}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('account.memberSince')}:</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {new Date(user.joinDate).toLocaleDateString('vi-VN')}
+                      {/* {new Date(user.joinDate).toLocaleDateString('vi-VN')} */}
                     </span>
                   </div>
                 </div>
@@ -202,7 +196,7 @@ export default function AccountPage() {
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {user.totalOrders}
+                    {/* {user.totalOrders} */}
                   </div>
                   <div className="text-sm text-[#8b6a42]">{t('account.totalOrders')}</div>
                 </CardContent>
@@ -210,7 +204,7 @@ export default function AccountPage() {
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {formatPrice(user.totalSpent)}
+                    {/* {formatPrice(user.totalSpent)} */}
                   </div>
                   <div className="text-sm text-[#8b6a42]">{t('account.totalSpent')}</div>
                 </CardContent>
@@ -218,7 +212,7 @@ export default function AccountPage() {
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {user.addresses.length}
+                    {/* {user.addresses.length} */}
                   </div>
                   <div className="text-sm text-[#8b6a42]">{t('account.savedAddresses')}</div>
                 </CardContent>

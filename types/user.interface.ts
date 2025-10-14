@@ -1,0 +1,13 @@
+import { IBase } from "./base.interface";
+import { UserRole } from "./enums";
+
+export interface IUser extends IBase {
+  username?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+  passwordSalt?: string;
+  role?: UserRole;
+  active?: boolean;
+  lastLogin?: Date;
+}
