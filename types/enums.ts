@@ -40,7 +40,8 @@ export enum PaymentMethod {
   debitCard = "debitCard",
   bankTransfer = "bankTransfer",
   cash = "cash",
-  paypal = "paypal"
+  paypal = "paypal",
+  momo = "momo"
 }
 
 export enum CustomerStatus {

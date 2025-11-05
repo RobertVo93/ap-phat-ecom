@@ -56,3 +56,14 @@ export async function deleteCartItem(cartItemId: string) {
     if (!res.ok) throw new Error("Failed to delete");
     return res;
 } 
+
+export async function clearCart(userId: string) {
+    const res = await fetch(`/api/carts`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ userId }),
+    });
+    if (!res.ok) throw new Error("Failed to delete");
+    return res;
+} 

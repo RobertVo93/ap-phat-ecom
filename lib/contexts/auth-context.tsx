@@ -125,7 +125,7 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
     const updatedUser = { ...user, ...data };
     setUser(updatedUser);
     const rememberMe = localStorage.getItem('rememberMe') === 'true';
-    if (rememberMe) localStorage.setItem('user', JSON.stringify(updatedUser));
+    if (rememberMe) localStorage.setItem('ecom_user', JSON.stringify(updatedUser));
     setIsLoading(false);
   };
 

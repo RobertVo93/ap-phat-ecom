@@ -60,7 +60,7 @@ const mockVouchers: Voucher[] = [
     discountValue: 10,
     minOrderAmount: 50000,
     maxDiscountAmount: 20000,
-    expiryDate: '2024-12-31',
+    expiryDate: '2026-12-31',
     isUsed: false,
     isActive: true
   },
