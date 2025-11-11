@@ -1,5 +1,6 @@
 import { OrderStatus, PaymentStatus, PaymentMethod, ProductUnit } from "@/types/enums";
 import { IBase, IBaseFilters } from "./base.interface";
+import { ICustomer } from "./customer.interface";
 
 export interface IOrder extends IBase {
   number?: string
@@ -14,6 +15,7 @@ export interface IOrder extends IBase {
   tax?: number
   shippingFee?: number
   items?: IOrderItem[]
+  customer?: ICustomer
   ecom_customer?: {
     name?: string
     phone?: string

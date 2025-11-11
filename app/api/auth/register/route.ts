@@ -5,14 +5,20 @@ import { createNewUser } from "@/lib/services/userService";
 export async function POST(req: Request) {
   try {
     await ensureDataSource()
-    const { email, phone, username, password } = await req.json()
+    const { fullName, email, phone, username, password } = await req.json()
 
-    const user = await createNewUser(email, phone, username, password)
+    const res = await createNewUser(fullName, email, phone, username, password)
 
-    return NextResponse.json({
-      success: true,
-      user: user,
-    })
+    if (typeof res === "string") {
+      return NextResponse.json({
+        success: false
+      })
+    } else {
+      return NextResponse.json({
+        success: true,
+        user: res,
+      })
+    }
   } catch (err) {
     console.error("Register error:", err)
     return NextResponse.json(

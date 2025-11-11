@@ -7,6 +7,7 @@ import { ProductEntity } from "./entities/product.entity";
 import { env } from "@/constants/env";
 import { CartEntity, CartItemEntity, UserEntity } from "./entities";
 import { OrderEntity } from "./entities/order.entity";
+import { CustomerEntity } from "./entities/customer.entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -19,7 +20,8 @@ export const AppDataSource = new DataSource({
     CartEntity,
     CartItemEntity,
     UserEntity,
-    OrderEntity
+    OrderEntity,
+    CustomerEntity
   ],
   ssl: { rejectUnauthorized: false }, // required for Neon
   migrations: [__dirname + '/migrations/*{.ts,.js}'],

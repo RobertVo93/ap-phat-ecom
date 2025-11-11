@@ -1,17 +1,18 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { IUser, UserRole } from '@/types';
+import { IUser, UsernameType, UserRole } from '@/types';
 import { signOut, signIn, useSession, SessionProvider } from "next-auth/react";
 import { usePathname, useRouter } from 'next/navigation';
 import { apiGetMe, registerUser } from '../httpclient/user.client';
 import { useLanguage } from './language-context';
 import { toast } from 'sonner';
+import { checkUsernameType } from '../utils.username';
 
 interface AuthContextType {
   user: IUser | null;
   login: (phone: string, password: string, rememberMe?: boolean) => Promise<void>;
-  register: (name: string, email: string, phone: string, password: string) => Promise<void>;
+  register: (fullName: string, username: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => void;
   updateProfile: (data: Partial<IUser>) => Promise<void>;
@@ -50,15 +51,21 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const login = async (phone: string, password: string, rememberMe: boolean = false) => {
+  const login = async (username: string, password: string, rememberMe: boolean = false) => {
     try {
       setIsLoading(true);
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
         redirect: false,
-        phone,
+        username,
         password,
         rememberMe,
       });
+      if(res.error) {
+        toast(t("auth.register.account.alert"), {
+          position: "bottom-left",
+          description: t("auth.register.account.wrongLoginInfo"),
+        })
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -66,27 +73,29 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, phone: string, password: string) => {
+  const register = async (fullName: string, username: string, password: string) => {
     try {
       setIsLoading(true);
+      const checkUsername = checkUsernameType(username)
       const newUser: IUser = {
-        username: name,
-        email,
-        phone,
+        fullName: fullName,
+        username: username,
         password,
         passwordSalt: "",
         role: UserRole.customer,
         active: true,
         lastLogin: new Date(),
+        email: checkUsername === UsernameType.email ? username : '',
+        phone: checkUsername === UsernameType.phone ? username : ''
       };
       const data = await registerUser(newUser)
       if (data.success) {
         router.push('/login');
       }
       else {
-        toast(t("auth.register.account.alert"), {         
+        toast(t("auth.register.account.alert"), {
           position: "bottom-left",
-          description: t("auth.register.account.existed"),          
+          description: t("auth.register.account.existed"),
         })
       }
     } catch (e) {

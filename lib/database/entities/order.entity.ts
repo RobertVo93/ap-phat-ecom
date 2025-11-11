@@ -1,7 +1,9 @@
-import { Entity, Column, BeforeInsert } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, BeforeInsert } from "typeorm";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
+import { CustomerEntity } from "./customer.entity";
 import { OrderStatus, PaymentStatus, PaymentMethod } from "@/types/enums";
 import { IOrderItem, IOrder } from "@/types";
+import type { ICustomer } from "@/types";
 import { CommonService } from "@/lib/services/commonService";
 
 @Entity({ name: "orders" })
@@ -43,6 +45,11 @@ export class OrderEntity extends BaseEntity implements IOrder {
   items!: IOrderItem[];
 
   //////Related fields//////
+  @ManyToOne(() => CustomerEntity, (customer: CustomerEntity) => customer.orders, { nullable: true })
+  @JoinColumn({ name: "customer_id" })
+  customer?: ICustomer;
+
+  // For ecom buyers
   @Column({ type: "json", nullable: true })
   ecom_customer?: {
     name: string;

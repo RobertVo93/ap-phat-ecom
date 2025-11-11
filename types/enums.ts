@@ -75,3 +75,9 @@ export enum UserRole {
   staff = "staff",
   customer = "customer",
 }
+
+export enum UsernameType {
+  phone = "phone",
+  email = "email",
+  invalid = "invalid"
+}

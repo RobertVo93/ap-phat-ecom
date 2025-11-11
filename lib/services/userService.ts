@@ -1,6 +1,7 @@
 import { UserEntity } from "../database/entities";
+import { CustomerEntity } from "../database/entities/customer.entity";
 import { AppDataSource } from "../database/typeorm";
-import { UserRole } from "@/types"
+import { CustomerStatus, CustomerType, UserRole } from "@/types"
 import { hash, genSalt } from "bcryptjs"
 
 export async function getCurrentUser(userId: string) {
@@ -10,27 +11,42 @@ export async function getCurrentUser(userId: string) {
 }
 
 export async function createNewUser(
-  email: string, phone: string, username: string, password: string
+  fullName: string, email: string, phone: string, username: string, password: string
 ) {
-  const repo = AppDataSource.getRepository(UserEntity)
+  return await AppDataSource.transaction(async (manager) => {
+    const existing = await manager.findOne(UserEntity, { where: [{ username: username }] })
+    if (existing) {
+      return "Username existed!"
+    }
 
-  const existing = await repo.findOne({ where: [{ phone: phone }] })
-  if (existing) return
+    const salt = await genSalt(10)
+    const hashed = await hash(password, salt)
 
-  const salt = await genSalt(10)
-  const hashed = await hash(password, salt)
+    // 1. create new user
+    const user = manager.create(UserEntity, {
+      fullName: fullName,
+      email: email,
+      username: username,
+      phone: phone,
+      password: hashed,
+      passwordSalt: salt,
+      role: UserRole.customer,
+      active: true,
+      lastLogin: new Date(),
+    })
+    const savedUser = await manager.save(UserEntity, user);
 
-  // create new user
-  const user = repo.create({
-    email: email,
-    username: username,
-    phone: phone,
-    password: hashed,
-    passwordSalt: salt,
-    role: UserRole.customer,
-    active: true,
-    lastLogin: new Date(),
+    // 2. create new customer
+    const customer = manager.create(CustomerEntity, {
+      name: savedUser.fullName || "",
+      email: savedUser.email,
+      phone: savedUser.phone,
+      joinDate: new Date(),
+      customerType: CustomerType.regular,
+      status: CustomerStatus.active
+    });
+    await manager.save(CustomerEntity, customer);
+
+    return savedUser
   })
-
-  return await repo.save(user)
 }

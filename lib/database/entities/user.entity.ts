@@ -6,6 +6,9 @@ import { IUser } from "@/types";
 @Entity({ name: "users" })
 export class UserEntity extends BaseEntity implements IUser {
     @Column({ type: "varchar", length: 255, nullable: false })
+    fullName?: string;
+
+    @Column({ type: "varchar", length: 255, nullable: false })
     email?: string;
 
     @Column({ type: "varchar", length: 255, nullable: true })

@@ -1,3 +1,4 @@
+import { useAuth } from "@/lib/contexts/auth-context"
 import { useCart } from "@/lib/contexts/cart-context"
 import { useLanguage } from "@/lib/contexts/language-context"
 import { useRewards } from "@/lib/contexts/rewards-context"
@@ -51,6 +52,7 @@ export const useCheckout = () => {
 
   const { items, getCartTotal, clearCart } = useCart();
   const { loyaltyPoints, vouchers, calculateDiscount, useVoucher, redeemPoints, addPoints } = useRewards();
+  const { user } = useAuth()
 
   // Rewards state
   const subtotal = getCartTotal();
@@ -137,10 +139,10 @@ export const useCheckout = () => {
     addPoints(subtotal, orderId);
 
     // Create order
-    createOrder(orderData)
+    createOrder(orderData, user?.email, user?.phone)
   };
 
-  const createOrder = async (orderData: Partial<IOrder>) => {
+  const createOrder = async (orderData: Partial<IOrder>, email?: string, phone?: string) => {
     try {
       setLoading(true)
       const newOrder: IOrder = {
@@ -157,8 +159,8 @@ export const useCheckout = () => {
         items: mapCartItemsToOrderItems(items),
         ecom_customer: orderData.ecom_customer
       }
-      const res = await apiCreateOrder(newOrder)
-      if(res) {
+      const res = await apiCreateOrder(newOrder, email!, phone!)
+      if (res) {
         clearCart()
         router.push(`/account/orders/${res.id}`)
       }

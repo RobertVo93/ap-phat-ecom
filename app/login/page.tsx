@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowLeft, User } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
@@ -93,16 +93,16 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-[#573e1c]">{t('auth.login.phone')}</Label>
+                <Label htmlFor="phone" className="text-[#573e1c]">{t('auth.login.username')}</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
-                    id="phone"
-                    type="phone"
+                    id="username"
+                    type="text"
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder={t('auth.login.phonePlaceholder')}
+                    placeholder={t('auth.login.usernamePlaceholder')}
                     required
                   />
                 </div>
