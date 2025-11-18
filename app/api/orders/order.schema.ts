@@ -28,10 +28,8 @@ export const CreateOrderSchema = z.object({
   shippingFee: z.number().optional(),
 
   items: z.array(OrderItemSchema).optional(),
-  ecom_customer: z.object({
-    name: z.string(),
-    phone: z.string(),
-  })
+  customer: z.any().optional(),
+  receiverInfo: z.any().optional(),
 });
 
 export const UpdateOrderSchema = CreateOrderSchema.partial(); 

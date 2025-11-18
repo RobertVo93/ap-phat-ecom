@@ -41,20 +41,19 @@ export class OrderEntity extends BaseEntity implements IOrder {
   @Column({ type: "float", nullable: true })
   tax?: number;
 
-  @Column({type: "jsonb", nullable: true})
+  @Column({ type: "jsonb", nullable: true })
   items!: IOrderItem[];
+
+  @Column({ type: "jsonb", nullable: true })
+  receiverInfo?: {
+    name?: string;
+    phone?: string;
+  };
 
   //////Related fields//////
   @ManyToOne(() => CustomerEntity, (customer: CustomerEntity) => customer.orders, { nullable: true })
   @JoinColumn({ name: "customer_id" })
   customer?: ICustomer;
-
-  // For ecom buyers
-  @Column({ type: "json", nullable: true })
-  ecom_customer?: {
-    name: string;
-    phone: string;
-  };
 
   //////Auto order numbering//////
   @BeforeInsert()

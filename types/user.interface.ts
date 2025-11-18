@@ -1,4 +1,5 @@
 import { IBase } from "./base.interface";
+import { ICustomer } from "./customer.interface";
 import { UserRole } from "./enums";
 
 export interface IUser extends IBase {
@@ -11,4 +12,5 @@ export interface IUser extends IBase {
   role?: UserRole;
   active?: boolean;
   lastLogin?: Date;
+  customer?: ICustomer
 }

@@ -132,13 +132,13 @@ export default function CheckoutPage() {
                       </Label>
                       <Input
                         id="name"
-                        value={orderData.ecom_customer?.name}
+                        value={orderData.receiverInfo?.name}
                         placeholder={t("checkout.form.customerName")}
                         onChange={(e) =>
                           setOrderData({
                             ...orderData,
-                            ecom_customer: {
-                              ...orderData.ecom_customer,
+                            receiverInfo: {
+                              ...orderData.receiverInfo,
                               name: e.target.value,
                             },
                           })
@@ -156,12 +156,12 @@ export default function CheckoutPage() {
                         id="phone"
                         type="tel"
                         placeholder={t("checkout.form.customerPhone")}
-                        value={orderData.ecom_customer?.phone || ""}
+                        value={orderData.receiverInfo?.phone || ""}
                         onChange={(e) =>
                           setOrderData({
                             ...orderData,
-                            ecom_customer: {
-                              ...orderData.ecom_customer,
+                            receiverInfo: {
+                              ...orderData.receiverInfo,
                               phone: e.target.value,
                             },
                           })

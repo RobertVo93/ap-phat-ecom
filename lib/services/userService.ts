@@ -6,12 +6,15 @@ import { hash, genSalt } from "bcryptjs"
 
 export async function getCurrentUser(userId: string) {
   const repo = AppDataSource.getRepository(UserEntity);
-  const user = await repo.findOne({ where: { id: userId } });
+  const user = await repo.findOne({
+      where: { id: userId },
+      relations: ["customer"],
+    });
   return user
 }
 
 export async function createNewUser(
-  fullName: string, email: string, phone: string, username: string, password: string
+  userId: string, customerId: string, fullName: string, email: string, phone: string, username: string, password: string
 ) {
   return await AppDataSource.transaction(async (manager) => {
     const existing = await manager.findOne(UserEntity, { where: [{ username: username }] })
@@ -24,6 +27,7 @@ export async function createNewUser(
 
     // 1. create new user
     const user = manager.create(UserEntity, {
+      id: userId,
       fullName: fullName,
       email: email,
       username: username,
@@ -38,15 +42,22 @@ export async function createNewUser(
 
     // 2. create new customer
     const customer = manager.create(CustomerEntity, {
+      id: customerId,
       name: savedUser.fullName || "",
       email: savedUser.email,
       phone: savedUser.phone,
       joinDate: new Date(),
       customerType: CustomerType.regular,
-      status: CustomerStatus.active
+      status: CustomerStatus.active,
+      user: savedUser
     });
     await manager.save(CustomerEntity, customer);
 
-    return savedUser
+    const result = await manager.findOne(UserEntity, {
+      where: { id: savedUser.id },
+      relations: ["customer"],
+    });
+
+    return result;
   })
 }

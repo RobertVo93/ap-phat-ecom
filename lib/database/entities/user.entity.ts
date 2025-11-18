@@ -1,7 +1,8 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToOne } from "typeorm";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { UserRole } from "@/types/enums";
 import { IUser } from "@/types";
+import { CustomerEntity } from "./customer.entity";
 
 @Entity({ name: "users" })
 export class UserEntity extends BaseEntity implements IUser {
@@ -31,4 +32,7 @@ export class UserEntity extends BaseEntity implements IUser {
 
     @Column({ type: "timestamp", nullable: true })
     lastLogin?: Date;
+
+    @OneToOne(() => CustomerEntity, (customer) => customer.user, { nullable: true })
+    customer?: CustomerEntity;
 } 

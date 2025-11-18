@@ -1,13 +1,14 @@
-import { Entity, Column, OneToMany, BeforeInsert } from "typeorm";
+import { Entity, Column, OneToMany, BeforeInsert, OneToOne, JoinColumn } from "typeorm";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { OrderEntity } from "./order.entity";
 import { CustomerStatus, CustomerType } from "@/types/enums";
-import { IOrder, ICustomer } from "@/types";
+import type { IOrder, ICustomer, IUser } from "@/types";
 import { CommonService } from "@/lib/services/commonService";
+import { UserEntity } from "./user.entity";
 
 @Entity({ name: "customers" })
 export class CustomerEntity extends BaseEntity implements ICustomer {
-  @Column({ unique: true})
+  @Column({ unique: true })
   number?: string;
 
   @Column({ nullable: false })
@@ -43,6 +44,10 @@ export class CustomerEntity extends BaseEntity implements ICustomer {
   //////Related fields//////
   @OneToMany(() => OrderEntity, (order) => order.customer, { nullable: true })
   orders!: IOrder[];
+
+  @OneToOne(() => UserEntity, { nullable: true })
+  @JoinColumn({ name: "user_id" })
+  user?: IUser;
 
   //////Auto numbering//////
   @BeforeInsert()

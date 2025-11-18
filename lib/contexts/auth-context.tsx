@@ -8,6 +8,7 @@ import { apiGetMe, registerUser } from '../httpclient/user.client';
 import { useLanguage } from './language-context';
 import { toast } from 'sonner';
 import { checkUsernameType } from '../utils.username';
+import { renewUserAndCustomer } from '../utils.localStorage';
 
 interface AuthContextType {
   user: IUser | null;
@@ -60,7 +61,7 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
         password,
         rememberMe,
       });
-      if(res.error) {
+      if (res.error) {
         toast(t("auth.register.account.alert"), {
           position: "bottom-left",
           description: t("auth.register.account.wrongLoginInfo"),
@@ -90,6 +91,7 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
       };
       const data = await registerUser(newUser)
       if (data.success) {
+        renewUserAndCustomer()
         router.push('/login');
       }
       else {
@@ -153,6 +155,12 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
       }
     }
   }, [pathName, user])
+
+  useEffect(() => {
+    if(!user) {
+      renewUserAndCustomer()
+    }
+  }, [user])
 
   return (
     <AuthContext.Provider value={{

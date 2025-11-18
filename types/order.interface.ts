@@ -16,7 +16,7 @@ export interface IOrder extends IBase {
   shippingFee?: number
   items?: IOrderItem[]
   customer?: ICustomer
-  ecom_customer?: {
+  receiverInfo?: {
     name?: string
     phone?: string
   }

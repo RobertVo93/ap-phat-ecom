@@ -4,6 +4,7 @@ import { useLanguage } from "@/lib/contexts/language-context"
 import { useRewards } from "@/lib/contexts/rewards-context"
 import { createOrder as apiCreateOrder } from "@/lib/httpclient/order.client"
 import { getNextBlockTime } from "@/lib/utils.date"
+import { localValues } from "@/lib/utils.localStorage"
 import { ICartItem, IOrder, IOrderItem, OrderStatus, PaymentMethod, PaymentStatus } from "@/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -18,9 +19,8 @@ const defaultOrderData: Partial<IOrder> = {
   items: [],
   notes: "",
   tags: [],
-  ecom_customer: {
-    name: '',
-    phone: ''
+  receiverInfo: {
+    name: "", phone: ""
   }
 }
 
@@ -139,12 +139,14 @@ export const useCheckout = () => {
     addPoints(subtotal, orderId);
 
     // Create order
-    createOrder(orderData, user?.email, user?.phone)
+    createOrder(orderData)
   };
 
-  const createOrder = async (orderData: Partial<IOrder>, email?: string, phone?: string) => {
+  const createOrder = async (orderData: Partial<IOrder>) => {
     try {
       setLoading(true)
+      const { customer } = localValues()
+
       const newOrder: IOrder = {
         deliveryDate: new Date(),
         totalAmount: orderData.totalAmount || 0,
@@ -157,9 +159,10 @@ export const useCheckout = () => {
         shippingFee: shipping,
         tax: orderData.tax || tax,
         items: mapCartItemsToOrderItems(items),
-        ecom_customer: orderData.ecom_customer
+        customer: user ? user.customer : customer,
+        receiverInfo: orderData.receiverInfo
       }
-      const res = await apiCreateOrder(newOrder, email!, phone!)
+      const res = await apiCreateOrder(newOrder)
       if (res) {
         clearCart()
         router.push(`/account/orders/${res.id}`)
