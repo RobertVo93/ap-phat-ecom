@@ -15,6 +15,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { Brand } from "@/lib/brand"
+import Image from 'next/image';
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -41,17 +43,25 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-[#573e1c] rounded-full flex items-center justify-center">
-              <span className="text-[#efe1c1] font-bold text-sm">RT</span>
+          <Link href="/">
+            <div className='flex items-center space-x-2'>
+              <div className="w-8 h-8 bg-[#573e1c] rounded-full flex items-center justify-center">
+                <Image
+                  alt='an phat food'
+                  src='/AP-logo.png'
+                  width={32}
+                  height={32}
+                  className="object-cover"
+                />
+              </div>
+              <span className="text-[#573e1c] font-bold text-xl hidden sm:block">
+                {Brand.name}
+              </span>
             </div>
-            <span className="text-[#573e1c] font-bold text-xl hidden sm:block">
-              Rice & Noodles
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-8 ml-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}

@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Brand } from '@/lib/brand';
+import Link from 'next/link';
 
 export default function ContactPage() {
   const { t } = useLanguage();
@@ -30,7 +32,7 @@ export default function ContactPage() {
 
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     setSubmitMessage(t('contact.form.success'));
     setFormData({
       name: '',
@@ -47,19 +49,19 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: t('contact.info.phone'),
-      details: ['028 3823 4567', '0901 234 567'],
+      details: [Brand.phone],
       description: t('contact.info.phone.hours')
     },
     {
       icon: Mail,
       title: t('contact.info.email'),
-      details: ['contact@ricepaperstore.vn', 'support@ricepaperstore.vn'],
+      details: [Brand.email],
       description: t('contact.info.email.response')
     },
     {
       icon: MapPin,
       title: t('contact.info.address'),
-      details: ['123 Đường Lê Lợi, Phường Bến Nghé', 'Quận 1, TP. Hồ Chí Minh'],
+      details: [Brand.address],
       description: t('contact.info.address.main')
     },
     {
@@ -79,6 +81,9 @@ export default function ContactPage() {
     { value: 'complaint', label: t('contact.form.inquiryType.options.complaint') },
     { value: 'other', label: t('contact.form.inquiryType.options.other') }
   ];
+
+  const lat = 14.19053562479765
+  const lng = 109.01629465767265
 
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
@@ -145,7 +150,7 @@ export default function ContactPage() {
                     <Input
                       id="name"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="border-[#8b6a42] focus:border-[#573e1c]"
                       required
                     />
@@ -159,7 +164,7 @@ export default function ContactPage() {
                       id="phone"
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="border-[#8b6a42] focus:border-[#573e1c]"
                     />
                   </div>
@@ -174,7 +179,7 @@ export default function ContactPage() {
                     id="email"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="border-[#8b6a42] focus:border-[#573e1c]"
                     required
                   />
@@ -185,7 +190,7 @@ export default function ContactPage() {
                     <Building className="w-4 h-4 mr-1" />
                     {t('contact.form.inquiryType')}
                   </Label>
-                  <Select value={formData.inquiryType} onValueChange={(value) => setFormData({...formData, inquiryType: value})}>
+                  <Select value={formData.inquiryType} onValueChange={(value) => setFormData({ ...formData, inquiryType: value })}>
                     <SelectTrigger className="border-[#8b6a42]">
                       <SelectValue placeholder={t('contact.form.inquiryType.placeholder')} />
                     </SelectTrigger>
@@ -204,7 +209,7 @@ export default function ContactPage() {
                   <Input
                     id="subject"
                     value={formData.subject}
-                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="border-[#8b6a42] focus:border-[#573e1c]"
                     placeholder={t('contact.form.subject.placeholder')}
                     required
@@ -216,7 +221,7 @@ export default function ContactPage() {
                   <Textarea
                     id="message"
                     value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="border-[#8b6a42] focus:border-[#573e1c] min-h-[120px]"
                     placeholder={t('contact.form.message.placeholder')}
                     required
@@ -246,21 +251,17 @@ export default function ContactPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="aspect-video bg-gradient-to-br from-[#efe1c1] to-[#d4c5a0] rounded-lg flex items-center justify-center">
-                  <div className="text-center text-[#573e1c]">
-                    <MapPin className="w-16 h-16 mx-auto mb-4" />
-                    <p className="font-semibold">{t('contact.map.placeholder')}</p>
-                    <p className="text-sm text-[#8b6a42]">{t('contact.map.address')}</p>
-                  </div>
-                </div>
-                <div className="mt-4 p-4 bg-[#f8f5f0] rounded-lg">
-                  <h4 className="font-semibold text-[#573e1c] mb-2">{t('contact.map.directions')}</h4>
-                  <ul className="text-sm text-[#8b6a42] space-y-1">
-                    <li>• {t('contact.map.directions.airport')}</li>
-                    <li>• {t('contact.map.directions.metro')}</li>
-                    <li>• {t('contact.map.directions.parking')}</li>
-                  </ul>
-                </div>
+                <Link 
+                  href={Brand.maps[0]} 
+                  target="_blank" 
+                  className="block w-full h-[300px]"
+                >
+                  <iframe
+                    src={`https://www.google.com/maps?output=embed&q=${lat},${lng}`}
+                    className="w-full h-full rounded-xl pointer-events-none"
+                    loading="lazy"
+                  />
+                </Link>
               </CardContent>
             </Card>
 
