@@ -26,7 +26,7 @@ export default function AddressesPage() {
     street: '',
     ward: '',
     district: '',
-    city: 'TP.HCM',
+    city: '',
     isDefault: false
   });
 
@@ -42,7 +42,7 @@ export default function AddressesPage() {
       street: '',
       ward: '',
       district: '',
-      city: 'TP.HCM',
+      city: '',
       isDefault: false
     });
     setIsDialogOpen(true);
