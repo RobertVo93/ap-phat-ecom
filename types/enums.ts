@@ -40,7 +40,8 @@ export enum PaymentMethod {
   debitCard = "debitCard",
   bankTransfer = "bankTransfer",
   cash = "cash",
-  paypal = "paypal"
+  paypal = "paypal",
+  momo = "momo"
 }
 
 export enum CustomerStatus {
@@ -73,4 +74,11 @@ export enum UserRole {
   manager = "manager",
   staff = "staff",
   customer = "customer",
+}
+
+export enum UsernameType {
+  phone = "phone",
+  email = "email",
+  normal = "normal",
+  invalid = "invalid"
 }

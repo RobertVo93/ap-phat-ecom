@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Lock, User, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
@@ -11,15 +11,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
+import { checkUsernameType } from '@/lib/utils.username';
+import { UsernameType } from '@/types';
 
 export default function RegisterPage() {
   const { t } = useLanguage();
   const { register, loginWithGoogle } = useAuth();
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    fullName: '',
+    username: '',
     password: '',
     confirmPassword: ''
   });
@@ -47,7 +48,11 @@ export default function RegisterPage() {
     }
 
     try {
-      await register(formData.name, formData.email, formData.phone, formData.password);
+      if (checkUsernameType(formData.username) === UsernameType.invalid) {
+        setError(t("auth.register.account.wrongFormat"));
+      } else {
+        await register(formData.fullName, formData.username, formData.password);
+      }
     } catch (err) {
       setError(t('auth.register.error.failed'));
     } finally {
@@ -109,49 +114,32 @@ export default function RegisterPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-[#573e1c]">{t('auth.register.fullName')}</Label>
+                <Label htmlFor="fullName" className="text-[#573e1c]">{t('auth.register.fullName')}</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
-                    id="name"
+                    id="fullName"
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
                     placeholder={t('auth.register.fullNamePlaceholder')}
-                    required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[#573e1c]">{t('auth.register.email')}</Label>
+                <Label htmlFor="username" className="text-[#573e1c]">{t('auth.register.username')}</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                   <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    id="username"
+                    type="text"
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder={t('auth.register.emailPlaceholder')}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-[#573e1c]">{t('auth.register.phone')}</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                    placeholder={t('auth.register.phonePlaceholder')}
+                    placeholder={t('auth.register.usernamePlaceholder')}
                     required
-                    pattern="[0-9]{10}"
                   />
                 </div>
               </div>

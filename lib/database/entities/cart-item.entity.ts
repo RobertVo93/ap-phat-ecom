@@ -3,7 +3,7 @@ import { CartEntity, ProductEntity } from "@/lib/database/entities";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { ICartItem } from "@/types";
 
-@Entity({ name: "cart-items" })
+@Entity({ name: "cart_items" })
 export class CartItemEntity extends BaseEntity implements ICartItem{
     @Column({ type: "int", default: 1 })
     quantity?: number;
