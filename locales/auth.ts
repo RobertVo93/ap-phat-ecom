@@ -15,9 +15,17 @@ export const authTranslations = {
     en: 'Email *',
     vi: 'Email *',
   },
-    'auth.login.phone': {
+  'auth.login.phone': {
     en: 'Phone *',
-    vi:  'Số điện thoại *',
+    vi: 'Số điện thoại *',
+  },
+  'auth.login.username': {
+    en: 'Username *',
+    vi: 'Tên đăng nhập *',
+  },
+  'auth.login.usernamePlaceholder': {
+    en: 'Phone number or Email',
+    vi: 'Số điện thoại hoặc Email',
   },
   'auth.login.emailPlaceholder': {
     en: 'your@email.com',
@@ -88,12 +96,20 @@ export const authTranslations = {
     vi: 'Về trang chủ',
   },
   'auth.register.fullName': {
-    en: 'Full Name *',
-    vi: 'Họ và tên *',
+    en: 'Full Name',
+    vi: 'Họ và tên',
   },
   'auth.register.fullNamePlaceholder': {
     en: 'John Doe',
     vi: 'Nguyễn Văn A',
+  },
+  'auth.register.username': {
+    en: 'Username *',
+    vi: 'Tên đăng nhập *',
+  },
+  'auth.register.usernamePlaceholder': {
+    en: 'Phone number or Email',
+    vi: 'Số điện thoại hoặc Email',
   },
   'auth.register.email': {
     en: 'Email',
@@ -188,7 +204,15 @@ export const authTranslations = {
     vi: "Cảnh báo đăng ký tài khoản!"
   },
   'auth.register.account.existed': {
-    en: "Phone number is registed",
-    vi: "Số điện thoại này đã được đăng ký",
+    en: "Username is registed",
+    vi: "Tài khoản này đã được đăng ký",
+  },
+  'auth.register.account.wrongLoginInfo': {
+    en: "Wrong information",
+    vi: "Sai thông tin đăng nhập",
+  },
+  'auth.register.account.wrongFormat': {
+    en: "Username should be a Phone Number or an Email",
+    vi: "Tên đăng nhập phải là Số Điện Thoại hoặc Email"
   }
 }; 

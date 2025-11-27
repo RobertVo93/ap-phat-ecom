@@ -103,6 +103,14 @@ export const checkoutTranslations = {
     en: 'Additional notes for your order (optional)',
     vi: 'Ghi chú thêm cho đơn hàng (tùy chọn)',
   },
+  'checkout.form.customerName': {
+    en: "John",
+    vi: "Nguyễn Văn A",
+  },
+  'checkout.form.customerPhone': {
+    en: "0328...",
+    vi: "0328...",
+  },
   'checkout.payment.cod': {
     en: 'Cash on Delivery (COD)',
     vi: 'Thanh toán khi nhận hàng (COD)',

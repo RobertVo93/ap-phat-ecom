@@ -1,15 +1,16 @@
 import { ensureDataSource } from '@/lib/database/ensureDataSource';
-import { getCurrentUser } from '@/lib/services/userService';
+import { UserService } from '@/lib/services/userService';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
     await ensureDataSource();
+    const userService = new UserService();
 
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId") || undefined;
 
-    const user = await getCurrentUser(userId!)
+    const user = await userService.getCurrentUser(userId!)
 
     return NextResponse.json( user );
   } catch (err) {

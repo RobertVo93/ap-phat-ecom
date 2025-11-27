@@ -2,13 +2,14 @@
 
 import { ICartItem, IProduct } from '@/types';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  addToCart as apiAddToCart, 
-  updateCartItem as apiUpdateCartItem, 
-  deleteCartItem, 
-  syncCartFromBackend 
+import {
+  addToCart as apiAddToCart,
+  updateCartItem as apiUpdateCartItem,
+  deleteCartItem,
+  syncCartFromBackend
 } from '../httpclient/cart.client';
 import { useAuth } from './auth-context';
+import { clearCart as apiClearCart } from "@/lib/httpclient/cart.client"
 
 interface CartContextType {
   items: ICartItem[];
@@ -39,7 +40,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (user) {
         // sync from backend
         const res = await syncCartFromBackend(user.id!);
-        if(res.items) {
+        if (res.items) {
           setItems(res.items);
         }
       } else {
@@ -84,10 +85,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           return prevItems.map(item =>
             item.product?.id === product.id
               ? {
-                  ...item,
-                  quantity: (item.quantity || 0) + quantity,
-                  subtotal: ((item.quantity || 0) + quantity) * (item.price || product.price || 0),
-                }
+                ...item,
+                quantity: (item.quantity || 0) + quantity,
+                subtotal: ((item.quantity || 0) + quantity) * (item.price || product.price || 0),
+              }
               : item
           );
         } else {
@@ -130,9 +131,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const clearCart = () => {
-    setItems([]);
-    if (!user && typeof window !== 'undefined') localStorage.removeItem('cart');
+  const clearCart = async () => {
+    if (user) {
+      const res = await apiClearCart(user?.id!)
+      if (res) {
+        setItems([]);
+        if (!user && typeof window !== 'undefined') localStorage.removeItem('cart');
+      }
+    } else {
+      setItems([]);
+      if (!user && typeof window !== 'undefined') localStorage.removeItem('cart');
+    }
   };
 
   const getCartTotal = () =>

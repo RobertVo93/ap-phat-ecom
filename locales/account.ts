@@ -168,8 +168,8 @@ export const accountTranslations = {
     vi: 'Cập nhật thông tin cá nhân của bạn',
   },
   'account.fullName': {
-    en: 'Full Name *',
-    vi: 'Họ và tên *',
+    en: 'Full Name',
+    vi: 'Họ và tên',
   },
   'account.phoneNumber': {
     en: 'Phone Number *',

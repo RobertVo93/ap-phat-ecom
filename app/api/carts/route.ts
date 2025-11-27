@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ensureDataSource } from '@/lib/database/ensureDataSource';
-import { addCartItem, syncCartFromBE } from '@/lib/services/cartService';
+import { addCartItem, clearCart, syncCartFromBE } from '@/lib/services/cartService';
 
 export async function GET(req: Request) {
     try {
@@ -28,3 +28,13 @@ export async function POST(req: Request) {
     }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    await ensureDataSource();
+    const { userId } = await req.json()
+    await clearCart(userId);
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
+  }
+} 

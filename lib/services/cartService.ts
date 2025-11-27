@@ -93,3 +93,19 @@ export async function deleteCartItem(cartItemId: string) {
   if (!cartItem) return null;
   await cartItemRepo.remove(cartItem);
 }
+
+export async function clearCart(userId: string) {
+  const cartRepo = AppDataSource.getRepository(CartEntity)
+  const itemRepo = AppDataSource.getRepository(CartItemEntity)
+
+  const cart = await cartRepo.findOne({ where: { userId } })
+  if (!cart) return null
+
+  await itemRepo.delete({ cart: { id: cart.id } })
+
+  cart.totalQuantity = 0
+  cart.totalPrice = 0
+  await cartRepo.save(cart)
+
+  return cart
+}

@@ -3,9 +3,10 @@ import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
 import { AppDataSource } from "./lib/database/typeorm"
 import { UserEntity } from "./lib/database/entities"
-import { UserRole } from "./types"
+import { CustomerStatus, CustomerType, UserRole } from "./types"
 import { compare } from "bcryptjs"
 import { ensureDataSource } from '@/lib/database/ensureDataSource';
+import { CustomerEntity } from "./lib/database/entities/customer.entity"
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -13,21 +14,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     Credentials({
       name: "Credentials",
       credentials: {
-        phone: { label: "Phone", type: "text" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
         rememberMe: { label: "RememberMe", type: "text" }
       },
       async authorize(credentials) {
         await ensureDataSource()
-        if (!credentials?.phone || !credentials?.password) return null
+        if (!credentials?.username || !credentials?.password) return null
         const rememberMe = credentials.rememberMe === "true";
 
-        const phone = String(credentials.phone)
+        const username = String(credentials.username).trim()
         const password = String(credentials.password)
 
         const repo = AppDataSource.getRepository(UserEntity)
-        const user = await repo.findOne({ where: { phone: phone } })
-
+        const user = await repo.findOne({ where: { username: username } })
         if (!user) return null
 
         const isValid = await compare(password, user.password ?? "")
@@ -56,28 +56,46 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async signIn({ account, user }) {
       if (account?.provider === "google") {
         await ensureDataSource()
-        const repo = AppDataSource.getRepository(UserEntity)
+        await AppDataSource.transaction(async (manager) => {
+          try {
+            let existing = await manager.findOne(UserEntity, { where: { email: user.email! } })
 
-        let existing = await repo.findOne({ where: { email: user.email! } })
-        if (!existing) {
-          existing = repo.create({
-            email: user.email as string,
-            username: user.name as string,
-            password: "",
-            passwordSalt: "",
-            role: UserRole.customer,
-            active: true,
-            lastLogin: new Date(),
-          })
-          await repo.save(existing)
-        } else {
-          existing.lastLogin = new Date()
-          await repo.save(existing)
-        }
+            if (!existing) {
+              const newUser = manager.create(UserEntity, {
+                fullName: user.name as string,
+                email: user.email as string,
+                username: user.email as string,
+                password: "",
+                passwordSalt: "",
+                role: UserRole.customer,
+                active: true,
+                lastLogin: new Date(),
+              })
 
-        user.id = existing.id
+              const saved = await manager.save(UserEntity, newUser)
+
+              const customer = manager.create(CustomerEntity, {
+                name: saved.username || saved.email || "Unknown",
+                email: saved.email,
+                phone: saved.phone,
+                joinDate: new Date(),
+                customerType: CustomerType.regular,
+                status: CustomerStatus.active
+              })
+              await manager.save(CustomerEntity, customer)
+              existing = saved
+            } else {
+              existing.lastLogin = new Date()
+              await manager.save(UserEntity, existing)
+            }
+
+            user.id = existing.id
+          } catch (err) {
+            console.error(err)
+            throw err
+          }
+        })
       }
-
       return true
     },
 
