@@ -13,7 +13,7 @@ import { Toaster } from "@/components/ui/sonner"
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Rice & Noodles - Bánh Tráng & Bún Phở Truyền Thống',
+  title: 'An Phat Food - Bánh Tráng & Bún Phở Truyền Thống',
   description: 'Cửa hàng bánh tráng và bún phở truyền thống chất lượng cao, mang đến hương vị đậm đà từ miền quê Việt Nam.',
 };
 

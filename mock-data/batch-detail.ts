@@ -221,8 +221,8 @@ export const mockBatchDetail: IBatchDetailComplete = {
       location: 'Nhà máy sản xuất',
       locationEn: 'Production Facility',
       distributor: {
-        name: 'Nhà máy Rice & Noodles',
-        nameEn: 'Rice & Noodles Factory',
+        name: 'Nhà máy An Phat Food',
+        nameEn: 'An Phat Food Factory',
         address: '456 Đường Cách Mạng Tháng 8, TP. Tây Ninh, Tây Ninh',
         addressEn: '456 Cach Mang Thang 8 Street, Tay Ninh City, Tay Ninh',
         phone: '0276 3842 123',
@@ -261,8 +261,8 @@ export const mockBatchDetail: IBatchDetailComplete = {
       location: 'Cửa hàng bán lẻ',
       locationEn: 'Retail Store',
       distributor: {
-        name: 'Cửa hàng Rice & Noodles Quận 1',
-        nameEn: 'Rice & Noodles Store District 1',
+        name: 'Cửa hàng An Phat Food Quận 1',
+        nameEn: 'An Phat Food Store District 1',
         address: '123 Đường Lê Lợi, Phường Bến Nghé, Quận 1, TP.HCM',
         addressEn: '123 Le Loi Street, Ben Nghe Ward, District 1, Ho Chi Minh City',
         phone: '028 3823 4567',

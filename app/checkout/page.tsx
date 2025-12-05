@@ -54,13 +54,13 @@ export default function CheckoutPage() {
   const bankInfo = {
     bankName: 'Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)',
     accountNumber: '0123456789',
-    accountName: 'CONG TY TNHH RICE & NOODLES',
+    accountName: 'CONG TY TNHH AN PHAT FOOD',
     branch: 'Chi nhánh Sài Gòn'
   };
 
   const momoInfo = {
     phoneNumber: '0901234567',
-    accountName: 'Rice & Noodles Store'
+    accountName: 'An Phat Food'
   };
 
   if (items.length === 0) {
