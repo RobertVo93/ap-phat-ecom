@@ -151,10 +151,6 @@ export const storeTranslations = {
     en: 'Store Map',
     vi: 'Bản đồ cửa hàng',
   },
-  'contact.map.address': {
-    en: '123 Le Loi, District 1, Ho Chi Minh City',
-    vi: '123 Đường Lê Lợi, Quận 1, TP.HCM',
-  },
   'contact.map.directions': {
     en: 'Directions to the store:',
     vi: 'Hướng dẫn đến cửa hàng:',
@@ -208,8 +204,8 @@ export const storeTranslations = {
     vi: 'Đổi trả trong vòng 7 ngày nếu sản phẩm có lỗi.',
   },
   'about.hero.title': {
-    en: 'About Rice & Noodles',
-    vi: 'Về Rice & Noodles',
+    en: 'About',
+    vi: 'Về',
   },
   'about.hero.subtitle': {
     en: 'We are dedicated artisans bringing the authentic taste of traditional Vietnamese rice paper and pho noodles to every family.',
@@ -316,8 +312,8 @@ export const storeTranslations = {
     vi: 'Thành lập công ty',
   },
   'about.timeline.2018.description': {
-    en: 'Rice & Noodles was established with the mission of bringing traditional rice paper and pho noodles to every Vietnamese family.',
-    vi: 'Rice & Noodles được thành lập với sứ mệnh mang bánh tráng và bún phở truyền thống đến mọi gia đình Việt.',
+    en: 'An Phat Food was established with the mission of bringing traditional rice paper and pho noodles to every Vietnamese family.',
+    vi: 'An Phat Food được thành lập với sứ mệnh mang bánh tráng và bún phở truyền thống đến mọi gia đình Việt.',
   },
   'about.timeline.2019.title': {
     en: 'Production Expansion',
@@ -364,8 +360,8 @@ export const storeTranslations = {
     vi: 'Đội ngũ lãnh đạo',
   },
   'about.team.subtitle': {
-    en: 'The talented and dedicated people who built Rice & Noodles\' success',
-    vi: 'Những con người tài năng và tận tâm đã xây dựng nên thành công của Rice & Noodles',
+    en: 'The talented and dedicated people who built An Phat Food\' success',
+    vi: 'Những con người tài năng và tận tâm đã xây dựng nên thành công của An Phat Food',
   },
   'about.team.ceo.name': {
     en: 'Nguyen Van Minh',
@@ -376,8 +372,8 @@ export const storeTranslations = {
     vi: 'Giám đốc điều hành',
   },
   'about.team.ceo.description': {
-    en: 'With over 15 years of experience in the food industry, Mr. Minh has led Rice & Noodles to become a trusted brand.',
-    vi: 'Với hơn 15 năm kinh nghiệm trong ngành thực phẩm, anh Minh đã dẫn dắt Rice & Noodles trở thành thương hiệu uy tín.',
+    en: 'With over 15 years of experience in the food industry, Mr. Minh has led An Phat Food to become a trusted brand.',
+    vi: 'Với hơn 15 năm kinh nghiệm trong ngành thực phẩm, anh Minh đã dẫn dắt An Phat Food trở thành thương hiệu uy tín.',
   },
   'about.team.production.name': {
     en: 'Tran Thi Lan',
@@ -404,8 +400,8 @@ export const storeTranslations = {
     vi: 'Với tầm nhìn chiến lược, anh Nam đã xây dựng mạng lưới phân phối rộng khắp và phát triển thương hiệu.',
   },
   'about.cta.title': {
-    en: 'Create Warm Family Meals with Rice & Noodles',
-    vi: 'Cùng Rice & Noodles tạo nên những bữa cơm gia đình ấm cúng',
+    en: 'Create Warm Family Meals with An Phat Food',
+    vi: 'Cùng An Phat Food tạo nên những bữa cơm gia đình ấm cúng',
   },
   'about.cta.subtitle': {
     en: 'Let us accompany you in bringing traditional, delicious, and nutritious meals to your family.',

@@ -3,14 +3,36 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Navigation, Car, Bus, Train } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { mockStoreLocations } from '@/lib/mock-data/store-locations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Brand } from '@/lib/brand';
+import { StoreLocation } from '@/lib/types';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+const StoreLocations: StoreLocation[] = [
+  {
+    id: `${new Date().getTime()}`,
+    name: `Cửa hàng chính - Phù Mỹ, Bình Định`,
+    nameEn: 'Main Store - Phu My, Binh Dinh',
+    address: Brand.address,
+    addressEn: 'Chu Van An, Hamlet 5, Hoi Khanh Village, Phu My Commune, Binh Dinh Province',
+    phone: Brand.phone,
+    email: Brand.email,
+    hours: 'Thứ 2 - Chủ nhật: 7:00 - 21:00',
+    hoursEn: 'Monday - Sunday: 7:00 AM - 9:00 PM',
+    coordinates: {
+      lat: 14.190373918981283,
+      lng: 109.01627452738636
+    }
+  },
+]
 
 export default function StoreLocationsPage() {
   const { language, t } = useLanguage();
-  const [selectedStore, setSelectedStore] = useState(mockStoreLocations[0]);
+  const [selectedStore, setSelectedStore] = useState(StoreLocations[0]);
+  const router = useRouter()
 
   const storeFeatures = [
     {
@@ -39,6 +61,9 @@ export default function StoreLocationsPage() {
     'Đóng gói quà tặng'
   ];
 
+  const lat = 14.19053562479765
+  const lng = 109.01629465767265
+
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
       {/* Hero Section */}
@@ -49,11 +74,11 @@ export default function StoreLocationsPage() {
             {t('store.locations')}
           </h1>
           <p className="text-xl text-[#d4c5a0] max-w-3xl mx-auto leading-relaxed">
-            Tìm cửa hàng Rice & Noodles gần bạn nhất. Chúng tôi có mặt tại nhiều địa điểm để phục vụ bạn tốt nhất.
+            Tìm cửa hàng {Brand.name} gần bạn nhất. Chúng tôi có mặt tại nhiều địa điểm để phục vụ bạn tốt nhất.
           </p>
           <div className="mt-8 flex justify-center">
             <Badge className="bg-[#efe1c1] text-[#573e1c] px-4 py-2 text-lg">
-              {mockStoreLocations.length} cửa hàng trên toàn quốc
+              {StoreLocations.length} cửa hàng trên toàn quốc
             </Badge>
           </div>
         </div>
@@ -64,14 +89,13 @@ export default function StoreLocationsPage() {
           {/* Store List */}
           <div className="lg:col-span-1 space-y-4">
             <h2 className="text-2xl font-bold text-[#573e1c] mb-6">Danh sách cửa hàng</h2>
-            {mockStoreLocations.map((store) => (
-              <Card 
-                key={store.id} 
-                className={`cursor-pointer transition-all duration-300 ${
-                  selectedStore.id === store.id 
-                    ? 'border-[#573e1c] ring-2 ring-[#573e1c] ring-opacity-50 bg-[#efe1c1]' 
-                    : 'border-[#d4c5a0] hover:border-[#8b6a42] bg-white'
-                }`}
+            {StoreLocations.map((store) => (
+              <Card
+                key={store.id}
+                className={`cursor-pointer transition-all duration-300 ${selectedStore.id === store.id
+                  ? 'border-[#573e1c] ring-2 ring-[#573e1c] ring-opacity-50 bg-[#efe1c1]'
+                  : 'border-[#d4c5a0] hover:border-[#8b6a42] bg-white'
+                  }`}
                 onClick={() => setSelectedStore(store)}
               >
                 <CardContent className="p-6">
@@ -109,15 +133,17 @@ export default function StoreLocationsPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Map Placeholder */}
-                <div className="aspect-video bg-gradient-to-br from-[#efe1c1] to-[#d4c5a0] rounded-lg flex items-center justify-center">
-                  <div className="text-center text-[#573e1c]">
-                    <MapPin className="w-16 h-16 mx-auto mb-4" />
-                    <p className="font-semibold text-lg">Bản đồ cửa hàng</p>
-                    <p className="text-sm text-[#8b6a42]">
-                      {language === 'vi' ? selectedStore.address : selectedStore.addressEn}
-                    </p>
-                  </div>
-                </div>
+                <Link
+                  href={Brand.maps[0]}
+                  target="_blank"
+                  className="block w-full h-[300px]"
+                >
+                  <iframe
+                    src={`https://www.google.com/maps?output=embed&q=${lat},${lng}`}
+                    className="w-full h-full rounded-xl pointer-events-none"
+                    loading="lazy"
+                  />
+                </Link>
 
                 {/* Contact Information */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -148,7 +174,10 @@ export default function StoreLocationsPage() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button className="flex-1 bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]">
+                  <Button 
+                    className="flex-1 bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
+                    onClick={() => window.open(Brand.maps[0], "_blank")}
+                  >
                     <Navigation className="w-4 h-4 mr-2" />
                     Chỉ đường
                   </Button>
