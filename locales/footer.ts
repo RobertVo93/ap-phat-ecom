@@ -1,11 +1,11 @@
 export const footerTranslations = {
   'footer.companyName': {
-    en: 'Rice & Noodles',
-    vi: 'Rice & Noodles',
+    en: 'An Phat Food',
+    vi: 'An Phat Food',
   },
   'footer.copyright': {
-    en: '© 2024 Rice & Noodles. All rights reserved.',
-    vi: '© 2024 Rice & Noodles. Bảo lưu mọi quyền.',
+    en: '© 2024 An Phat Food. All rights reserved.',
+    vi: '© 2024 An Phat Food. Bảo lưu mọi quyền.',
   },
   'footer.privacyPolicy': {
     en: 'Privacy Policy',
@@ -26,17 +26,5 @@ export const footerTranslations = {
   'footer.categories.vermicelli': {
     en: 'Vermicelli',
     vi: 'Bún',
-  },
-  'footer.contact.phone': {
-    en: '028 3823 4567',
-    vi: '028 3823 4567',
-  },
-  'footer.contact.email': {
-    en: 'contact@ricepaperstore.vn',
-    vi: 'contact@ricepaperstore.vn',
-  },
-  'footer.contact.address': {
-    en: '123 Le Loi Street, Ben Nghe Ward\nDistrict 1, Ho Chi Minh City',
-    vi: '123 Đường Lê Lợi, Phường Bến Nghé\nQuận 1, TP.HCM',
   },
 } 

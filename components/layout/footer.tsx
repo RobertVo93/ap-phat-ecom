@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Youtube } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
+import { Brand } from '@/lib/brand';
 
 export function Footer() {
   const { t } = useLanguage();
@@ -16,7 +17,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-[#efe1c1] rounded-full flex items-center justify-center">
-                <span className="text-[#573e1c] font-bold text-sm">RT</span>
+                <span className="text-[#573e1c] font-bold text-sm">AP</span>
               </div>
               <span className="font-bold text-xl">{t('footer.companyName')}</span>
             </div>
@@ -24,13 +25,10 @@ export function Footer() {
               {t('home.hero.subtitle')}
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
-                <Facebook className="w-5 h-5" />
+              <Link href={Brand.facebook} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
+                <Facebook target="_blank" className="w-5 h-5" />
               </Link>
-              <Link href="#" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
-                <Instagram className="w-5 h-5" />
-              </Link>
-              <Link href="#" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
+              <Link href={Brand.youtube} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
                 <Youtube className="w-5 h-5" />
               </Link>
             </div>
@@ -96,16 +94,16 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-[#d4c5a0]" />
-                <span className="text-[#d4c5a0] text-sm">{t('footer.contact.phone')}</span>
+                <span className="text-[#d4c5a0] text-sm">{Brand.phone}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-[#d4c5a0]" />
-                <span className="text-[#d4c5a0] text-sm">{t('footer.contact.email')}</span>
+                <span className="text-[#d4c5a0] text-sm">{Brand.email}</span>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-[#d4c5a0] mt-0.5" />
                 <span className="text-[#d4c5a0] text-sm leading-relaxed whitespace-pre-line">
-                  {t('footer.contact.address')}
+                  {Brand.address}
                 </span>
               </div>
             </div>
