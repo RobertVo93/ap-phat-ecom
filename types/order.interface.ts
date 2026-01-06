@@ -45,3 +45,12 @@ export interface OrderFilters extends IBaseFilters{
 }
 
 export type OrderSortBy = "deliveryDate" | "totalAmount" | "customer" | "number"
+
+export interface IRecentOrder {
+  id: string,
+  number: string,
+  date: Date,
+  total: number,
+  status: OrderStatus,
+  items: number
+}
