@@ -8,3 +8,8 @@ export async function getProducts(params: IProductFilters = {}) {
 
   return res.json();
 }
+
+export async function getProductById(id: string) {
+  const res = await fetch(`/api/products/${id}`);
+  return res.json();
+}

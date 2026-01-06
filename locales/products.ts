@@ -35,6 +35,38 @@ export const productTranslations = {
     en: 'Features',
     vi: 'Đặc điểm',
   },
+  'product.name': {
+    en: 'Name',
+    vi: 'Tên',
+  },
+  'product.sku': {
+    en: 'SKU',
+    vi: 'SKU',
+  },
+  'product.unit': {
+    en: 'Unit',
+    vi: 'Đơn vị',
+  },
+  "product.unit.kg": {
+    en: "kg",
+    vi: "kg",
+  },
+  "product.unit.piece": {
+    en: "piece",
+    vi: "bánh",
+  },
+  "product.unit.other": {
+    en: "other",
+    vi: "khác",
+  },
+  'product.supplier': {
+    en: 'Supplier',
+    vi: 'Nhà cung cấp',
+  },
+  'product.copied': {
+    en: 'Copied',
+    vi: 'Đã copy',
+  },
   'product.description': {
     en: 'Description',
     vi: 'Mô tả',
