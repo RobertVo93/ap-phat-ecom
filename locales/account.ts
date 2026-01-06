@@ -27,21 +27,29 @@ export const accountTranslations = {
     en: 'Delivered',
     vi: 'Đã giao',
   },
-  'account.status.shipping': {
-    en: 'Shipping',
-    vi: 'Đang giao',
+  'account.status.shipped': {
+    en: 'shipped',
+    vi: 'Đã giao',
   },
-  'account.status.confirmed': {
-    en: 'Confirmed',
-    vi: 'Đã xác nhận',
+  'account.status.completed': {
+    en: 'Completed',
+    vi: 'Đã hoàn thành',
   },
   'account.status.pending': {
     en: 'Pending',
     vi: 'Chờ xử lý',
   },
+  'account.status.processing': {
+    en: 'Processing',
+    vi: 'Đang xử lý',
+  },
   'account.status.cancelled': {
     en: 'Cancelled',
     vi: 'Đã hủy',
+  },
+  'account.status.lackProduct': {
+    en: 'Lack of product',
+    vi: 'Thiếu hàng',
   },
   'account.personalInfo': {
     en: 'Personal Information',

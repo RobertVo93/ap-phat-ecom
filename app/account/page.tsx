@@ -1,73 +1,29 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { User, Package, MapPin, Settings, LogOut, Edit, Eye } from 'lucide-react';
-import { useLanguage } from '@/lib/contexts/language-context';
-import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
-import Image from 'next/image';
+import { useAccount } from '@/hooks/use-account';
+import { formatCurrency } from '@/lib/utils.currency';
+import { getOrderStatusColor } from '@/lib/utils.style';
+import { formatDate } from '@/lib/utils.date';
 
 export default function AccountPage() {
-  const { t } = useLanguage();
-  const { user, logout } = useAuth();
-  const router = useRouter();
+  const {
+    user,
+    userStats,
+    recentOrders,
+    t,
+    handleLogout,
+  } = useAccount()
 
   if (!user) {
     return null;
   }
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
-
-  const handleLogout = () => {
-    logout();
-    router.push('/');
-  };
-
-  // Mock recent orders data
-  const recentOrders = [
-    {
-      id: 'ORD-001',
-      date: '2024-01-15',
-      total: 125000,
-      status: 'delivered',
-      items: 3
-    },
-    {
-      id: 'ORD-002',
-      date: '2024-01-10',
-      total: 85000,
-      status: 'shipping',
-      items: 2
-    },
-    {
-      id: 'ORD-003',
-      date: '2024-01-05',
-      total: 65000,
-      status: 'confirmed',
-      items: 1
-    }
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'delivered': return 'bg-green-100 text-green-800';
-      case 'shipping': return 'bg-blue-100 text-blue-800';
-      case 'confirmed': return 'bg-yellow-100 text-yellow-800';
-      case 'pending': return 'bg-gray-100 text-gray-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
 
   const getStatusText = (status: string) => {
     return t(`account.status.${status}`);
@@ -84,7 +40,7 @@ export default function AccountPage() {
                 {t('account.dashboard')}
               </h1>
               <p className="text-[#8b6a42] mt-2">
-                {t('account.welcome')} {user.username}
+                {t('account.welcome')} <span className='font-bold'>{user.fullName}</span>
               </p>
             </div>
             <Button
@@ -109,8 +65,8 @@ export default function AccountPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* <div className="text-center">
-                  {user.avatar ? (
+                <div className="text-center">
+                  {/* {user.avatar ? (
                     <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-4 border-2 border-[#573e1c]">
                       <Image
                         src={user.avatar}
@@ -124,29 +80,29 @@ export default function AccountPage() {
                         {user.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                  )}
-                  <h3 className="font-semibold text-[#573e1c] text-lg">{user.name}</h3>
+                  )} */}
+                  <h3 className="font-semibold text-[#573e1c] text-lg">{user.fullName}</h3>
                   <p className="text-[#8b6a42] text-sm">{user.email}</p>
                   <p className="text-[#8b6a42] text-sm">{user.phone}</p>
-                </div> */}
+                </div>
 
                 <Separator />
 
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('account.totalOrders')}:</span>
-                    {/* <span className="font-semibold text-[#573e1c]">{user.totalOrders}</span> */}
+                    <span className="font-semibold text-[#573e1c]">{userStats.totalOrders}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('account.totalSpent')}:</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {/* {formatPrice(user.totalSpent)} */}
+                      {formatCurrency(userStats.totalSpent)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('account.memberSince')}:</span>
                     <span className="font-semibold text-[#573e1c]">
-                      {/* {new Date(user.joinDate).toLocaleDateString('vi-VN')} */}
+                      {formatDate(user.createdAt!)}
                     </span>
                   </div>
                 </div>
@@ -196,7 +152,7 @@ export default function AccountPage() {
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {/* {user.totalOrders} */}
+                    {userStats.totalOrders}
                   </div>
                   <div className="text-sm text-[#8b6a42]">{t('account.totalOrders')}</div>
                 </CardContent>
@@ -204,7 +160,7 @@ export default function AccountPage() {
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {/* {formatPrice(user.totalSpent)} */}
+                    {formatCurrency(userStats.totalSpent)}
                   </div>
                   <div className="text-sm text-[#8b6a42]">{t('account.totalSpent')}</div>
                 </CardContent>
@@ -212,7 +168,7 @@ export default function AccountPage() {
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
                   <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {/* {user.addresses.length} */}
+                    {userStats.totalAddresses}
                   </div>
                   <div className="text-sm text-[#8b6a42]">{t('account.savedAddresses')}</div>
                 </CardContent>
@@ -245,19 +201,19 @@ export default function AccountPage() {
                     <div key={order.id} className="border border-[#d4c5a0] rounded-lg p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div>
-                          <h4 className="font-semibold text-[#573e1c]">#{order.id}</h4>
+                          <h4 className="font-semibold text-[#573e1c]">#{order.number}</h4>
                           <p className="text-sm text-[#8b6a42]">
                             {new Date(order.date).toLocaleDateString('vi-VN')}
                           </p>
                         </div>
-                        <Badge className={getStatusColor(order.status)}>
+                        <Badge className={getOrderStatusColor(order.status)}>
                           {getStatusText(order.status)}
                         </Badge>
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
                         <div className="text-sm text-[#8b6a42]">
-                          {order.items} {t('account.items')} • {formatPrice(order.total)}
+                          {order.items} {t('account.items')} • {formatCurrency(order.total)}
                         </div>
                         <div className="flex space-x-2">
                           <Button
