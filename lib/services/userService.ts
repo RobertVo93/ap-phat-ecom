@@ -1,5 +1,6 @@
 import { CustomerEntity } from "@/lib/database/entities/customer.entity";
 import { UserEntity } from "@/lib/database/entities/user.entity";
+import { OrderEntity } from "@/lib/database/entities/order.entity";
 import { AppDataSource } from "@/lib/database/typeorm";
 import { ensureDataSource } from "@/lib/database/ensureDataSource";
 import { CustomerStatus, CustomerType, UserRole } from "@/types"
@@ -64,4 +65,46 @@ export class UserService {
     await ensureDataSource();
     return await this.userRepository.findOneBy({ username });
   }
+
+  async getUserStats(userId: string) {
+    const orderRepo = AppDataSource.getRepository(OrderEntity);
+    const [recentOrders, rawStats] = await Promise.all([
+      // get 4 newest orders
+      orderRepo.find({
+        where: {
+          customer: {
+            user: {
+              id: userId,
+            },
+          },
+        },
+        order: {
+          createdAt: "DESC",
+        },
+        take: 4,
+      }),
+
+      // get stats
+      orderRepo
+        .createQueryBuilder("order")
+        .leftJoin("order.customer", "customer")
+        .leftJoin("customer.user", "user")
+        .select("COUNT(order.id)", "totalOrders")
+        .addSelect("SUM(order.totalAmount)", "totalSpent")
+        .addSelect("COUNT(DISTINCT order.shippingAddress)", "totalAddresses")
+        .where("user.id = :userId", { userId })
+        .getRawOne(),
+    ]);
+
+    return {
+      stats: {
+        totalOrders: Number(rawStats?.totalOrders || 0),
+        totalSpent: Number(rawStats?.totalSpent || 0),
+        totalAddresses: Number(rawStats?.totalAddresses || 0),
+      },
+      recentOrders: recentOrders,
+    };
+  }
 }
+
+

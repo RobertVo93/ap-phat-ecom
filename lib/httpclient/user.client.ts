@@ -13,6 +13,17 @@ export async function apiGetMe(userId: string) {
     return data;
 }
 
+export async function apiGetUserStats(userId: string) {
+  const params = new URLSearchParams({ userId })
+  const res = await fetch(
+    `/api/auth/user-stats?${params}`,
+    { credentials: "include" }
+  );
+  if (!res.ok) throw new Error("Failed to fetch recent orders");
+
+  return res.json();
+}
+
 export async function registerUser(newUser: IUser) {
     const {
         userId, 
