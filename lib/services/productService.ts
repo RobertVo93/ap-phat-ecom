@@ -76,3 +76,10 @@ export async function getCollectionById(id: string) {
   const repo = AppDataSource.getRepository(CollectionEntity);
   return repo.findOneBy({ id });
 }
+
+export async function getProductById(id: string) {
+  const repo = AppDataSource.getRepository(ProductEntity);
+  return repo.findOne({
+    where: { id },
+  });
+}

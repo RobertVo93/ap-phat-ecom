@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ShoppingCart, Heart, Share2, Minus, Plus, Truck, Shield, RotateCcw, ZoomIn} from 'lucide-react';
+import { ShoppingCart, Copy, Minus, Plus, Truck, Shield, RotateCcw, ZoomIn } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
 import { IProduct, ProductStatus } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { formatCurrencyVND } from '@/lib/utils.currency';
+import { ProductDetailTable } from './product-detail-table';
+import { toast } from "sonner"
 
 interface ProductDetailClientProps {
   product: IProduct;
@@ -23,6 +23,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [selectedVariant, setSelectedVariant] = useState<string>('');
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+
+  const handleCopy = async () => {
+    const url = window.location.href
+    await navigator.clipboard.writeText(url)
+    toast.success(t("product.copied"))
+  }
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
@@ -72,18 +78,17 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <img
                   src={product.image}
                   alt={product.name}
-                  className={`w-full h-full object-cover transition-transform duration-300 ${
-                    isZoomed ? 'scale-150' : 'scale-100'
-                  }`}
+                  className={`w-full h-full object-cover transition-transform duration-300 ${isZoomed ? 'scale-150' : 'scale-100'
+                    }`}
                   style={
                     isZoomed
                       ? {
-                          transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                        }
+                        transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                      }
                       : {}
                   }
                 />
-                
+
                 {/* Zoom Icon */}
                 <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                   <ZoomIn className="w-4 h-4" />
@@ -107,7 +112,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 </DialogContent>
               </Dialog>
             </div>
-            
+
             {/* Thumbnail Images */}
             {/* {product.images.length > 1 && (
               <div className="flex space-x-2 overflow-x-auto pb-2">
@@ -148,7 +153,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c] mb-4">
                 {product.name}
               </h1>
-              
+
 
               <div className="flex items-center space-x-4 mb-6">
                 <span className="text-3xl font-bold text-[#573e1c]">
@@ -208,21 +213,15 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   {getAddToCartButtonText()}
                 </Button>
-                
+
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="icon"
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1] h-12 w-12"
+                    onClick={handleCopy}
                   >
-                    <Heart className="w-5 h-5" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1] h-12 w-12"
-                  >
-                    <Share2 className="w-5 h-5" />
+                    <Copy className="w-5 h-5" />
                   </Button>
                 </div>
               </div>
@@ -255,44 +254,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           </div>
         </div>
 
-        {/* Product Details Tabs */}
-        <div className="mt-16">
-          <Tabs defaultValue="description" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-[#efe1c1]">
-              <TabsTrigger value="description" className="data-[state=active]:bg-[#573e1c] data-[state=active]:text-[#efe1c1]">
-                {t('product.description')}
-              </TabsTrigger>
-              <TabsTrigger value="features" className="data-[state=active]:bg-[#573e1c] data-[state=active]:text-[#efe1c1]">
-                {t('product.features')}
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="description" className="mt-6">
-              <Card className="border-[#d4c5a0]">
-                <CardContent className="p-6">
-                  <p className="text-[#8b6a42] leading-relaxed text-lg">
-                    {product.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="features" className="mt-6">
-              <Card className="border-[#d4c5a0]">
-                <CardContent className="p-6">
-                  <ul className="space-y-3">
-                    {/* {productFeatures.map((feature, index) => (
-                      <li key={index} className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#573e1c] rounded-full mt-2 flex-shrink-0"></div>
-                        <span className="text-[#8b6a42]">{feature}</span>
-                      </li>
-                    ))} */}
-                  </ul>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+        {/* Product Details Table */}
+        <ProductDetailTable product={product} />
       </div>
     </div>
   );
