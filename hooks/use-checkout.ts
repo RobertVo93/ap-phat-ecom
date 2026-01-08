@@ -198,7 +198,7 @@ export const useCheckout = () => {
     const splitAddress = customer.location ? customer.location.split(' - ') : [];
     setOrderData({ 
       ...orderData, 
-      notes: customer.notes, 
+      notes: customer.notes || '', 
       receiverInfo: {
         name: customer.name || '',
         phone: customer.phone || '',

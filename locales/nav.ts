@@ -24,6 +24,10 @@ export const navTranslations = {
     en: "Account",
     vi: "Tài khoản",
   },
+  'nav.orders': {
+    en: "Orders",
+    vi: "Đơn hàng",
+  },
   'nav.login': {
     en: "Login",
     vi: "Đăng nhập",
