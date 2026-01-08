@@ -29,7 +29,7 @@ export const accountTranslations = {
   },
   'account.status.shipped': {
     en: 'shipped',
-    vi: 'Đã giao',
+    vi: 'Đã gửi',
   },
   'account.status.completed': {
     en: 'Completed',
@@ -128,8 +128,8 @@ export const accountTranslations = {
     vi: 'Theo dõi và quản lý đơn hàng của bạn',
   },
   'account.searchPlaceholder': {
-    en: 'Search by order ID or product name...',
-    vi: 'Tìm kiếm theo mã đơn hàng hoặc tên sản phẩm...',
+    en: 'Search by order number, customer\'s name, shipping address or note',
+    vi: 'Tìm kiếm theo mã đơn hàng, tên người mua, địa chỉ hoặc ghi chú',
   },
   'account.filterByStatus': {
     en: 'Filter by status',
@@ -166,6 +166,10 @@ export const accountTranslations = {
   'account.total': {
     en: 'Total: {amount}',
     vi: 'Tổng: {amount}',
+  },
+  'account.orderNote': {
+    en: 'Note',
+    vi: 'Ghi chú',
   },
   'account.track': {
     en: 'Track',
@@ -411,4 +415,5 @@ export const accountTranslations = {
     en: 'New password must be at least 6 characters',
     vi: 'Mật khẩu mới phải có ít nhất 6 ký tự',
   },
-}; 
+};
+ 

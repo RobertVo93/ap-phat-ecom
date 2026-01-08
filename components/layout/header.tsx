@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingCart, User, Menu, X, Globe, Gift } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Globe, Gift, ClipboardList } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
 import { useAuth } from '@/lib/contexts/auth-context';
@@ -129,6 +129,12 @@ export function Header() {
                   <>
                     <DropdownMenuItem asChild>
                       <Link href="/account">{t('nav.account')}</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/account/orders">
+                        <ClipboardList className="w-4 h-4 mr-2" />
+                        {t('nav.orders')}
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/account/rewards">

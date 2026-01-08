@@ -54,3 +54,11 @@ export interface IRecentOrder {
   status: OrderStatus,
   items: number
 }
+
+export interface IOrderFilters extends IBaseFilters{
+  customerId?: string
+  search?: string
+  status?: string
+  limit?: number
+  offset?: number
+}
