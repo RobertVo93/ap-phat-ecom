@@ -1,6 +1,6 @@
 import { AppDataSource } from "@/lib/database/typeorm";
 import { OrderEntity } from "@/lib/database/entities/order.entity";
-import { CustomerStatus, CustomerType, IOrder } from "@/types";
+import { CustomerStatus, CustomerType, IOrder, OrderStatus } from "@/types";
 import { CustomerEntity } from "../database/entities/customer.entity";
 
 export async function createOrderService(data: Partial<IOrder>) {
@@ -29,4 +29,62 @@ export async function createOrderService(data: Partial<IOrder>) {
 
     return await manager.save(OrderEntity, order);
   })
+}
+
+type GetOrdersInput = {
+  customerId?: string;
+  searchTerm?: string;
+  status?: OrderStatus;
+  offset?: number;
+  limit?: number;
+};
+
+export async function getOrders({
+  customerId,
+  searchTerm,
+  status,
+  offset = 0,
+  limit = 10,
+}: GetOrdersInput) {
+  const repo = AppDataSource.getRepository(OrderEntity);
+  const qb = repo.createQueryBuilder("order");
+
+  qb.leftJoinAndSelect("order.customer", "customer");
+
+  // Always filter by customer ID for security - users should only see their own orders
+  if (customerId) {
+    qb.andWhere("order.customer_id = :customerId", { customerId });
+  }
+
+  if (status) {
+    qb.andWhere("order.status = :status", { status });
+  }
+
+  if (searchTerm && searchTerm.trim() !== "") {
+    qb.andWhere(
+      `
+        (
+          order.number ILIKE :searchTerm
+          OR order.notes ILIKE :searchTerm
+          OR order.shippingAddress ILIKE :searchTerm
+          OR customer.name ILIKE :searchTerm
+        )
+      `,
+      { searchTerm: `%${searchTerm}%` }
+    );
+  }
+
+  qb.orderBy("order.deliveryDate", "DESC");
+
+  qb.skip(offset).take(limit);
+
+  const [data, total] = await qb.getManyAndCount();
+
+  return {
+    data,
+    total,
+    offset,
+    limit,
+    hasMore: offset + data.length < total,
+  };
 }
