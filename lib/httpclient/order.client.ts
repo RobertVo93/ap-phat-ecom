@@ -18,3 +18,20 @@ export async function apiGetOrders(params: IOrderFilters = {}) {
   if (!res.ok) throw new Error("Failed to fetch collections");
   return res.json();
 }
+
+export async function apiGetOrder(id: string) {
+  const res = await fetch(`/api/orders/${id}`, { credentials: "include" });
+  if (!res.ok) throw new Error("Failed to fetch collections");
+  return res.json();
+}
+
+export async function apiCancelOrder(id: string) {
+  const res = await fetch(`/api/orders/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({}),
+  });
+  if (!res.ok) throw new Error("Failed to cancel order");
+  return res.json();
+}

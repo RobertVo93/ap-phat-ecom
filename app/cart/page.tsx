@@ -2,12 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, ImageIcon } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 
 export default function CartPage() {
   const { language, t } = useLanguage();
@@ -84,11 +85,14 @@ export default function CartPage() {
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
                       <div className="flex-shrink-0">
-                        <img
-                          src={item.product?.image}
-                          alt={item.product?.name}
-                          className="w-20 h-20 object-cover rounded-lg"
-                        />
+                        {item.product?.image ?
+                          <img
+                            src={item.product?.image}
+                            alt={item.product?.name}
+                            className="w-20 h-20 object-cover rounded-lg"
+                          /> :
+                          <ImageIcon className="w-20 h-20 text-gray-400" />
+                        }
                       </div>
 
                       <div className="flex-1 min-w-0">
@@ -122,9 +126,18 @@ export default function CartPage() {
                             >
                               <Minus className="w-4 h-4" />
                             </Button>
-                            <span className="px-4 py-2 font-semibold min-w-[3rem] text-center">
-                              {item.quantity}
-                            </span>
+                            <Input
+                              type="number"
+                              value={item.quantity}
+                              onChange={(e) => updateQuantity(item.id!, Number(e.currentTarget.value))}
+                              className="
+                                px-4 py-2 font-semibold min-w-[3rem] text-center
+                                [appearance:textfield]
+                                [&::-webkit-outer-spin-button]:appearance-none
+                                [&::-webkit-inner-spin-button]:appearance-none
+                              "
+                            />
+                            {/* </Input> */}
                             <Button
                               variant="ghost"
                               size="sm"
