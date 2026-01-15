@@ -1,20 +1,18 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { 
-  ArrowLeft, 
-  Package,
-  MapPin, 
-  Phone, 
+import {
+  ArrowLeft,
+  MapPin,
+  Phone,
   Mail,
   Download,
   MessageCircle,
   Star,
   RotateCcw,
-  AlertCircle
+  ImageIcon
 } from 'lucide-react';
-import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -22,61 +20,38 @@ import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { IOrder, OrderStatus } from '@/types';
+import { OrderStatus } from '@/types';
 import Image from 'next/image';
 import { formatDate } from '@/lib/utils.date';
 import { getOrderStatusColor } from '@/lib/utils.style';
 import { formatCurrencyVND } from '@/lib/utils.currency';
+import { notFound } from 'next/navigation';
+import { useOrder } from '@/hooks/use-order';
+import { LoadingOverlay } from '../common/LoadOverlay';
+import { OrderCancelDialog } from './order-cancel-dialog';
 
-interface OrderDetailClientProps {
-  order: IOrder;
-}
+export function OrderDetailClient({ id }: { id: string }) {
+  const {
+    loading,
+    order,
+    rating,
+    reviewText,
+    notFoundError,
+    rateOpen,
+    setRateOpen,
+    t,
+    handleCancelOrder,
+    handleReorder,
+    handleSubmitReview,
+    setRating,
+    setReviewText
+  } = useOrder(id)
 
-export function OrderDetailClient({ order }: OrderDetailClientProps) {
-  const { t } = useLanguage();
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [reviewText, setReviewText] = useState('');
-  const [rating, setRating] = useState(0);
+  if (loading) return <LoadingOverlay loading />
 
-  const getStatusText = (status: string) => {
-    return t(`order.status.${status}`);
-  };
+  if (notFoundError) return notFound()
 
-  const getProgressPercentage = useMemo(() => {
-    // const completedSteps = order.timeline.filter(step => step.completed).length;
-    // return (completedSteps / order.timeline.length) * 100;
-    return 0;
-  }, []);
-
-  const copyToClipboard = async (text: string, field: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedField(field);
-      setTimeout(() => setCopiedField(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
-
-  const handleReorder = () => {
-    alert(t('order.detail.reorderSuccess'));
-  };
-
-  const handleCancelOrder = () => {
-    if (confirm(t('order.detail.cancelConfirm'))) {
-      alert(t('order.detail.cancelSuccess'));
-    }
-  };
-
-  const handleSubmitReview = () => {
-    if (rating === 0) {
-      alert(t('order.detail.reviewRatingRequired'));
-      return;
-    }
-    alert(t('order.detail.reviewSuccess'));
-    setReviewText('');
-    setRating(0);
-  };
+  if (!order) return null
 
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
@@ -95,7 +70,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
               </Link>
             </Button>
           </div>
-          
+
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
@@ -105,10 +80,10 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 {t('order.detail.placedOn')} {formatDate(order.createdAt!)}
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <Badge className={getOrderStatusColor(order.status!)}>
-                {getStatusText(order.status!)}
+                {t(`account.status.${order.status}`)}
               </Badge>
               {order.status === OrderStatus.shipped && (
                 <Badge variant="outline" className="border-blue-500 text-blue-600">
@@ -122,94 +97,6 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Order Progress */}
-            <Card className="bg-white border-[#d4c5a0]">
-              <CardHeader>
-                <CardTitle className="text-[#573e1c] flex items-center">
-                  <Package className="w-5 h-5 mr-2" />
-                  {t('order.detail.status')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* <div className="space-y-4">
-                  {order.timeline?.map((step, index) => (
-                    <div key={index} className="flex items-start space-x-4">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        step.completed 
-                          ? 'bg-[#573e1c] text-[#efe1c1]' 
-                          : 'bg-gray-200 text-gray-500'
-                      } ${step.current ? 'ring-4 ring-[#573e1c] ring-opacity-20' : ''}`}>
-                        {step.completed ? (
-                          <CheckCircle className="w-4 h-4" />
-                        ) : (
-                          <Clock className="w-4 h-4" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className={`font-semibold ${
-                          step.completed ? 'text-[#573e1c]' : 'text-gray-500'
-                        }`}>
-                          {t(`order.timeline.${step.title}`)}
-                        </h4>
-                        <p className="text-sm text-[#8b6a42] mt-1">
-                          {step.description}
-                        </p>
-                        {step.timestamp && (
-                          <p className="text-xs text-[#8b6a42] mt-1">
-                            {formatDate(step.timestamp)}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div> */}
-
-                {/* Tracking Information */}
-                {/* {order.status === 'shipping' && (
-                  <div className="mt-6 p-4 bg-[#f8f5f0] rounded-lg">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold text-[#573e1c] flex items-center">
-                        <Truck className="w-4 h-4 mr-2" />
-                        {t('order.detail.shippingInfo')}
-                      </h4>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-[#8b6a42]">{t('order.detail.carrier')}:</span>
-                        <p className="font-medium text-[#573e1c]">{order.carrier}</p>
-                      </div>
-                      <div>
-                        <span className="text-[#8b6a42]">{t('order.detail.trackingNumber')}:</span>
-                        <div className="flex items-center space-x-2">
-                          <p className="font-mono font-medium text-[#573e1c]">{order.trackingNumber}</p>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => copyToClipboard(order?.trackingNumber || '', 'tracking')}
-                            className="h-6 w-6 p-0 text-[#8b6a42] hover:text-[#573e1c]"
-                          >
-                            {copiedField === 'tracking' ? (
-                              <CheckCircle className="w-3 h-3" />
-                            ) : (
-                              <Copy className="w-3 h-3" />
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-3 border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
-                    >
-                      <Truck className="w-3 h-3 mr-1" />
-                      {t('order.detail.trackPackage')}
-                    </Button>
-                  </div>
-                )} */}
-              </CardContent>
-            </Card>
-
             {/* Order Items */}
             <Card className="bg-white border-[#d4c5a0]">
               <CardHeader>
@@ -219,15 +106,19 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                 <div className="space-y-4">
                   {order.items?.map((item, index) => (
                     <div key={index} className="flex items-start space-x-4 p-4 border border-[#efe1c1] rounded-lg">
-                      <Image
-                        src={item.name!}
-                        alt={item.name!}
-                        width={64}
-                        height={64}
-                        className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                      />
+                      {item.product?.image ?
+                        <Image
+                          src={item.product.image}
+                          alt={item.product.name!}
+                          width={64}
+                          height={64}
+                          className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                        /> :
+                        <ImageIcon className="w-[64px] h-[64px] text-gray-400" />
+                      }
+
                       <div className="flex-1">
-                        <h4 className="font-semibold text-[#573e1c]">{item.name}</h4>
+                        <h4 className="font-semibold text-[#573e1c]">{item.product?.name}</h4>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-sm text-[#8b6a42]">
                             {t('cart.quantity')}: {item.quantity}
@@ -257,7 +148,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                     <RotateCcw className="w-4 h-4 mr-2" />
                     {t('order.detail.reorder')}
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
@@ -265,7 +156,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                     <Download className="w-4 h-4 mr-2" />
                     {t('order.detail.downloadInvoice')}
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
@@ -275,18 +166,11 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                   </Button>
 
                   {order.status === OrderStatus.pending && (
-                    <Button
-                      variant="outline"
-                      onClick={handleCancelOrder}
-                      className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white"
-                    >
-                      <AlertCircle className="w-4 h-4 mr-2" />
-                      {t('order.detail.cancel')}
-                    </Button>
+                    <OrderCancelDialog handleCancelOrder={handleCancelOrder} id={order.id!} />
                   )}
 
-                  {order.status === 'delivered' && (
-                    <Dialog>
+                  {order.status === OrderStatus.completed && (
+                    <Dialog open={rateOpen} onOpenChange={setRateOpen}>
                       <DialogTrigger asChild>
                         <Button
                           variant="outline"
@@ -308,9 +192,8 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                                 <button
                                   key={star}
                                   onClick={() => setRating(star)}
-                                  className={`w-8 h-8 ${
-                                    star <= rating ? 'text-yellow-400' : 'text-gray-300'
-                                  }`}
+                                  className={`w-8 h-8 ${star <= rating ? 'text-yellow-400' : 'text-gray-300'
+                                    }`}
                                 >
                                   <Star className="w-full h-full fill-current" />
                                 </button>
@@ -332,6 +215,7 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                             <Button
                               variant="outline"
                               className="border-[#573e1c] text-[#573e1c]"
+                              onClick={() => setRateOpen(false)}
                             >
                               {t('common.cancel')}
                             </Button>
@@ -409,11 +293,11 @@ export function OrderDetailClient({ order }: OrderDetailClientProps) {
                   <div className="space-y-1 text-sm">
                     <div className="flex items-center space-x-2">
                       <span className="text-[#8b6a42]">{t('order.detail.name')}:</span>
-                      <span className="font-medium text-[#573e1c]">{order.shippingAddress}</span>
+                      <span className="font-medium text-[#573e1c]">{order.receiverInfo?.name}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Phone className="w-3 h-3 text-[#8b6a42]" />
-                      <span className="text-[#573e1c]">{order.customer?.phone}</span>
+                      <span className="text-[#8b6a42]">{t('contact.info.phone')}:</span>
+                      <span className="text-[#573e1c]">{order.receiverInfo?.phone}</span>
                     </div>
                   </div>
                 </div>

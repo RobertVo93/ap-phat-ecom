@@ -88,3 +88,20 @@ export async function getOrders({
     hasMore: offset + data.length < total,
   };
 }
+
+export async function getOrderById(id: string) {
+  const repo = AppDataSource.getRepository(OrderEntity);
+  return repo.findOne({
+    where: { id },
+  });
+}
+
+export async function cancelOrder(id: string) {
+  const repo = AppDataSource.getRepository(OrderEntity);
+  const order = await repo.findOne({ where: { id } })
+  if (!order) {
+    throw new Error("Order not found");
+  }
+  order.status = OrderStatus.cancelled;
+  return await repo.save(order);
+}
