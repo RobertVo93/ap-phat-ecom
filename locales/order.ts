@@ -131,6 +131,14 @@ export const orderTranslations = {
     en: 'Are you sure you want to cancel this order?',
     vi: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
   },
+  'order.detail.alert': {
+    en: 'Alert',
+    vi: 'Cảnh báo'
+  },
+  'order.detail.thisActionCantUndo': {
+    en: 'This action cannot be undone',
+    vi: 'Hành động này không thể hoàn tác'
+  },
   'order.detail.cancelSuccess': {
     en: 'Order has been cancelled',
     vi: 'Đơn hàng đã được hủy',
@@ -183,9 +191,9 @@ export const orderTranslations = {
     en: 'Your order has been delivered',
     vi: 'Đơn hàng của bạn đã được giao',
   },
-  'payment.method.cod': {
-    en: 'Cash on Delivery',
-    vi: 'Thanh toán khi nhận hàng',
+  'payment.method.cash': {
+    en: 'Cash',
+    vi: 'Tiền mặt',
   },
   'payment.method.bankTransfer': {
     en: 'Bank Transfer',
@@ -195,13 +203,17 @@ export const orderTranslations = {
     en: 'MoMo',
     vi: 'Ví MoMo',
   },
-  'payment.method.vnpay': {
-    en: 'VNPay',
-    vi: 'VNPay',
+  'payment.method.paypal': {
+    en: 'Paypal',
+    vi: 'Paypal',
   },
   'payment.method.creditCard': {
     en: 'Credit Card',
     vi: 'Thẻ tín dụng',
+  },
+  "payment.method.debitCard": {
+    en: "Debit Card",
+    vi: "Thẻ Ghi Nợ",
   },
   'order.status.confirmed': {
     en: 'Confirmed',
@@ -223,4 +235,12 @@ export const orderTranslations = {
     en: 'Cancelled',
     vi: 'Đã hủy',
   },
+  'order.action.cancel': {
+    en: 'Cancel',
+    vi: 'Hủy'
+  },
+  'order.action.confirm': {
+    en: 'Confirm',
+    vi: 'Xác nhận'
+  }
 } 

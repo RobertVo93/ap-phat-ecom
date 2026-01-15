@@ -158,7 +158,7 @@ export default function OrdersPage() {
                             className="flex justify-between py-2 border-b last:border-b-0"
                           >
                             <span>
-                              {item.name || "Unknown item"} x{item.quantity || 0}
+                              {item.product?.name || "Unknown item"} x{item.quantity || 0}
                             </span>
                             <span>
                               {formatCurrency(item.totalCost || 0)}
