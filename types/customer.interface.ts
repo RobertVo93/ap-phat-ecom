@@ -1,6 +1,6 @@
 import { CustomerStatus, CustomerType } from "@/types/enums";
 import { IBase, IBaseFilters } from "./base.interface";
-import { IOrder, IUser } from "@/types";
+import { IAddress, IOrder, IUser } from "@/types";
 
 export interface ICustomer extends IBase {
   number?: string
@@ -17,6 +17,7 @@ export interface ICustomer extends IBase {
   orders?: IOrder[]
   totalSpend?: number
   user?: IUser
+  addresses?: IAddress[]
 }
 
 export interface ICustomerFilters extends IBaseFilters {

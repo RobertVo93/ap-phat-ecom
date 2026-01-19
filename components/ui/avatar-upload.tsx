@@ -5,6 +5,8 @@ import { Upload, Camera, X, Check, RotateCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { useLanguage } from '@/lib/contexts/language-context';
 
 interface AvatarUploadProps {
   currentAvatar?: string;
@@ -13,6 +15,7 @@ interface AvatarUploadProps {
 }
 
 export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarUploadProps) {
+  const { t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -22,12 +25,12 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
 
   const handleFileSelect = useCallback((file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert('Vui lòng chọn file hình ảnh');
+      toast.error(t('account.avatar.pleaseSelectImage'))
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      alert('File quá lớn. Vui lòng chọn file nhỏ hơn 5MB');
+      toast.error(t('account.avatar.fileSizeWarning'))
       return;
     }
 
@@ -41,7 +44,7 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       handleFileSelect(files[0]);
@@ -102,13 +105,12 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
 
     setIsProcessing(true);
     try {
-      const processedImageUrl = await processImage(selectedImage);
-      onAvatarChange(processedImageUrl);
+      onAvatarChange(selectedImage!);
       setIsOpen(false);
       setSelectedImage(null);
     } catch (error) {
       console.error('Error processing image:', error);
-      alert('Có lỗi xảy ra khi xử lý hình ảnh');
+      toast.error(t('account.avatar.processingError'))
     } finally {
       setIsProcessing(false);
     }
@@ -125,7 +127,7 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
       className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
     >
       <Camera className="w-4 h-4 mr-2" />
-      Thay đổi ảnh đại diện
+      {t('account.avatar.changeAvatar')}
     </Button>
   );
 
@@ -139,17 +141,17 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-[#573e1c]">
-              Thay đổi ảnh đại diện
+              {t('account.avatar.changeAvatar')}
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-6">
             {!selectedImage ? (
               <div className="space-y-4">
                 {/* Current Avatar Preview */}
                 {currentAvatar && (
                   <div className="text-center">
-                    <p className="text-sm text-[#8b6a42] mb-2">Ảnh hiện tại:</p>
+                    <p className="text-sm text-[#8b6a42] mb-2">{t('account.avatar.currentAvatar')}:</p>
                     <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-[#d4c5a0]">
                       <img
                         src={currentAvatar}
@@ -162,11 +164,10 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
 
                 {/* Upload Area */}
                 <Card
-                  className={`border-2 border-dashed transition-colors cursor-pointer ${
-                    isDragging
+                  className={`border-2 border-dashed transition-colors cursor-pointer ${isDragging
                       ? 'border-[#573e1c] bg-[#efe1c1]'
                       : 'border-[#8b6a42] hover:border-[#573e1c] hover:bg-[#f8f5f0]'
-                  }`}
+                    }`}
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -175,10 +176,10 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
                   <CardContent className="p-8 text-center">
                     <Upload className="w-12 h-12 text-[#8b6a42] mx-auto mb-4" />
                     <p className="text-[#573e1c] font-medium mb-2">
-                      Kéo thả ảnh vào đây hoặc click để chọn
+                      {t('account.avatar.dragOrClick')}
                     </p>
                     <p className="text-sm text-[#8b6a42]">
-                      Hỗ trợ JPG, PNG, GIF (tối đa 5MB)
+                      {t('account.avatar.filesSupport')}
                     </p>
                   </CardContent>
                 </Card>
@@ -198,7 +199,7 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
               <div className="space-y-4">
                 {/* Image Preview */}
                 <div className="text-center">
-                  <p className="text-sm text-[#8b6a42] mb-4">Xem trước ảnh đại diện:</p>
+                  <p className="text-sm text-[#8b6a42] mb-4">{t('account.avatar.avatarPreview')}:</p>
                   <div className="relative inline-block">
                     <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#573e1c] mx-auto">
                       <img
@@ -216,7 +217,7 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
                 {/* Info */}
                 <div className="bg-[#efe1c1] p-3 rounded-lg">
                   <p className="text-xs text-[#8b6a42] text-center">
-                    Ảnh sẽ được cắt thành hình vuông và thay đổi kích thước phù hợp
+                    {t('account.avatar.cropAvatar')}
                   </p>
                 </div>
 
@@ -228,7 +229,7 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
                     className="flex-1 border-[#8b6a42] text-[#8b6a42] hover:bg-[#8b6a42] hover:text-white"
                   >
                     <X className="w-4 h-4 mr-2" />
-                    Hủy
+                    {t('common.cancel')}
                   </Button>
                   <Button
                     onClick={() => setSelectedImage(null)}
@@ -236,7 +237,7 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
                     className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
                   >
                     <RotateCw className="w-4 h-4 mr-2" />
-                    Chọn lại
+                    {t('account.avatar.reSelect')}
                   </Button>
                   <Button
                     onClick={handleSaveAvatar}
@@ -246,12 +247,12 @@ export function AvatarUpload({ currentAvatar, onAvatarChange, trigger }: AvatarU
                     {isProcessing ? (
                       <>
                         <RotateCw className="w-4 h-4 mr-2 animate-spin" />
-                        Đang xử lý...
+                        {t('account.avatar.processing')}
                       </>
                     ) : (
                       <>
                         <Check className="w-4 h-4 mr-2" />
-                        Lưu ảnh
+                        {t('account.avatar.saveAvatar')}
                       </>
                     )}
                   </Button>

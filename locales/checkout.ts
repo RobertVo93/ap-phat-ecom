@@ -7,6 +7,10 @@ export const checkoutTranslations = {
     en: 'Customer Information',
     vi: 'Thông tin khách hàng',
   },
+  'checkout.selectCustomerInfo': {
+    en: 'Select Customer Information',
+    vi: 'Chọn Thông tin khách hàng',
+  },
   'checkout.deliveryInfo': {
     en: 'Delivery Information',
     vi: 'Thông tin giao hàng',

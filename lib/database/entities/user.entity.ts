@@ -1,6 +1,6 @@
 import { Entity, Column, OneToOne } from "typeorm";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
-import { UserRole } from "@/types/enums";
+import { Gender, UserRole } from "@/types/enums";
 import { IUser } from "@/types";
 import { CustomerEntity } from "./customer.entity";
 
@@ -32,6 +32,12 @@ export class UserEntity extends BaseEntity implements IUser {
 
     @Column({ type: "timestamp", nullable: true })
     lastLogin?: Date;
+
+    @Column({ type: "varchar", length: 255, nullable: true })
+    avatar?: string;
+
+    @Column({ type: "enum", enum: Gender, default: Gender.male, nullable: false })
+    gender?: Gender;
 
     @OneToOne(() => CustomerEntity, (customer) => customer.user, { nullable: true })
     customer?: CustomerEntity;

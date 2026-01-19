@@ -180,12 +180,28 @@ export const accountTranslations = {
     vi: 'Cập nhật thông tin cá nhân của bạn',
   },
   'account.fullName': {
-    en: 'Full Name',
-    vi: 'Họ và tên',
+    en: 'Full Name *',
+    vi: 'Họ và tên *',
   },
   'account.phoneNumber': {
     en: 'Phone Number *',
     vi: 'Số điện thoại *',
+  },
+  'account.gender': {
+    en: 'Gender *',
+    vi: 'Giới tính *',
+  },
+  'account.gender.male': {
+    en: 'Male',
+    vi: 'Nam'
+  },
+  'account.gender.female': {
+    en: 'Female',
+    vi: 'Nữ'
+  },
+  'account.gender.other': {
+    en: 'Other',
+    vi: 'Khác'
   },
   'account.preferredLanguage': {
     en: 'Preferred Language',
@@ -414,6 +430,58 @@ export const accountTranslations = {
   'account.passwordLength': {
     en: 'New password must be at least 6 characters',
     vi: 'Mật khẩu mới phải có ít nhất 6 ký tự',
+  },
+  'account.mustFillTheForm': {
+    en: 'You must complete the entire form.',
+    vi: 'Bạn phải điền hết phiếu.'
+  },
+  'account.avatar.pleaseSelectImage': {
+    en: 'Please select image file',
+    vi: 'Vui lòng chọn file hình ảnh',
+  },
+  'account.avatar.fileSizeWarning': {
+    en: 'File is too heavy. Please select file under 5MB',
+    vi: 'File quá lớn. Vui lòng chọn file nhỏ hơn 5MB',
+  },
+  'account.avatar.processingError': {
+    en: 'An error occurred while processing the image.',
+    vi: 'Có lỗi xảy ra khi xử lý hình ảnh',
+  },
+  'account.avatar.changeAvatar': {
+    en: 'Change avatar',
+    vi: 'Thay đổi ảnh đại diện',
+  },
+  'account.avatar.currentAvatar': {
+    en: 'Current avatar',
+    vi: 'Ảnh hiện tại',
+  },
+  'account.avatar.dragOrClick': {
+    en: 'Drag and drop an image here or click to select one',
+    vi: 'Kéo thả ảnh vào đây hoặc click để chọn',
+  },
+  'account.avatar.filesSupport': {
+    en: 'Supports JPG, PNG, GIF (maximum 5MB)',
+    vi: 'Hỗ trợ JPG, PNG, GIF (tối đa 5MB)',
+  },
+  'account.avatar.avatarPreview': {
+    en: 'Preview avatar',
+    vi: 'Xem trước ảnh đại diện',
+  },
+  'account.avatar.cropAvatar': {
+    en: 'The image will be cropped into a square and resized appropriately',
+    vi: 'Ảnh sẽ được cắt thành hình vuông và thay đổi kích thước phù hợp',
+  },
+  'account.avatar.reSelect': {
+    en: 'Choose again',
+    vi: 'Chọn lại',
+  },
+  'account.avatar.processing': {
+    en: 'Processing...',
+    vi: 'Đang xử lý...',
+  },
+  'account.avatar.saveAvatar': {
+    en: 'Save avatar',
+    vi: 'Lưu ảnh',
   },
 };
  
