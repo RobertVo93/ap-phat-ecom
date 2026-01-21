@@ -8,6 +8,7 @@ import { localValues, localUpdateCustomer } from "@/lib/utils.localStorage"
 import { ICartItem, IOrder, IOrderItem, OrderStatus, PaymentMethod, PaymentStatus } from "@/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useAddresses } from "./use-addresses"
 
 const defaultOrderData: Partial<IOrder> = {
   deliveryDate: new Date(),
@@ -20,7 +21,7 @@ const defaultOrderData: Partial<IOrder> = {
   notes: "",
   tags: [],
   receiverInfo: {
-    name: "", 
+    name: "",
     phone: "",
   }
 }
@@ -37,6 +38,10 @@ function mapCartItemsToOrderItems(cartItems: ICartItem[]): IOrderItem[] {
 
 export const useCheckout = () => {
   const { t } = useLanguage();
+  const {
+    addresses
+  } = useAddresses()
+
   const [loading, setLoading] = useState<boolean>(false)
   const [orderData, setOrderData] = useState<IOrder>({ ...defaultOrderData, deliveryDate: getNextBlockTime(new Date()) })
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -194,9 +199,9 @@ export const useCheckout = () => {
   useEffect(() => {
     const customer = localValues().customer;
     const splitAddress = customer.location ? customer.location.split(' - ') : [];
-    setOrderData({ 
-      ...orderData, 
-      notes: customer.notes || '', 
+    setOrderData({
+      ...orderData,
+      notes: customer.notes || '',
       receiverInfo: {
         name: customer.name || '',
         phone: customer.phone || '',
@@ -208,6 +213,27 @@ export const useCheckout = () => {
       city: splitAddress[2] || '',
     })
   }, [])
+
+  useEffect(() => {
+    if(addresses) {
+      const defaultAddress = addresses.find(item => item.isDefault)
+      if(defaultAddress) {
+        setDeliveryInfo({
+          address: defaultAddress.street!,
+          ward: defaultAddress.ward!,
+          city: defaultAddress.city!
+        })
+        setOrderData(prev => ({
+          ...prev,
+          addressId: defaultAddress.id,
+          receiverInfo: {
+            name: defaultAddress.name,
+            phone: defaultAddress.phone,
+          }
+        }))
+      }
+    }
+  }, [addresses])
 
   return {
     loading,
@@ -225,6 +251,7 @@ export const useCheckout = () => {
     subtotal,
     shipping,
     tax,
+    addresses,
     copyToClipboard,
     handleRemoveVoucher,
     handleApplyVoucher,

@@ -17,6 +17,7 @@ import { useCheckout } from '@/hooks/use-checkout';
 import { PaymentMethod } from '@/types';
 import { formatCurrencyVND } from '@/lib/utils.currency';
 import { LoadingOverlay } from '@/components/common/LoadOverlay';
+import { AddressSelector } from '@/components/checkout/address-selector';
 
 export default function CheckoutPage() {
   const {
@@ -35,6 +36,7 @@ export default function CheckoutPage() {
     subtotal,
     shipping,
     tax,
+    addresses,
     copyToClipboard,
     handleRemoveVoucher,
     handleApplyVoucher,
@@ -120,10 +122,28 @@ export default function CheckoutPage() {
                 <CardHeader>
                   <CardTitle className="text-[#573e1c] flex items-center">
                     <MapPin className="w-5 h-5 mr-2" />
-                    {t('checkout.customerInfo')}
+                    {t('checkout.selectCustomerInfo')}
                   </CardTitle>
                 </CardHeader>
 
+                <CardContent className="space-y-4">
+                  <AddressSelector 
+                    orderData={orderData}
+                    setOrderData={setOrderData}
+                    setDeliveryInfo={setDeliveryInfo}
+                    addresses={addresses}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Delivery Information */}
+              <Card className="bg-white border-[#d4c5a0]">
+                <CardHeader>
+                  <CardTitle className="text-[#573e1c] flex items-center">
+                    <Truck className="w-5 h-5 mr-2" />
+                    {t('checkout.deliveryInfo')}
+                  </CardTitle>
+                </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -172,18 +192,6 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                </CardContent>
-              </Card>
-
-              {/* Delivery Information */}
-              <Card className="bg-white border-[#d4c5a0]">
-                <CardHeader>
-                  <CardTitle className="text-[#573e1c] flex items-center">
-                    <Truck className="w-5 h-5 mr-2" />
-                    {t('checkout.deliveryInfo')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="address" className="text-[#573e1c]">{t('checkout.form.address')} *</Label>
                     <Input
