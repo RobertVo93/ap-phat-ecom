@@ -5,7 +5,7 @@ dotenv.config();
 import { CollectionEntity } from "./entities/collection.entity";
 import { ProductEntity } from "./entities/product.entity";
 import { env } from "@/constants/env";
-import { CartEntity, CartItemEntity, UserEntity } from "./entities";
+import { AddressEntity, CartEntity, CartItemEntity, UserEntity } from "./entities";
 import { OrderEntity } from "./entities/order.entity";
 import { CustomerEntity } from "./entities/customer.entity";
 
@@ -21,7 +21,8 @@ export const AppDataSource = new DataSource({
     CartItemEntity,
     UserEntity,
     OrderEntity,
-    CustomerEntity
+    CustomerEntity,
+    AddressEntity,
   ],
   ssl: { rejectUnauthorized: false }, // required for Neon
   migrations: [__dirname + '/migrations/*{.ts,.js}'],

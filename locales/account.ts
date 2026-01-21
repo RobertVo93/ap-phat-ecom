@@ -180,8 +180,8 @@ export const accountTranslations = {
     vi: 'Cập nhật thông tin cá nhân của bạn',
   },
   'account.fullName': {
-    en: 'Full Name',
-    vi: 'Họ và tên',
+    en: 'Full Name *',
+    vi: 'Họ và tên *',
   },
   'account.phoneNumber': {
     en: 'Phone Number *',
@@ -415,5 +415,9 @@ export const accountTranslations = {
     en: 'New password must be at least 6 characters',
     vi: 'Mật khẩu mới phải có ít nhất 6 ký tự',
   },
+  'account.mustFillTheForm': {
+    en: 'You must complete the entire form.',
+    vi: 'Bạn phải điền hết phiếu.'
+  }
 };
  
