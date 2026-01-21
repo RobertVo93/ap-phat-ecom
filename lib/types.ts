@@ -53,29 +53,29 @@
 //   selectedOptions: Record<string, string>;
 // }
 
-export interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  avatar?: string;
-  addresses: Address[];
-  preferredLanguage: 'vi' | 'en';
-  joinDate: string;
-  totalOrders: number;
-  totalSpent: number;
-}
+// export interface Customer {
+//   id: string;
+//   name: string;
+//   email: string;
+//   phone: string;
+//   avatar?: string;
+//   addresses: Address[];
+//   preferredLanguage: 'vi' | 'en';
+//   joinDate: string;
+//   totalOrders: number;
+//   totalSpent: number;
+// }
 
-export interface Address {
-  id: string;
-  name: string;
-  phone: string;
-  street: string;
-  ward: string;
-  district: string;
-  city: string;
-  isDefault: boolean;
-}
+// export interface Address {
+//   id: string;
+//   name: string;
+//   phone: string;
+//   street: string;
+//   ward: string;
+//   district: string;
+//   city: string;
+//   isDefault: boolean;
+// }
 
 // export interface Order {
 //   id: string;

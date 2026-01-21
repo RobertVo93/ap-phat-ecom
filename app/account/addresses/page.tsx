@@ -1,114 +1,44 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, MapPin, Plus, Edit, Trash2, Star } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Address } from '@/lib/types';
+import { useAddresses } from '@/hooks/use-addresses';
+import { LoadingOverlay } from '@/components/common/LoadOverlay';
 
 export default function AddressesPage() {
   const { t } = useLanguage();
-  const { user, updateProfile } = useAuth();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    street: '',
-    ward: '',
-    district: '',
-    city: '',
-    isDefault: false
-  });
+  const {
+    loading,
+    user, 
+    addresses,
+    editingAddress,
+    formData,
+    isDialogOpen,
+    setFormData,
+    setIsDialogOpen,
+    handleAddAddress,
+    handleEditAddress,
+    handleSaveAddress,
+    handleDeleteAddress,
+    handleSetDefault
+  } = useAddresses()
 
   if (!user) {
     return null;
-  }
-
-  const handleAddAddress = () => {
-    setEditingAddress(null);
-    setFormData({
-      name: user.username!,
-      phone: user.phone!,
-      street: '',
-      ward: '',
-      district: '',
-      city: '',
-      isDefault: false
-    });
-    setIsDialogOpen(true);
-  };
-
-  const handleEditAddress = (address: Address) => {
-    setEditingAddress(address);
-    setFormData({
-      name: address.name,
-      phone: address.phone,
-      street: address.street,
-      ward: address.ward,
-      district: address.district,
-      city: address.city,
-      isDefault: address.isDefault
-    });
-    setIsDialogOpen(true);
-  };
-
-  const handleSaveAddress = async () => {
-    // const newAddress: Address = {
-    //   id: editingAddress?.id || Date.now().toString(),
-    //   ...formData
-    // };
-
-    // let updatedAddresses = [...user.addresses];
-
-    // if (editingAddress) {
-    //   // Update existing address
-    //   updatedAddresses = updatedAddresses.map(addr => 
-    //     addr.id === editingAddress.id ? newAddress : addr
-    //   );
-    // } else {
-    //   // Add new address
-    //   updatedAddresses.push(newAddress);
-    // }
-
-    // // If this is set as default, remove default from others
-    // if (formData.isDefault) {
-    //   updatedAddresses = updatedAddresses.map(addr => ({
-    //     ...addr,
-    //     isDefault: addr.id === newAddress.id
-    //   }));
-    // }
-
-    // await updateProfile({ addresses: updatedAddresses });
-    // setIsDialogOpen(false);
-  };
-
-  const handleDeleteAddress = async (addressId: string) => {
-    // if (confirm(t('account.deleteConfirm'))) {
-    //   const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
-    //   await updateProfile({ addresses: updatedAddresses });
-    // }
-  };
-
-  const handleSetDefault = async (addressId: string) => {
-    // const updatedAddresses = user.addresses.map(addr => ({
-    //   ...addr,
-    //   isDefault: addr.id === addressId
-    // }));
-    // await updateProfile({ addresses: updatedAddresses });
-  };
+  }  
 
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
+      <LoadingOverlay loading={loading} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -156,7 +86,7 @@ export default function AddressesPage() {
                       <Input
                         id="name"
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="border-[#8b6a42] focus:border-[#573e1c]"
                         required
                       />
@@ -167,7 +97,7 @@ export default function AddressesPage() {
                         id="phone"
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="border-[#8b6a42] focus:border-[#573e1c]"
                         required
                       />
@@ -179,47 +109,33 @@ export default function AddressesPage() {
                     <Input
                       id="street"
                       value={formData.street}
-                      onChange={(e) => setFormData({...formData, street: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, street: e.target.value })}
                       className="border-[#8b6a42] focus:border-[#573e1c]"
                       placeholder={t('account.streetPlaceholder')}
                       required
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="ward" className="text-[#573e1c]">{t('account.ward')}</Label>
                       <Input
                         id="ward"
                         value={formData.ward}
-                        onChange={(e) => setFormData({...formData, ward: e.target.value})}
-                        className="border-[#8b6a42] focus:border-[#573e1c]"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="district" className="text-[#573e1c]">{t('account.district')}</Label>
-                      <Input
-                        id="district"
-                        value={formData.district}
-                        onChange={(e) => setFormData({...formData, district: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, ward: e.target.value })}
                         className="border-[#8b6a42] focus:border-[#573e1c]"
                         required
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="city" className="text-[#573e1c]">{t('account.city')}</Label>
-                      <Select value={formData.city} onValueChange={(value) => setFormData({...formData, city: value})}>
-                        <SelectTrigger className="border-[#8b6a42]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="TP.HCM">TP. Hồ Chí Minh</SelectItem>
-                          <SelectItem value="Hanoi">Hà Nội</SelectItem>
-                          <SelectItem value="Danang">Đà Nẵng</SelectItem>
-                          <SelectItem value="Cantho">Cần Thơ</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        id="city"
+                        value={formData.city}
+                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                        className="border-[#8b6a42] focus:border-[#573e1c]"
+                        required
+                      />
                     </div>
                   </div>
 
@@ -227,7 +143,7 @@ export default function AddressesPage() {
                     <Checkbox
                       id="isDefault"
                       checked={formData.isDefault}
-                      onCheckedChange={(checked) => setFormData({...formData, isDefault: !!checked})}
+                      onCheckedChange={(checked) => setFormData({ ...formData, isDefault: !!checked })}
                     />
                     <Label htmlFor="isDefault" className="text-[#8b6a42]">
                       {t('account.setAsDefault')}
@@ -257,7 +173,7 @@ export default function AddressesPage() {
 
         {/* Addresses List */}
         <div className="space-y-4">
-          {/* {user.addresses.length === 0 ? (
+          {addresses.length === 0 ? (
             <Card className="bg-white border-[#d4c5a0]">
               <CardContent className="p-12 text-center">
                 <MapPin className="w-16 h-16 text-[#8b6a42] mx-auto mb-4" />
@@ -277,7 +193,7 @@ export default function AddressesPage() {
               </CardContent>
             </Card>
           ) : (
-            user.addresses.map((address) => (
+            addresses.map((address) => (
               <Card key={address.id} className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
@@ -293,7 +209,7 @@ export default function AddressesPage() {
                       </div>
                       <p className="text-[#8b6a42] mb-1">{address.phone}</p>
                       <p className="text-[#8b6a42]">
-                        {address.street}, {address.ward}, {address.district}, {address.city}
+                        {address.street}, {address.ward}, {address.city}
                       </p>
                     </div>
                     
@@ -302,7 +218,7 @@ export default function AddressesPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleSetDefault(address.id)}
+                          onClick={() => handleSetDefault(address.id!)}
                           className="text-[#573e1c] hover:bg-[#efe1c1]"
                         >
                           <Star className="w-4 h-4 mr-1" />
@@ -320,7 +236,7 @@ export default function AddressesPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDeleteAddress(address.id)}
+                        onClick={() => handleDeleteAddress(address.id!)}
                         className="text-red-500 hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -330,7 +246,7 @@ export default function AddressesPage() {
                 </CardContent>
               </Card>
             ))
-          )} */}
+          )}
         </div>
       </div>
     </div>
