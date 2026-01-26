@@ -1,59 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, User, Mail, Phone, Globe, Save } from 'lucide-react';
-import { useLanguage } from '@/lib/contexts/language-context';
-import { useAuth } from '@/lib/contexts/auth-context';
+import { ArrowLeft, User, Mail, Phone, Save, CircleUser } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AvatarUpload } from '@/components/ui/avatar-upload';
+import { useProfile } from '@/hooks/use-profile';
+import { Gender } from '@/types';
 
 export default function ProfilePage() {
-  const { language, setLanguage, t } = useLanguage();
-  const { user, updateProfile, isLoading } = useAuth();
-  
-  const [formData, setFormData] = useState({
-    name: user?.username || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    preferredLanguage:'vi',
-    avatar: ''
-  });
-  const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState('');
+  const {
+    formData,
+    user,
+    isSaving,
+
+    t,
+    setFormData,
+    handleSubmit,
+    handleAvatarChange,
+    onCancel
+  } = useProfile()
 
   if (!user) {
     return null;
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    setMessage('');
-
-    try {
-      await updateProfile(formData);
-      setMessage(t('account.updateSuccess'));
-      
-      // Update language context if changed
-      if (formData.preferredLanguage !== language) {
-        setLanguage(formData.preferredLanguage as 'vi' | 'en');
-      }
-    } catch (error) {
-      setMessage(t('account.error'));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleAvatarChange = (avatarUrl: string) => {
-    setFormData(prev => ({ ...prev, avatar: avatarUrl }));
-    setMessage(t('account.avatarUpdated'));
-  };
 
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
@@ -101,18 +75,18 @@ export default function ProfilePage() {
                       </span>
                     </div>
                   )}
-                  
+
                   {/* Upload indicator */}
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#573e1c] rounded-full flex items-center justify-center border-2 border-white">
                     <User className="w-4 h-4 text-[#efe1c1]" />
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-[#573e1c] text-xl mb-2">{user.username}</h3>
+                <h3 className="font-semibold text-[#573e1c] text-xl mb-2">{user.fullName}</h3>
                 <p className="text-[#8b6a42] text-sm mb-4">
                   {t('account.memberSince')} {new Date(user.createdAt!).toLocaleDateString('vi-VN')}
                 </p>
-                
+
                 <AvatarUpload
                   currentAvatar={formData.avatar}
                   onAvatarChange={handleAvatarChange}
@@ -141,27 +115,31 @@ export default function ProfilePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {message && (
-                  <div className={`mb-6 p-4 rounded-lg ${
-                    message.includes(t('account.success')) 
-                      ? 'bg-green-50 border border-green-200 text-green-600'
-                      : 'bg-red-50 border border-red-200 text-red-600'
-                  }`}>
-                    {message}
-                  </div>
-                )}
-
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="username" className="text-[#573e1c]">{t("auth.login.username")}</Label>
+                    <div className="relative">
+                      <CircleUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
+                      <Input
+                        id="username"
+                        type="text"
+                        value={formData.username}
+                        className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
+                        disabled
+                      />
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-[#573e1c]">{t('account.fullName')}</Label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                         <Input
-                          id="name"
+                          id="fullName"
                           type="text"
-                          value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          value={formData.fullName}
+                          onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                           className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
                           required
                         />
@@ -176,7 +154,7 @@ export default function ProfilePage() {
                           id="phone"
                           type="tel"
                           value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
                           required
                         />
@@ -185,37 +163,47 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-[#573e1c]">Email *</Label>
+                    <Label htmlFor="email" className="text-[#573e1c]">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                       <Input
                         id="email"
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         className="pl-10 border-[#8b6a42] focus:border-[#573e1c]"
-                        required
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="language" className="text-[#573e1c] flex items-center">
-                      <Globe className="w-4 h-4 mr-1" />
-                      {t('account.preferredLanguage')}
-                    </Label>
-                    <Select 
-                      value={formData.preferredLanguage} 
-                      onValueChange={(value) => setFormData({...formData, preferredLanguage: value as 'vi' | 'en'})}
-                    >
-                      <SelectTrigger className="border-[#8b6a42]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="vi">Tiếng Việt</SelectItem>
-                        <SelectItem value="en">English</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="gender" className="text-[#573e1c]">{t("account.gender")}</Label>
+                    <div className="flex justify-start gap-10">
+                      {Object.values(Gender).map((gender) => (
+                        <div
+                          className="flex items-center gap-1 cursor-pointer hover:underline"
+                          key={`div-gender-${gender}`}
+                        >
+                          <Checkbox
+                            id={`checkbox-gender-${gender}`}
+                            checked={formData.gender === gender}
+                            onCheckedChange={() => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                gender,
+                              }))
+                            }}
+                            className="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+                          />
+                          <Label
+                            htmlFor={`checkbox-gender-${gender}`}
+                            className="cursor-pointer"
+                          >
+                            {t(`account.gender.${gender}`)}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="flex justify-end space-x-4 pt-6">
@@ -223,13 +211,7 @@ export default function ProfilePage() {
                       type="button"
                       variant="outline"
                       className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
-                      onClick={() => setFormData({
-                        name: user.username!,
-                        email: user.email!,
-                        phone: user.phone!,
-                        preferredLanguage: 'vi',
-                        avatar: ''
-                      })}
+                      onClick={onCancel}
                     >
                       {t('account.cancelChanges')}
                     </Button>
