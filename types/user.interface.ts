@@ -1,6 +1,6 @@
 import { IBase } from "./base.interface";
 import { ICustomer } from "./customer.interface";
-import { UserRole } from "./enums";
+import { Gender, UserRole } from "./enums";
 
 export interface IUser extends IBase {
   fullName?: string
@@ -13,4 +13,6 @@ export interface IUser extends IBase {
   active?: boolean;
   lastLogin?: Date;
   customer?: ICustomer
+  avatar?: string
+  gender?: Gender
 }
