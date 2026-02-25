@@ -9,6 +9,7 @@ import { useLanguage } from './language-context';
 import { toast } from 'sonner';
 import { checkUsernameType } from '../utils.username';
 import { localUpdateCustomer, localValues, renewUserAndCustomer } from '../utils.localStorage';
+import { apiGetNotificationSettings } from '../httpclient/notification.client';
 
 interface AuthContextType {
   user: IUser | null;
@@ -42,9 +43,12 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true)
       if (session?.user?.id) {
-        const res = await apiGetMe(session.user.id);
-        localUpdateCustomer(res.customer);
-        setUser(res)
+        const res = await Promise.all([
+          apiGetMe(session.user.id),
+          apiGetNotificationSettings(session.user.id)
+        ])
+        localUpdateCustomer(res[0].customer);
+        setUser(res[0])
       }
     } catch (e) {
       console.error(e)

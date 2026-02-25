@@ -291,6 +291,30 @@ export const accountTranslations = {
     en: 'Receive notifications via SMS',
     vi: 'Nhận thông báo qua SMS',
   },
+  'account.email': {
+    en: 'Email Messages',
+    vi: 'Tin nhắn Email',
+  },
+  'account.emailDesc': {
+    en: 'Receive notifications via Email',
+    vi: 'Nhận thông báo qua Email',
+  },
+  'account.inapp': {
+    en: 'Web Notifications',
+    vi: 'Thông báo trên Web',
+  },
+  'account.inappDesc': {
+    en: 'Receive notifications on Web',
+    vi: 'Nhận thông báo trên Web',
+  },
+  'account.muteUntil': {
+    en: 'Mute until',
+    vi: 'Tắt thông báo tới',
+  },
+  'account.unMute': {
+    en: 'Unmute Notifications',
+    vi: 'Mở Thông Báo',
+  },
   'account.privacySettings': {
     en: 'Privacy Settings',
     vi: 'Cài đặt riêng tư',
@@ -484,4 +508,3 @@ export const accountTranslations = {
     vi: 'Lưu ảnh',
   },
 };
- 

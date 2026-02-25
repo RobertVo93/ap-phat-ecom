@@ -88,3 +88,10 @@ export enum Gender {
   female = "female",
   other = "other",
 }
+
+export enum NotificationType {
+  system = "system",
+  order = "order",
+  message = "message",
+  promotion = "promotion",
+}

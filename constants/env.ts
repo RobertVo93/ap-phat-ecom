@@ -9,6 +9,10 @@ export const env = {
   // Node Environment
   NODE_ENV: process.env.NODE_ENV || 'development',
 
+  // Notification settings
+  SMS_KEY: process.env.NEXT_PUBLIC_SMS_KEY || '',
+  EMAIL_KEY: process.env.NEXT_PUBLIC_EMAIL_KEY || '',
+
   // S3 Configuration
   NEXT_PUBLIC_AWS_ACCESS_KEY_ID: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || '',
   NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY || '',

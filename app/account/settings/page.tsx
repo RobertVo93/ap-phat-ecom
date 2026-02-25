@@ -1,108 +1,52 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Settings, Bell, Shield, Eye, EyeOff, Save } from 'lucide-react';
-import { useLanguage } from '@/lib/contexts/language-context';
-import { useAuth } from '@/lib/contexts/auth-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { useAccountSettings } from '@/hooks/use-account-settings';
+import { LoadingOverlay } from '@/components/common/LoadOverlay';
+import { env } from '@/constants/env'
 
 export default function SettingsPage() {
-  const { t } = useLanguage();
-  const { user, updateProfile } = useAuth();
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState('');
+  const {
+    loading,
+    user,
+    message,
+    showCurrentPassword,
+    passwordData,
+    notiSettings,
+    showNewPassword,
+    showConfirmPassword,
+    isSaving,
+    privacy,
+    notiSaving,
 
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
-
-  const [notifications, setNotifications] = useState({
-    orderUpdates: true,
-    promotions: true,
-    newsletter: false,
-    sms: true
-  });
-
-  const [privacy, setPrivacy] = useState({
-    profileVisible: true,
-    orderHistoryVisible: false,
-    reviewsVisible: true
-  });
+    setPrivacy,
+    t,
+    handlePasswordChange,
+    setPasswordData,
+    setShowConfirmPassword,
+    setShowCurrentPassword,
+    setShowNewPassword,
+    handlePrivacySave,
+    handleNotificationSave,
+    toggleNotiSetting,
+    setNotiSettings
+  } = useAccountSettings()
 
   if (!user) {
     return null;
   }
 
-  const handlePasswordChange = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    setMessage('');
-
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage(t('account.passwordMismatch'));
-      setIsSaving(false);
-      return;
-    }
-
-    if (passwordData.newPassword.length < 6) {
-      setMessage(t('account.passwordLength'));
-      setIsSaving(false);
-      return;
-    }
-
-    try {
-      // In real app, validate current password with backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setMessage(t('account.passwordChanged'));
-      setPasswordData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      });
-    } catch (error) {
-      setMessage(t('account.error'));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleNotificationSave = async () => {
-    setIsSaving(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setMessage(t('account.notificationUpdated'));
-    } catch (error) {
-      setMessage(t('account.error'));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handlePrivacySave = async () => {
-    setIsSaving(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setMessage(t('account.privacyUpdated'));
-    } catch (error) {
-      setMessage(t('account.error'));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
+      <LoadingOverlay loading={loading} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -127,11 +71,10 @@ export default function SettingsPage() {
         </div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            message.includes(t('account.success')) 
-              ? 'bg-green-50 border border-green-200 text-green-600'
-              : 'bg-red-50 border border-red-200 text-red-600'
-          }`}>
+          <div className={`mb-6 p-4 rounded-lg ${message.includes(t('account.success'))
+            ? 'bg-green-50 border border-green-200 text-green-600'
+            : 'bg-red-50 border border-red-200 text-red-600'
+            }`}>
             {message}
           </div>
         )}
@@ -154,7 +97,7 @@ export default function SettingsPage() {
                       id="currentPassword"
                       type={showCurrentPassword ? 'text' : 'password'}
                       value={passwordData.currentPassword}
-                      onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                      onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                       className="pr-10 border-[#8b6a42] focus:border-[#573e1c]"
                       required
                     />
@@ -176,7 +119,7 @@ export default function SettingsPage() {
                         id="newPassword"
                         type={showNewPassword ? 'text' : 'password'}
                         value={passwordData.newPassword}
-                        onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                         className="pr-10 border-[#8b6a42] focus:border-[#573e1c]"
                         required
                       />
@@ -197,7 +140,7 @@ export default function SettingsPage() {
                         id="confirmPassword"
                         type={showConfirmPassword ? 'text' : 'password'}
                         value={passwordData.confirmPassword}
-                        onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                         className="pr-10 border-[#8b6a42] focus:border-[#573e1c]"
                         required
                       />
@@ -227,78 +170,116 @@ export default function SettingsPage() {
           </Card>
 
           {/* Notification Settings */}
-          <Card className="bg-white border-[#d4c5a0]">
-            <CardHeader>
-              <CardTitle className="text-[#573e1c] flex items-center">
-                <Bell className="w-5 h-5 mr-2" />
-                {t('account.notificationSettings')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-[#573e1c] font-medium">{t('account.orderUpdates')}</Label>
-                    <p className="text-sm text-[#8b6a42]">{t('account.orderUpdatesDesc')}</p>
+          {notiSettings &&
+            <Card className="bg-white border-[#d4c5a0]">
+              <CardHeader>
+                <CardTitle className="text-[#573e1c] flex items-center">
+                  <Bell className="w-5 h-5 mr-2" />
+                  {t('account.notificationSettings')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label className="text-[#573e1c] font-medium">{t('account.orderUpdates')}</Label>
+                      <p className="text-sm text-[#8b6a42]">{t('account.orderUpdatesDesc')}</p>
+                    </div>
+                    <Switch
+                      checked={notiSettings?.orderEnabled}
+                      onCheckedChange={() => toggleNotiSetting('orderEnabled')}
+                    />
                   </div>
-                  <Switch
-                    checked={notifications.orderUpdates}
-                    onCheckedChange={(checked) => setNotifications({...notifications, orderUpdates: checked})}
+
+                  <Separator />
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label className="text-[#573e1c] font-medium">{t('account.promotions')}</Label>
+                      <p className="text-sm text-[#8b6a42]">{t('account.promotionsDesc')}</p>
+                    </div>
+                    <Switch
+                      checked={notiSettings?.promotionEnabled}
+                      onCheckedChange={() => toggleNotiSetting('promotionEnabled')}
+                    />
+                  </div>
+
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label className="text-[#573e1c] font-medium">{t('account.inapp')}</Label>
+                      <p className="text-sm text-[#8b6a42]">{t('account.inappDesc')}</p>
+                    </div>
+                    <Switch
+                      checked={notiSettings?.inappEnabled}
+                      onCheckedChange={() => toggleNotiSetting('inappEnabled')}
+                    />
+                  </div>
+
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label className="text-[#573e1c] font-medium">{t('account.sms')}</Label>
+                      <p className="text-sm text-[#8b6a42]">{t('account.smsDesc')}</p>
+                    </div>
+                    <Switch
+                      disabled={env.SMS_KEY ? false : true}
+                      checked={notiSettings?.smsEnabled}
+                      onCheckedChange={() => toggleNotiSetting('smsEnabled')}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label className="text-[#573e1c] font-medium">{t('account.email')}</Label>
+                      <p className="text-sm text-[#8b6a42]">{t('account.emailDesc')}</p>
+                    </div>
+                    <Switch
+                      disabled={env.EMAIL_KEY ? false : true}
+                      checked={notiSettings?.emailEnabled}
+                      onCheckedChange={() => toggleNotiSetting('emailEnabled')}
+                    />
+                  </div>
+
+                  <Separator />
+                </div>
+
+                <div>
+                  <Label className="text-[#573e1c] font-medium">{t('account.muteUntil')}</Label>
+                  <Input
+                    type="date"
+                    className="w-[150px]"
+                    min={new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString("sv-SE")}
+                    value={
+                      notiSettings.muteUntil
+                        ? new Date(notiSettings.muteUntil).toLocaleDateString("sv-SE")
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const dateValue = e.target.value;
+                      setNotiSettings({
+                        ...notiSettings,
+                        muteUntil: dateValue ? new Date(dateValue) : undefined
+                      });
+                    }}
                   />
                 </div>
 
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-[#573e1c] font-medium">{t('account.promotions')}</Label>
-                    <p className="text-sm text-[#8b6a42]">{t('account.promotionsDesc')}</p>
-                  </div>
-                  <Switch
-                    checked={notifications.promotions}
-                    onCheckedChange={(checked) => setNotifications({...notifications, promotions: checked})}
-                  />
+                <div className="flex justify-end">
+                  <Button
+                    onClick={handleNotificationSave}
+                    disabled={notiSaving}
+                    className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    {t('account.saveSettings')}
+                  </Button>
                 </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-[#573e1c] font-medium">{t('account.newsletter')}</Label>
-                    <p className="text-sm text-[#8b6a42]">{t('account.newsletterDesc')}</p>
-                  </div>
-                  <Switch
-                    checked={notifications.newsletter}
-                    onCheckedChange={(checked) => setNotifications({...notifications, newsletter: checked})}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-[#573e1c] font-medium">{t('account.sms')}</Label>
-                    <p className="text-sm text-[#8b6a42]">{t('account.smsDesc')}</p>
-                  </div>
-                  <Switch
-                    checked={notifications.sms}
-                    onCheckedChange={(checked) => setNotifications({...notifications, sms: checked})}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <Button
-                  onClick={handleNotificationSave}
-                  disabled={isSaving}
-                  className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  {t('account.saveSettings')}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          }
 
           {/* Privacy Settings */}
           <Card className="bg-white border-[#d4c5a0]">
@@ -317,7 +298,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     checked={privacy.profileVisible}
-                    onCheckedChange={(checked) => setPrivacy({...privacy, profileVisible: checked})}
+                    onCheckedChange={(checked) => setPrivacy({ ...privacy, profileVisible: checked })}
                   />
                 </div>
 
@@ -330,7 +311,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     checked={privacy.orderHistoryVisible}
-                    onCheckedChange={(checked) => setPrivacy({...privacy, orderHistoryVisible: checked})}
+                    onCheckedChange={(checked) => setPrivacy({ ...privacy, orderHistoryVisible: checked })}
                   />
                 </div>
 
@@ -343,7 +324,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     checked={privacy.reviewsVisible}
-                    onCheckedChange={(checked) => setPrivacy({...privacy, reviewsVisible: checked})}
+                    onCheckedChange={(checked) => setPrivacy({ ...privacy, reviewsVisible: checked })}
                   />
                 </div>
               </div>
