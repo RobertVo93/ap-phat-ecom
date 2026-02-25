@@ -5,9 +5,10 @@ dotenv.config();
 import { CollectionEntity } from "./entities/collection.entity";
 import { ProductEntity } from "./entities/product.entity";
 import { env } from "@/constants/env";
-import { AddressEntity, CartEntity, CartItemEntity, UserEntity } from "./entities";
+import { AddressEntity, CartEntity, CartItemEntity, NotificationSettingsEntity, UserEntity } from "./entities";
 import { OrderEntity } from "./entities/order.entity";
 import { CustomerEntity } from "./entities/customer.entity";
+import { NotificationEntity } from "./entities/notification.entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -23,6 +24,8 @@ export const AppDataSource = new DataSource({
     OrderEntity,
     CustomerEntity,
     AddressEntity,
+    NotificationEntity,
+    NotificationSettingsEntity
   ],
   ssl: { rejectUnauthorized: false }, // required for Neon
   migrations: [__dirname + '/migrations/*{.ts,.js}'],

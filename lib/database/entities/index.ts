@@ -5,3 +5,4 @@ export * from "./cart-item.entity";
 export * from "./user.entity";
 export * from "./order.entity";
 export * from "./address.entity";
+export * from "./notification-settings.entity"
