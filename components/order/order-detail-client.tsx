@@ -25,7 +25,7 @@ import Image from 'next/image';
 import { formatDate } from '@/lib/utils.date';
 import { getOrderStatusColor } from '@/lib/utils.style';
 import { formatCurrencyVND } from '@/lib/utils.currency';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { useOrder } from '@/hooks/use-order';
 import { LoadingOverlay } from '../common/LoadOverlay';
 import { OrderCancelDialog } from './order-cancel-dialog';
@@ -46,6 +46,7 @@ export function OrderDetailClient({ id }: { id: string }) {
     setRating,
     setReviewText
   } = useOrder(id)
+  const router = useRouter()
 
   if (loading) return <LoadingOverlay loading />
 
@@ -64,10 +65,10 @@ export function OrderDetailClient({ id }: { id: string }) {
               variant="ghost"
               className="text-[#573e1c] hover:bg-[#efe1c1]"
             >
-              <Link href="/account/orders">
+              <div onClick={() => router.back()}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 {t('order.detail.back')}
-              </Link>
+              </div>
             </Button>
           </div>
 

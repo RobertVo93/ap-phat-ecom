@@ -40,4 +40,12 @@ export const navTranslations = {
     en: "Logout",
     vi: "Đăng xuất",
   },
+  'nav.seeAll': {
+    en: "See all",
+    vi: "Xem tất cả",
+  },
+  'nav.noNotifications': {
+    en: "There's no notification",
+    vi: "Không có thông báo",
+  },
 }

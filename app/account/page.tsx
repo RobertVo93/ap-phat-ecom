@@ -11,6 +11,7 @@ import { useAccount } from '@/hooks/use-account';
 import { formatCurrency } from '@/lib/utils.currency';
 import { getOrderStatusColor } from '@/lib/utils.style';
 import { formatDate } from '@/lib/utils.date';
+import Image from 'next/image';
 
 export default function AccountPage() {
   const {
@@ -66,9 +67,11 @@ export default function AccountPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  {/* {user.avatar ? (
+                  {user.avatar ? (
                     <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-4 border-2 border-[#573e1c]">
                       <Image
+                        width={20}
+                        height={20}
                         src={user.avatar}
                         alt="Avatar"
                         className="w-full h-full object-cover"
@@ -77,10 +80,10 @@ export default function AccountPage() {
                   ) : (
                     <div className="w-20 h-20 bg-[#573e1c] rounded-full flex items-center justify-center mx-auto mb-4">
                       <span className="text-[#efe1c1] text-2xl font-bold">
-                        {user.name.charAt(0).toUpperCase()}
+                        {user.fullName?.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                  )} */}
+                  )}
                   <h3 className="font-semibold text-[#573e1c] text-lg">{user.fullName}</h3>
                   <p className="text-[#8b6a42] text-sm">{user.email}</p>
                   <p className="text-[#8b6a42] text-sm">{user.phone}</p>

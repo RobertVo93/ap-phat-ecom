@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingCart, User, Menu, X, Globe, Gift, ClipboardList } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Globe, Gift, ClipboardList, Bell } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
 import { useAuth } from '@/lib/contexts/auth-context';
@@ -17,6 +17,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Brand } from "@/lib/brand"
 import Image from 'next/image';
+import { Badge } from '../ui/badge';
+import { useNotification } from '@/lib/contexts/notification-context';
+import { formatDate } from '@/lib/utils.date';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -24,7 +28,7 @@ export function Header() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const { notifications, unreadNumber, onMarkAsRead, } = useNotification();
   const cartItemsCount = getCartItemsCount();
 
   const navigation = [
@@ -116,6 +120,67 @@ export function Header() {
                 </span>
               )}
             </Link>
+
+            {/* Notifications */}
+            <HoverCard openDelay={100} closeDelay={100}>
+              <HoverCardTrigger asChild>
+                <Link
+                  className="p-2 text-[#573e1c] hover:bg-[#d4c5a0] transition-colors relative"
+                  href='/notifications'
+                >
+                  <Bell className="w-6 h-6" />
+                  {unreadNumber > 0 && (
+                    <Badge className="absolute -top-1 -right-0 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center">
+                      {unreadNumber > 5 ? '5+' : unreadNumber}
+                    </Badge>
+                  )}
+                </Link>
+              </HoverCardTrigger>
+
+              <HoverCardContent
+                align="end"
+                className="w-80 p-0"
+              >
+                {notifications.length > 0 ? (
+                  <div>
+                    {notifications.slice(0, 5).map(noti => (
+                      <Link
+                        href={noti.url || ''}
+                        key={noti.id}
+                        className="block"
+                        onClick={() => {
+                          if (!noti.isRead) onMarkAsRead(noti.id!)
+                        }}
+                      >
+                        <div className={`flex flex-col items-start p-2 border-b hover:bg-gray-200 ${!noti.isRead ? 'bg-[#E6F2FF]' : ''}`} >
+                          <p className="font-semibold">{t(`noti.order.${noti.title}`)}</p>
+                          <p className="text-sm">
+                            {t(`noti.order.${noti.content}`).replace(
+                              "{orderNumber}",
+                              noti.data?.orderNumber
+                            )}
+                          </p>
+                          <p className="w-full text-end text-xs text-gray-500">
+                            {formatDate(noti.createdAt!)}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+
+                    <Link
+                      href="/notifications"
+                      className="p-2 flex justify-center font-semibold hover:bg-gray-100"
+                    >
+                      {t('nav.seeAll')}
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="p-2 flex justify-center font-semibold">
+                    {t('nav.noNotifications')}
+                  </div>
+                )}
+              </HoverCardContent>
+            </HoverCard>
 
             {/* User Account */}
             <DropdownMenu>

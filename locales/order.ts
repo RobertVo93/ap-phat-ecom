@@ -4,8 +4,8 @@ export const orderTranslations = {
     vi: 'Đơn hàng',
   },
   'order.detail.back': {
-    en: 'Back to Orders',
-    vi: 'Quay lại đơn hàng',
+    en: 'Back',
+    vi: 'Quay lại',
   },
   'order.detail.placedOn': {
     en: 'Placed on',
