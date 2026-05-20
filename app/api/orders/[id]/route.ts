@@ -2,29 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensureDataSource } from "@/lib/database/ensureDataSource";
 import { cancelOrder, getOrderById } from "@/lib/services/orderService";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function GET(_req: NextRequest, { params }: RouteContext) {
   try {
     await ensureDataSource();
-    const order = await getOrderById(params.id);
+    const { id } = await params;
+    const order = await getOrderById(id);
     if (!order) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
     return NextResponse.json(order);
   } catch (error) {
-    return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(_req: NextRequest, { params }: RouteContext) {
   try {
     await ensureDataSource();
-    const updated = await cancelOrder(params.id)
+    const { id } = await params;
+    const updated = await cancelOrder(id);
     if (!updated) return NextResponse.json({ error: "Cannot update order" }, { status: 400 });
     return NextResponse.json(updated);
   } catch (error) {
-    return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

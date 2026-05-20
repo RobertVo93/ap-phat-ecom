@@ -2,10 +2,14 @@ import { ensureDataSource } from '@/lib/database/ensureDataSource';
 import { markAsReadService } from '@/lib/services/notificationService';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function PATCH(_req: NextRequest, { params }: RouteContext) {
   try {
     await ensureDataSource();
-    const notificationId = params.id;
+    const { id: notificationId } = await params;
     if (!notificationId) {
       return NextResponse.json({ error: "Notification ID is required" }, { status: 400 });
     }
