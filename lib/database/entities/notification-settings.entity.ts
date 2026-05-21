@@ -5,7 +5,7 @@ import { INotificationSettings } from "@/types/notification-settings.interface";
 
 @Entity({ name: "notification_settings" })
 export class NotificationSettingsEntity extends BaseEntity implements INotificationSettings {
-  @OneToOne(() => UserEntity, { nullable: false, onDelete: "CASCADE" })
+  @OneToOne(() => UserEntity, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user!: UserEntity;
 

@@ -46,7 +46,7 @@ export class CustomerEntity extends BaseEntity implements ICustomer {
   @OneToMany(() => OrderEntity, (order) => order.customer, { nullable: true })
   orders!: IOrder[];
 
-  @OneToOne(() => UserEntity, { nullable: true })
+  @OneToOne(() => UserEntity, (user) => user.customer, { nullable: true })
   @JoinColumn({ name: "user_id" })
   user?: IUser;
 

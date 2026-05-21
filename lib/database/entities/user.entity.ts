@@ -1,8 +1,9 @@
-import { Entity, Column, OneToOne } from "typeorm";
+import { Entity, Column, OneToMany, OneToOne } from "typeorm";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { Gender, UserRole } from "@/types/enums";
-import { IUser } from "@/types";
-import { CustomerEntity } from "./customer.entity";
+import { INotification, IUser } from "@/types";
+import type { ICustomer } from "@/types";
+import { NotificationEntity, CustomerEntity } from "@/lib/database/entities";
 
 @Entity({ name: "users" })
 export class UserEntity extends BaseEntity implements IUser {
@@ -40,5 +41,8 @@ export class UserEntity extends BaseEntity implements IUser {
     gender?: Gender;
 
     @OneToOne(() => CustomerEntity, (customer) => customer.user, { nullable: true })
-    customer?: CustomerEntity;
+    customer?: ICustomer;
+
+    @OneToMany(() => NotificationEntity, (notification) => notification.user)
+    notifications?: INotification[];
 } 
