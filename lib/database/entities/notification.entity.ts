@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, Index } from "typeorm";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { UserEntity } from "@/lib/database/entities";
 import { NotificationType } from "@/types/enums";
-import type { INotification } from "@/types";
+import type { INotification, IUser } from "@/types";
 
 @Entity({ name: "notifications" })
 @Index("IDX_NOTIF_DEDUPLICATION", ["userId", "type", "deduplicationKey"], { unique: true, where: '"deduplicationKey" IS NOT NULL' })
@@ -34,7 +34,7 @@ export class NotificationEntity extends BaseEntity implements INotification {
     @Column({ type: "uuid", nullable: false })
     userId?: string;
 
-    @ManyToOne(() => UserEntity, (user) => user.id, { nullable: false, onDelete: "CASCADE" })
+    @ManyToOne(() => UserEntity, (user) => user.notifications, { nullable: true, onDelete: "CASCADE" })
     @JoinColumn({ name: "userId" })
-    user?: UserEntity;
+    user?: IUser;
 }
