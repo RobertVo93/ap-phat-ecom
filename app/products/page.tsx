@@ -19,7 +19,6 @@ export default function ProductsPage() {
   const {
     loading,
     searchQuery,
-    selectedCategory,
     categories,
     priceRange,
     sortBy,
@@ -31,7 +30,6 @@ export default function ProductsPage() {
     setSortBy,
     setShowFilters,
     setPriceRange,
-    setSelectedCategory,
     setViewMode,
   } = useProducts()
 
@@ -99,12 +97,9 @@ export default function ProductsPage() {
                       </SheetHeader>
                       <div className="mt-6">
                         <FilterContent
-                          categories={categories}
-                          selectedCategory={selectedCategory}
+                          collections={categories}
                           priceRange={priceRange}
-                          setSearchQuery={setSearchQuery}
                           setPriceRange={setPriceRange}
-                          setSelectedCategory={setSelectedCategory}
                         />
                       </div>
                     </SheetContent>
@@ -112,7 +107,7 @@ export default function ProductsPage() {
                 </div>
 
                 {/* View Mode Toggle */}
-                <div className="flex items-center bg-[#efe1c1] rounded-lg p-1">
+                <div className="hidden lg:block flex items-center bg-[#efe1c1] rounded-lg p-1">
                   <Button
                     variant={viewMode === ViewMode.grid ? 'default' : 'ghost'}
                     size="sm"
@@ -153,12 +148,9 @@ export default function ProductsPage() {
               </CardHeader>
               <CardContent>
                 <FilterContent
-                  categories={categories}
-                  selectedCategory={selectedCategory}
+                  collections={categories}
                   priceRange={priceRange}
-                  setSearchQuery={setSearchQuery}
                   setPriceRange={setPriceRange}
-                  setSelectedCategory={setSelectedCategory}
                 />
               </CardContent>
             </Card>
@@ -184,16 +176,6 @@ export default function ProductsPage() {
                   <p className="text-[#8b6a42] mb-6">
                     {t('product.noResults.message')}
                   </p>
-                  <Button
-                    onClick={() => {
-                      setSelectedCategory('all');
-                      setPriceRange([0, 100000]);
-                      setSearchQuery('');
-                    }}
-                    className="bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
-                  >
-                    {t('product.noResults.clear')}
-                  </Button>
                 </CardContent>
               </Card>
             ) : (

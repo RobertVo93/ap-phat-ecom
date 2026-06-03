@@ -1,11 +1,11 @@
 export const footerTranslations = {
   'footer.companyName': {
-    en: 'An Phat Food',
-    vi: 'An Phat Food',
+    en: 'Bánh tráng An Phát',
+    vi: 'Bánh tráng An Phát',
   },
   'footer.copyright': {
-    en: '© 2024 An Phat Food. All rights reserved.',
-    vi: '© 2024 An Phat Food. Bảo lưu mọi quyền.',
+    en: '© 2026 Bánh tráng An Phát. All rights reserved.',
+    vi: '© 2026 Bánh tráng An Phát. Bảo lưu mọi quyền.',
   },
   'footer.privacyPolicy': {
     en: 'Privacy Policy',
