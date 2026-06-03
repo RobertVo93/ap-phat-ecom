@@ -17,7 +17,7 @@ export function HeroSection() {
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#573e1c]/10 rounded-full text-[#573e1c] text-sm font-medium mb-4">
                 <Award className="w-4 h-4" />
-                <span>100% Natural Vietnamese Products</span>
+                <span>{t('home.hero.remark')}</span>
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold text-[#573e1c] leading-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {t('home.hero.title')}
@@ -51,7 +51,7 @@ export function HeroSection() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-3 gap-8 pt-8 border-t border-[#8b6a42]/20 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
+            {/* <div className="grid grid-cols-3 gap-8 pt-8 border-t border-[#8b6a42]/20 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
               <div className="text-center group cursor-default">
                 <div className="text-2xl font-bold text-[#573e1c] group-hover:scale-110 transition-transform duration-300">500+</div>
                 <div className="text-sm text-[#8b6a42]">{t('home.stats.products')}</div>
@@ -64,16 +64,16 @@ export function HeroSection() {
                 <div className="text-2xl font-bold text-[#573e1c] group-hover:scale-110 transition-transform duration-300 delay-200">99%</div>
                 <div className="text-sm text-[#8b6a42]">{t('home.stats.satisfaction')}</div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000">
             <div className="relative z-10 group">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#573e1c]/20 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img
-                src="https://images.pexels.com/photos/4331491/pexels-photo-4331491.jpeg"
+                src='/AP-logo.png'
                 alt={t('home.hero.title')}
-                className="relative rounded-2xl shadow-2xl w-full h-[500px] object-cover transition-transform duration-500 group-hover:scale-105"
+                className="relative rounded-2xl shadow-2xl w-full h-[350px] lg:h-[540px] object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
             <div className="absolute -top-4 -right-4 w-full h-full bg-[#573e1c] rounded-2xl -z-10 transition-transform duration-500 group-hover:translate-x-2 group-hover:-translate-y-2"></div>

@@ -5,6 +5,7 @@ import { MessageCircle, Phone, MapPin, X, Facebook } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Brand } from '@/lib/brand';
 
 export function FloatingChatbot() {
   const { t } = useLanguage();
@@ -14,28 +15,28 @@ export function FloatingChatbot() {
     {
       icon: MessageCircle,
       label: t('chatbot.messenger'),
-      href: 'https://m.me/riceandnoodles',
+      href: `https://m.me/${Brand.shortName}`,
       color: 'bg-blue-600 hover:bg-blue-700',
       textColor: 'text-white'
     },
     {
       icon: MessageCircle,
       label: t('chatbot.zalo'),
-      href: 'https://zalo.me/0901234567',
+      href: `https://zalo.me/${Brand.phone?.replace(/\s+/g, '')}`,
       color: 'bg-blue-500 hover:bg-blue-600',
       textColor: 'text-white'
     },
     {
       icon: Phone,
       label: t('chatbot.phone'),
-      href: 'tel:02838234567',
+      href: `tel:${Brand.phone?.replace(/\s+/g, '')}`,
       color: 'bg-green-600 hover:bg-green-700',
       textColor: 'text-white'
     },
     {
       icon: MapPin,
       label: t('chatbot.location'),
-      href: 'https://maps.google.com/?q=123+Le+Loi+Street,+District+1,+Ho+Chi+Minh+City',
+      href: Brand.maps[0],
       color: 'bg-red-600 hover:bg-red-700',
       textColor: 'text-white'
     }
