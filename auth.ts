@@ -7,6 +7,7 @@ import { CustomerStatus, CustomerType, UserRole } from "./types"
 import { compare } from "bcryptjs"
 import { ensureDataSource } from '@/lib/database/ensureDataSource';
 import { CustomerEntity } from "./lib/database/entities/customer.entity"
+import { v4 as uuidv4 } from "uuid"
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -61,7 +62,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             let existing = await manager.findOne(UserEntity, { where: { email: user.email! } })
 
             if (!existing) {
+              const newId = uuidv4();
               const newUser = manager.create(UserEntity, {
+                id: newId,
                 fullName: user.name as string,
                 email: user.email as string,
                 username: user.email as string,
@@ -75,12 +78,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               const saved = await manager.save(UserEntity, newUser)
 
               const customer = manager.create(CustomerEntity, {
+                id: newId,
                 name: saved.username || saved.email || "Unknown",
                 email: saved.email,
                 phone: saved.phone,
                 joinDate: new Date(),
                 customerType: CustomerType.regular,
-                status: CustomerStatus.active
+                status: CustomerStatus.active,
+                user: saved,
               })
               await manager.save(CustomerEntity, customer)
               existing = saved

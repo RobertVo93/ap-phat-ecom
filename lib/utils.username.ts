@@ -1,4 +1,4 @@
-import { UsernameType } from "@/types";
+import { IAddress, UsernameType } from "@/types";
 
 export const checkUsernameType = (username: string) => {
   if (!username) return UsernameType.invalid;
@@ -22,4 +22,18 @@ export const checkUsernameType = (username: string) => {
   }
 
   return UsernameType.invalid;
+}
+
+export const addressToString = (address: IAddress | undefined | null): string => {
+  if (!address) {
+    return "";
+  }
+  let shippingAddress = address.street
+  if (address.ward) {
+    shippingAddress += ` - ${address.ward}`
+  }
+  if (address.city) {
+    shippingAddress += ` - ${address.city}`
+  }
+  return shippingAddress || ""
 }

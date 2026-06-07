@@ -3,31 +3,24 @@ import { CartEntity } from "@/lib/database/entities/cart.entity";
 import { CartItemEntity } from "@/lib/database/entities/cart-item.entity";
 import { ICartItem } from "@/types";
 import { ProductEntity } from "../database/entities";
+import { MAX_CART_ITEM_QUANTITY } from "@/constants";
 
-export async function syncCartFromBE(userId: string) {
+export async function getCartByUser(userId: string) {
   const cartRepo = AppDataSource.getRepository(CartEntity);
-  const cartItemRepo = AppDataSource.getRepository(CartItemEntity);
   let cart = await cartRepo.findOne({ where: { userId }, relations: ["items", "items.product"] })
 
   if (!cart) {
-    cart = cartRepo.create({
-      userId: userId,
-      totalPrice: 0,
-      totalQuantity: 0,
-      items: [],
-    })
+    cart = await cartRepo.save(
+      cartRepo.create({
+        userId,
+        totalPrice: 0,
+        totalQuantity: 0,
+        items: [],
+      })
+    );
   }
 
-  //sort
-  const items = await cartItemRepo.find({
-    where: { cart: { id: cart.id } },
-    relations: ["product"],
-    order: { createdAt: "ASC" },
-  });
-
-  cart.items = items;
-
-  return cartRepo.save(cart);
+  return cart;
 }
 
 export async function addCartItem(userId: string, item: ICartItem) {
@@ -47,18 +40,19 @@ export async function addCartItem(userId: string, item: ICartItem) {
   if (!product) return null;
 
   let cartItem = cart.items?.find((i) => i.product?.id === product.id);
+  const newTotalQuantity = Math.min((cartItem?.quantity || 0) + (item.quantity || 1), MAX_CART_ITEM_QUANTITY);
 
   if (cartItem) {
-    cartItem.quantity = (cartItem.quantity || 0) + 1;
-    cartItem.subtotal = (cartItem.price! || product.price!) * cartItem.quantity;
+    cartItem.quantity = newTotalQuantity;
+    cartItem.subtotal = (cartItem.price! || product.price!) * newTotalQuantity;
     await cartItemRepo.save(cartItem);
   } else {
     cartItem = cartItemRepo.create({
       cart,
       product,
-      quantity: item.quantity || 1,
+      quantity: newTotalQuantity,
       price: product.price,
-      subtotal: product.price! * (item.quantity || 1),
+      subtotal: product.price! * newTotalQuantity,
     });
     await cartItemRepo.save(cartItem);
   }
@@ -77,8 +71,8 @@ export async function updateCartItemQuantity(
   if (quantity <= 0) {
     await cartItemRepo.remove(cartItem);
   } else {
-    cartItem.quantity = quantity;
-    cartItem.subtotal = (cartItem.price || 0) * quantity;
+    cartItem.quantity = Math.min(quantity, MAX_CART_ITEM_QUANTITY);
+    cartItem.subtotal = (cartItem.price || 0) * cartItem.quantity;
     await cartItemRepo.save(cartItem);
   }
 }

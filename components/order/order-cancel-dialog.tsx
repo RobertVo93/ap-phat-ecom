@@ -43,7 +43,7 @@ export function OrderCancelDialog({
         </DialogHeader>
         <p>{t('order.detail.cancelConfirm')}</p>
         <p>{t('order.detail.thisActionCantUndo')}</p>
-        <DialogFooter>
+        <DialogFooter className="gap-2">
           <DialogClose asChild>
             <Button variant="outline">
               {t("order.action.cancel")}

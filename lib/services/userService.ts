@@ -5,7 +5,8 @@ import { AppDataSource } from "@/lib/database/typeorm";
 import { ensureDataSource } from "@/lib/database/ensureDataSource";
 import { CustomerStatus, CustomerType, UserRole } from "@/types"
 import { IUser } from "@/types/user.interface";
-import { hash, genSalt } from "bcryptjs";
+import { compare, genSalt, hash } from "bcryptjs";
+import { removeEmptyProperties } from "../utils";
 
 export class UserService {
   private userRepository = AppDataSource.getRepository(UserEntity);
@@ -19,33 +20,55 @@ export class UserService {
     return user
   }
 
-  async createUser(userId: string, customerId: string, fullName: string, email: string, phone: string, username: string, password: string): Promise<IUser> {
+  async createUser(userId: string, fullName: string, email: string, phone: string, username: string, password: string): Promise<IUser> {
     return await AppDataSource.transaction(async (manager) => {
+      const existingUsernameOwner = await manager.findOne(UserEntity, {
+        where: { username },
+      });
+
+      if (existingUsernameOwner && existingUsernameOwner.id !== userId) {
+        throw new Error("USER_WITH_USERNAME_EXISTS");
+      }
+
       const salt = await genSalt(10)
       const hashed = await hash(password, salt)
 
-      // 1. create new user
-      const user = manager.create(UserEntity, {
+      // 1. create or upgrade user
+      const existingUser = await manager.findOne(UserEntity, {
+        where: { id: userId },
+        relations: ["customer"],
+      });
+      const newUserObj = {
         id: userId,
-        fullName: fullName,
-        email: email,
-        username: username,
-        phone: phone,
+        fullName,
+        email,
+        username,
+        phone,
         password: hashed,
         passwordSalt: salt,
         role: UserRole.customer,
         active: true,
         lastLogin: new Date(),
-      })
+      }
+
+      const user = manager.create(UserEntity, {
+        ...(existingUser || {}),
+        ...removeEmptyProperties(newUserObj)
+      });
       const savedUser = await manager.save(UserEntity, user);
 
-      // 2. create new customer
+      // 2. create or update customer with the same id as user
+      const existingCustomer = existingUser?.customer || await manager.findOne(CustomerEntity, {
+        where: { id: userId },
+      });
+
       const customer = manager.create(CustomerEntity, {
-        id: customerId,
+        ...(existingCustomer || {}),
+        id: userId,
         name: savedUser.fullName || "",
         email: savedUser.email,
         phone: savedUser.phone,
-        joinDate: new Date(),
+        joinDate: existingCustomer?.joinDate || new Date(),
         customerType: CustomerType.regular,
         status: CustomerStatus.active,
         user: savedUser
@@ -59,6 +82,29 @@ export class UserService {
 
       return result;
     })
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new Error("USER_NOT_FOUND");
+    }
+
+    if (!user.password) {
+      throw new Error("PASSWORD_LOGIN_NOT_AVAILABLE");
+    }
+
+    const isCurrentPasswordValid = await compare(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      throw new Error("INVALID_CURRENT_PASSWORD");
+    }
+
+    const salt = await genSalt(10);
+    user.password = await hash(newPassword, salt);
+    user.passwordSalt = salt;
+
+    await this.userRepository.save(user);
   }
 
   async getUserByUsername(username: string): Promise<IUser | null> {
@@ -106,5 +152,3 @@ export class UserService {
     };
   }
 }
-
-

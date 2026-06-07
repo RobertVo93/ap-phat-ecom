@@ -18,8 +18,7 @@ import { chatbotTranslations } from '@/locales/chatbot'
 import { rewardsTranslations } from '@/locales/rewards'
 import { batchTranslations } from '@/locales/batch'
 import { notiTranslations } from "@/locales/notification"
-
-type Language = "en" | "vi"
+import { Language } from "@/types"
 
 export interface Translations {
   [key: string]: {

@@ -8,7 +8,7 @@ import { LanguageProvider } from '@/lib/contexts/language-context';
 import { CartProvider } from '@/lib/contexts/cart-context';
 import { AuthProvider } from '@/lib/contexts/auth-context';
 import { RewardsProvider } from '@/lib/contexts/rewards-context';
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/toaster"
 import { NotificationProvider } from '@/lib/contexts/notification-context';
 import { SettingProvider } from '@/lib/contexts/setting-context';
 

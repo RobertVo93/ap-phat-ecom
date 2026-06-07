@@ -1,54 +1,41 @@
 import { AppDataSource } from "@/lib/database/typeorm";
 import { OrderEntity } from "@/lib/database/entities/order.entity";
-import { CustomerStatus, CustomerType, IOrder, NotificationType, OrderStatus } from "@/types";
+import { CustomerStatus, CustomerType, IOrder, NotificationType, OrderStatus, UserRole } from "@/types";
 import { CustomerEntity } from "../database/entities/customer.entity";
 import { NotificationEntity } from "../database/entities/notification.entity";
 import { notificationEmitter } from "../eventEmitter";
-import { NotificationSettingsEntity } from "../database/entities";
+import { NotificationSettingsEntity, UserEntity } from "../database/entities";
+import { v4 as uuidv4 } from 'uuid';
+import { EntityManager } from "typeorm";
 
-export async function createOrderService(data: Partial<IOrder>) {
+export async function createOrderForGuest(data: Partial<IOrder>) {
+  return createOrderWithCustomer(data, (manager) => resolveGuestCustomer(manager, data));
+}
+
+export async function createOrderForAuthenticatedUser(data: Partial<IOrder>, userId: string) {
+  return createOrderWithCustomer(data, (manager) => resolveAuthenticatedCustomer(manager, data, userId));
+}
+
+async function createOrderWithCustomer(
+  data: Partial<IOrder>,
+  resolveCustomer: (manager: EntityManager) => Promise<CustomerEntity>
+) {
   const transactionResult = await AppDataSource.transaction(async (manager) => {
-    // 1. find existed customer or create new one
-    const customerId = data.customer?.id
-    let customer: CustomerEntity | null = null;
+    const customer = await resolveCustomer(manager);
 
-    if (customerId) {
-      customer = await manager.findOne(CustomerEntity, {
-        where: { id: customerId },
-        relations: ['user']
-      });
-    }
-
-    if (!customer) {
-      const newCustomer = manager.create(CustomerEntity, {
-        id: customerId,
-        name: data.receiverInfo?.name,
-        email: '',
-        phone: data.receiverInfo?.phone,
-        joinDate: new Date(),
-        customerType: CustomerType.regular,
-        status: CustomerStatus.active,
-      });
-      customer = await manager.save(CustomerEntity, newCustomer);
-    }
-
-    if (!customer.user) {
-      throw new Error("Customer has no user attached");
-    }
-
-    // 2. create order
+    // 1. create order
     const order = manager.create(OrderEntity, {
       ...data,
       customer
     });
     const savedOrder = await manager.save(OrderEntity, order);
 
-    // 3. notification settings
+    // 2. notification settings
     const settings = await manager.findOne(NotificationSettingsEntity, {
-      where: { user: { id: customer.user.id } }
+      where: { user: { id: customer.user?.id } }
     });
 
-    // 4. create notification (dedup safe)
+    // 3. create notification (dedup safe)
     let savedNotification: NotificationEntity | null = null;
     if (settings?.orderEnabled && settings?.inappEnabled) {
       const deduplicationKey = `order:${savedOrder.id}`;
@@ -58,7 +45,7 @@ export async function createOrderService(data: Partial<IOrder>) {
           type: NotificationType.order,
           title: "orderCreatedTitle",
           content: "orderCreatedContent",
-          userId: customer.user.id,
+          userId: customer.user?.id,
           user: customer.user,
           isRead: false,
           deduplicationKey,
@@ -82,12 +69,12 @@ export async function createOrderService(data: Partial<IOrder>) {
     return {
       order: savedOrder,
       notification: savedNotification,
-      userId: customer.user.id,
+      userId: customer.user?.id,
       settings
     };
   });
 
-  // 5. realtime trigger
+  // 4. realtime trigger
   if (
     transactionResult.notification &&
     transactionResult.userId &&
@@ -101,6 +88,82 @@ export async function createOrderService(data: Partial<IOrder>) {
   }
 
   return transactionResult.order;
+}
+
+async function resolveGuestCustomer(manager: EntityManager, data: Partial<IOrder>) {
+  let customerId = data.customer?.id;
+
+  if (customerId) {
+    const customer = await manager.findOne(CustomerEntity, {
+      where: { id: customerId },
+      relations: ['user']
+    });
+
+    if (customer) {
+      return customer;
+    }
+  }
+
+  customerId = customerId || uuidv4();
+
+  const user = manager.create(UserEntity, {
+    id: customerId,
+    fullName: data.receiverInfo?.name as string,
+    email: '',
+    username: `guest-${customerId}`,
+    phone: data.receiverInfo?.phone,
+    password: "",
+    passwordSalt: "",
+    role: UserRole.customer,
+    active: true,
+    lastLogin: new Date(),
+  });
+  const savedUser = await manager.save(UserEntity, user);
+
+  const customer = manager.create(CustomerEntity, {
+    id: customerId,
+    name: data.receiverInfo?.name,
+    email: '',
+    phone: data.receiverInfo?.phone,
+    joinDate: new Date(),
+    customerType: CustomerType.regular,
+    status: CustomerStatus.active,
+    location: data.shippingAddress,
+    user: savedUser,
+  });
+
+  return manager.save(CustomerEntity, customer);
+}
+
+async function resolveAuthenticatedCustomer(manager: EntityManager, data: Partial<IOrder>, userId: string) {
+  const user = await manager.findOne(UserEntity, {
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new Error("Authenticated user not found");
+  }
+
+  const customer = await manager.findOne(CustomerEntity, {
+    where: { id: userId },
+    relations: ['user']
+  });
+
+  if (customer) {
+    return customer;
+  }
+
+  return manager.save(CustomerEntity, manager.create(CustomerEntity, {
+    id: userId,
+    name: user.fullName || data.receiverInfo?.name || "Khách lẻ",
+    email: user.email || '',
+    phone: user.phone || data.receiverInfo?.phone,
+    joinDate: new Date(),
+    customerType: CustomerType.regular,
+    status: CustomerStatus.active,
+    location: data.shippingAddress,
+    user,
+  }));
 }
 
 type GetOrdersInput = {
@@ -168,17 +231,33 @@ export async function getOrderById(id: string) {
   });
 }
 
-export async function cancelOrder(id: string) {
+export async function getOrderByIdForUser(id: string, userId: string) {
+  const repo = AppDataSource.getRepository(OrderEntity);
+  return repo
+    .createQueryBuilder("order")
+    .innerJoin("order.customer", "customer")
+    .where("order.id = :id", { id })
+    .andWhere("customer.id = :userId", { userId })
+    .getOne();
+}
+
+export async function cancelOrder(id: string, userId?: string) {
   const transactionResult = await AppDataSource.transaction(async (manager) => {
     const orderRepo = manager.getRepository(OrderEntity);
+    const orderQuery = orderRepo
+      .createQueryBuilder("order")
+      .leftJoinAndSelect("order.customer", "customer")
+      .leftJoinAndSelect("customer.user", "user")
+      .where("order.id = :id", { id });
 
-    const order = await orderRepo.findOne({
-      where: { id },
-      relations: ["customer", "customer.user"],
-    });
+    if (userId) {
+      orderQuery.andWhere("user.id = :userId", { userId });
+    }
+
+    const order = await orderQuery.getOne();
 
     if (!order) {
-      throw new Error("Order not found");
+      return null;
     }
 
     // update status
@@ -217,6 +296,8 @@ export async function cancelOrder(id: string) {
       settings: settings,
     };
   });
+
+  if (!transactionResult) return null;
 
   // realtime trigger
   if (

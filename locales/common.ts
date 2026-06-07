@@ -43,4 +43,8 @@ export const commonTranslations = {
     en: 'View All',
     vi: 'Xem tất cả',
   },
+  'common.checkout.orderFailed': {
+    en: 'Failed to place order',
+    vi: 'Đặt hàng thất bại',
+  }
 } 

@@ -2,13 +2,17 @@
 
 import { useCart } from "@/lib/contexts/cart-context"
 import { useLanguage } from "@/lib/contexts/language-context"
-import { apiCancelOrder, apiGetOrder } from "@/lib/httpclient/order.client"
+import { apiCancelOrder, apiGetGuestOrder, apiGetOrder } from "@/lib/httpclient/order.client"
 import { IOrder } from "@/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { toast } from "sonner"
+import { toast } from "@/hooks/use-toast"
 
-export const useOrder = (id: string) => {
+type UseOrderOptions = {
+  guestCustomerId?: string;
+};
+
+export const useOrder = (id: string, options: UseOrderOptions = {}) => {
   const { t } = useLanguage();
   const { addToCart } = useCart()
   const router = useRouter()
@@ -24,7 +28,9 @@ export const useOrder = (id: string) => {
   const getOrderHandler = async () => {
     try {
       setLoading(true)
-      const res = await apiGetOrder(id)
+      const res = options.guestCustomerId
+        ? await apiGetGuestOrder(id, options.guestCustomerId)
+        : await apiGetOrder(id)
       setOrder(res)
     } catch (e) {
       console.error(e)
@@ -45,8 +51,10 @@ export const useOrder = (id: string) => {
     try {
       const res = await apiCancelOrder(id)
       if (res) {
-        setOrder(res)
-        toast.success(t("order.detail.cancelSuccess"))
+          setOrder(res)
+          toast({
+            description: t("order.detail.cancelSuccess"),
+          })
       }
 
     } catch (e) {
@@ -56,27 +64,35 @@ export const useOrder = (id: string) => {
 
   const handleSubmitReview = () => {
     if (rating === 0) {
-      toast.error(t('order.detail.reviewRatingRequired'));
+      toast({
+        variant: "destructive",
+        description: t('order.detail.reviewRatingRequired'),
+      });
       return;
     }
 
     try {
       // TODO: call API submit review
 
-      toast.success(t('order.detail.reviewSuccess'));
+      toast({
+        description: t('order.detail.reviewSuccess'),
+      });
 
       setReviewText('');
       setRating(0);
 
       setRateOpen(false);
     } catch (error) {
-      toast.error(t('common.somethingWentWrong'));
+      toast({
+        variant: "destructive",
+        description: t('common.somethingWentWrong'),
+      });
     }
   };
 
   useEffect(() => {
     getOrderHandler()
-  }, [id])
+  }, [id, options.guestCustomerId])
 
   return {
     loading,
