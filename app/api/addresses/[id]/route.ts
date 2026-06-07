@@ -2,12 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensureDataSource } from "@/lib/database/ensureDataSource";
 import { deleteAddress, updateAddress } from "@/lib/services/addressService";
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function PUT(req: NextRequest, { params }: RouteContext) {
   try {
     await ensureDataSource();
+    const { id } = await params;
     const data = await req.json();
 
-    const updated = await updateAddress(params.id, data.data)
+    const updated = await updateAddress(id, data.data)
     if (!updated) return NextResponse.json({ error: "Cannot update address" }, { status: 400 });
     return NextResponse.json(updated);
   } catch (error) {
@@ -15,7 +20,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: RouteContext) {
   try {
     await ensureDataSource();
     const { id } = await params;
