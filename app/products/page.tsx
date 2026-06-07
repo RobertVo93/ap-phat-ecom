@@ -139,7 +139,7 @@ export default function ProductsPage() {
         <div className="flex gap-8">
           {/* Desktop Filters Sidebar */}
           <aside className="hidden lg:block w-80 flex-shrink-0">
-            <Card className="bg-white border-[#d4c5a0] shadow-sm sticky top-8">
+            <Card className="bg-white border-[#d4c5a0] shadow-sm sticky top-24">
               <CardHeader className="pb-4">
                 <CardTitle className="text-[#573e1c] flex items-center text-xl">
                   <Filter className="w-5 h-5 mr-2" />

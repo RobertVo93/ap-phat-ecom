@@ -6,33 +6,33 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Brand } from '@/lib/brand';
+import { useBrand } from '@/lib/contexts/setting-context';
 import { StoreLocation } from '@/lib/types';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
-const StoreLocations: StoreLocation[] = [
-  {
-    id: `${new Date().getTime()}`,
-    name: `Cửa hàng chính - Phù Mỹ, Bình Định`,
-    nameEn: 'Main Store - Phu My, Binh Dinh',
-    address: Brand.address,
-    addressEn: 'Chu Van An, Hamlet 5, Hoi Khanh Village, Phu My Commune, Binh Dinh Province',
-    phone: Brand.phone,
-    email: Brand.email,
-    hours: 'Thứ 2 - Chủ nhật: 7:00 - 21:00',
-    hoursEn: 'Monday - Sunday: 7:00 AM - 9:00 PM',
-    coordinates: {
-      lat: 14.190373918981283,
-      lng: 109.01627452738636
-    }
-  },
-]
 
 export default function StoreLocationsPage() {
   const { language, t } = useLanguage();
-  const [selectedStore, setSelectedStore] = useState(StoreLocations[0]);
-  const router = useRouter()
+  const brand = useBrand();
+
+  const storeLocations: StoreLocation[] = [
+    {
+    id: `${new Date().getTime()}`,
+      name: `Cửa hàng chính - Phù Mỹ, Bình Định`,
+      nameEn: 'Main Store - Phu My, Binh Dinh',
+      address: brand.address,
+      addressEn: 'Chu Van An, Hamlet 5, Hoi Khanh Village, Phu My Commune, Binh Dinh Province',
+      phone: brand.phone,
+      email: brand.email,
+      hours: 'Thứ 2 - Chủ nhật: 7:00 - 21:00',
+      hoursEn: 'Monday - Sunday: 7:00 AM - 9:00 PM',
+      coordinates: {
+        lat: 14.190373918981283,
+        lng: 109.01627452738636
+      }
+    },
+  ]
+  const [selectedStoreId, setSelectedStoreId] = useState(storeLocations[0].id);
+  const selectedStore = storeLocations.find((store) => store.id === selectedStoreId) || storeLocations[0]
 
   const storeFeatures = [
     {
@@ -74,11 +74,11 @@ export default function StoreLocationsPage() {
             {t('store.locations')}
           </h1>
           <p className="text-xl text-[#d4c5a0] max-w-3xl mx-auto leading-relaxed">
-            Tìm cửa hàng {Brand.name} gần bạn nhất. Chúng tôi có mặt tại nhiều địa điểm để phục vụ bạn tốt nhất.
+            Tìm cửa hàng {brand.name} gần bạn nhất. Chúng tôi có mặt tại nhiều địa điểm để phục vụ bạn tốt nhất.
           </p>
           <div className="mt-8 flex justify-center">
             <Badge className="bg-[#efe1c1] text-[#573e1c] px-4 py-2 text-lg">
-              {StoreLocations.length} cửa hàng trên toàn quốc
+              {storeLocations.length} cửa hàng trên toàn quốc
             </Badge>
           </div>
         </div>
@@ -89,14 +89,14 @@ export default function StoreLocationsPage() {
           {/* Store List */}
           <div className="lg:col-span-1 space-y-4">
             <h2 className="text-2xl font-bold text-[#573e1c] mb-6">Danh sách cửa hàng</h2>
-            {StoreLocations.map((store) => (
+            {storeLocations.map((store) => (
               <Card
                 key={store.id}
                 className={`cursor-pointer transition-all duration-300 ${selectedStore.id === store.id
                   ? 'border-[#573e1c] ring-2 ring-[#573e1c] ring-opacity-50 bg-[#efe1c1]'
                   : 'border-[#d4c5a0] hover:border-[#8b6a42] bg-white'
                   }`}
-                onClick={() => setSelectedStore(store)}
+                onClick={() => setSelectedStoreId(store.id)}
               >
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-3">
@@ -134,7 +134,7 @@ export default function StoreLocationsPage() {
               <CardContent className="space-y-6">
                 {/* Map Placeholder */}
                 <Link
-                  href={Brand.maps[0]}
+                  href={brand.maps[0]}
                   target="_blank"
                   className="block w-full h-[300px]"
                 >
@@ -176,7 +176,7 @@ export default function StoreLocationsPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button 
                     className="flex-1 bg-[#573e1c] hover:bg-[#8b6a42] text-[#efe1c1]"
-                    onClick={() => window.open(Brand.maps[0], "_blank")}
+                    onClick={() => window.open(brand.maps[0], "_blank")}
                   >
                     <Navigation className="w-4 h-4 mr-2" />
                     Chỉ đường

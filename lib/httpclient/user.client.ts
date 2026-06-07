@@ -1,6 +1,16 @@
 import { appendQueryParams } from "@/lib/httpclient";
 import { IUser } from "@/types";
-import { localValues } from "../utils.localStorage";
+import { getLocalCustomer } from "../utils.localStorage";
+import { v4 as uuidv4 } from "uuid"
+
+export class ApiLocaleError extends Error {
+    errorKey: string;
+
+    constructor(errorKey: string) {
+        super(errorKey);
+        this.errorKey = errorKey;
+    }
+}
 
 export async function apiGetMe(userId: string) {
     const res = await fetch(appendQueryParams("/api/auth/me", { userId }), {
@@ -24,17 +34,32 @@ export async function apiGetUserStats(userId: string) {
   return res.json();
 }
 
+export async function apiChangePassword(currentPassword: string, newPassword: string) {
+    const res = await fetch("/api/auth/change-password", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ currentPassword, newPassword }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new ApiLocaleError(data.errorKey || "account.error");
+    }
+
+    return data;
+}
+
 export async function registerUser(newUser: IUser) {
-    const {
-        userId, 
-        customer
-    } = localValues()
+    const customer = getLocalCustomer()
+    const userId = customer?.id || uuidv4()
 
     const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            ...newUser, userId, customerId: customer.id
+            ...newUser, userId
         }),
     });
     const data = await res.json();

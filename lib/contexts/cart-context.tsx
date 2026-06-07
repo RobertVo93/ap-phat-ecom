@@ -6,7 +6,7 @@ import {
   addToCart as apiAddToCart,
   updateCartItem as apiUpdateCartItem,
   deleteCartItem,
-  syncCartFromBackend
+  getUserCart
 } from '../httpclient/cart.client';
 import { useAuth } from './auth-context';
 import { clearCart as apiClearCart } from "@/lib/httpclient/cart.client"
@@ -39,7 +39,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const init = async () => {
       if (user) {
         // sync from backend
-        const res = await syncCartFromBackend(user.id!);
+        const res = await getUserCart();
         if (res.items) {
           setItems(res.items);
         }
@@ -75,8 +75,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         quantity,
         price: product.price,
       };
-      await apiAddToCart(user.id!, cartItem);
-      const res = await syncCartFromBackend(user.id!);
+      await apiAddToCart(cartItem);
+      const res = await getUserCart();
       setItems(res.items);
     } else {
       setItems(prevItems => {
@@ -106,7 +106,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeFromCart = async (cartItemId: string) => {
     if (user) {
       await deleteCartItem(cartItemId);
-      const res = await syncCartFromBackend(user.id!);
+      const res = await getUserCart();
       setItems(res.items);
     } else {
       setItems(prevItems => prevItems.filter(item => item.id !== cartItemId));
@@ -116,7 +116,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = async (cartItemId: string, quantity: number) => {
     if (user) {
       await apiUpdateCartItem(cartItemId, quantity);
-      const res = await syncCartFromBackend(user.id!);
+      const res = await getUserCart();
       setItems(res.items);
     } else {
       setItems(prevItems =>
@@ -133,7 +133,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = async () => {
     if (user) {
-      const res = await apiClearCart(user?.id!)
+      const res = await apiClearCart()
       if (res) {
         setItems([]);
         if (!user && typeof window !== 'undefined') localStorage.removeItem('cart');

@@ -4,11 +4,13 @@ import { useLanguage } from "@/lib/contexts/language-context"
 import { useRewards } from "@/lib/contexts/rewards-context"
 import { createOrder as apiCreateOrder } from "@/lib/httpclient/order.client"
 import { getNextBlockTime } from "@/lib/utils.date"
-import { localValues, localUpdateCustomer } from "@/lib/utils.localStorage"
+import { getLocalCustomer, updateLocalCustomer } from "@/lib/utils.localStorage"
 import { ICartItem, IOrder, IOrderItem, OrderStatus, PaymentMethod, PaymentStatus } from "@/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { toast } from "@/hooks/use-toast"
 import { useAddresses } from "./use-addresses"
+import { env } from "@/constants"
 
 const defaultOrderData: Partial<IOrder> = {
   deliveryDate: new Date(),
@@ -60,8 +62,8 @@ export const useCheckout = () => {
 
   // Rewards state
   const subtotal = getCartTotal();
-  const tax = subtotal * 0.1;
-  const shipping = subtotal > 100000 ? 0 : 25000;
+  const tax = subtotal * (parseInt(env.NEXT_PUBLIC_TAX_RATE));
+  const shipping = 0;
 
   // Calculate discounts
   const discountCalculation = calculateDiscount(subtotal, appliedVoucher || undefined, pointsToRedeem);
@@ -149,7 +151,13 @@ export const useCheckout = () => {
   const createOrder = async (orderData: Partial<IOrder>) => {
     try {
       setLoading(true)
-      const { customer } = localValues()
+      let shippingAddress = deliveryInfo.address
+      if (deliveryInfo.ward) {
+        shippingAddress += ` - ${deliveryInfo.ward}`
+      }
+      if (deliveryInfo.city) {
+        shippingAddress += ` - ${deliveryInfo.city}`
+      }
 
       const newOrder: IOrder = {
         deliveryDate: new Date(),
@@ -157,7 +165,7 @@ export const useCheckout = () => {
         status: OrderStatus.pending,
         paymentStatus: PaymentStatus.pending,
         paymentMethod: orderData.paymentMethod || PaymentMethod.cash,
-        shippingAddress: `${deliveryInfo.address} - ${deliveryInfo.ward} - ${deliveryInfo.city}`,
+        shippingAddress: shippingAddress,
         notes: orderData.notes,
         tags: orderData.tags,
         shippingFee: shipping,
@@ -169,22 +177,33 @@ export const useCheckout = () => {
         newOrder.customer = user.customer
       }
       else {
+        const customer = getLocalCustomer()
         newOrder.customer = {
           ...customer,
-          name: customer.name || orderData.receiverInfo?.name || 'Khách lẻ',
-          phone: customer.phone || orderData.receiverInfo?.phone || 'Chưa cập nhật',
-          notes: customer.notes || orderData.notes || '',
-          location: customer.location || newOrder.shippingAddress || '',
+          name: customer?.name || orderData.receiverInfo?.name || 'Khách lẻ',
+          phone: customer?.phone || orderData.receiverInfo?.phone || 'Chưa cập nhật',
+          notes: customer?.notes || orderData.notes || '',
+          location: customer?.location || newOrder.shippingAddress || '',
         }
+        updateLocalCustomer(newOrder.customer);
       }
       const res = await apiCreateOrder(newOrder)
       if (res) {
         clearCart()
-        localUpdateCustomer(newOrder.customer!);
-        router.push(`/account/orders/${res.id}`)
+        if (user) {
+          router.push(`/account/orders/${res.id}`)
+        } else {
+          const params = new URLSearchParams({ customerId: newOrder.customer?.id || '' });
+          router.push(`/guest/orders/${res.id}?${params}`)
+        }
       }
     } catch (e) {
       console.error(e)
+      toast({
+				title: t("common.error"),
+				description: t("common.checkout.orderFailed"),
+				variant: "destructive",
+			})
     } finally {
       setLoading(false)
     }
@@ -197,14 +216,14 @@ export const useCheckout = () => {
   }, [deliveryInfo, voucherCode, pointsToRedeem, appliedVoucher, voucherError])
 
   useEffect(() => {
-    const customer = localValues().customer;
-    const splitAddress = customer.location ? customer.location.split(' - ') : [];
+    const customer = user?.customer || getLocalCustomer();
+    const splitAddress = customer?.location?.split(' - ') || [];
     setOrderData({
       ...orderData,
-      notes: customer.notes || '',
+      notes: customer?.notes || '',
       receiverInfo: {
-        name: customer.name || '',
-        phone: customer.phone || '',
+        name: customer?.name || '',
+        phone: customer?.phone || '',
       },
     });
     setDeliveryInfo({

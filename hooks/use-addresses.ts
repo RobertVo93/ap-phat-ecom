@@ -86,7 +86,7 @@ export const useAddresses = () => {
 
       if (editingAddress) {
         // Update existing address
-        handleUpdateAddress(formData)
+        await handleUpdateAddress(formData)
         setIsDialogOpen(false)
       } else {
         // Add new address
@@ -132,7 +132,7 @@ export const useAddresses = () => {
     try {
       setLoading(true)
       const address = addresses.find(address => address.id === addressId)
-      handleUpdateAddress({ ...address!, isDefault: true })
+      await handleUpdateAddress({ ...address!, isDefault: true })
     } catch (e) {
       console.error(e)
     } finally {

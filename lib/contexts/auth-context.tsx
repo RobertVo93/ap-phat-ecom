@@ -8,7 +8,7 @@ import { apiGetMe, registerUser } from '../httpclient/user.client';
 import { useLanguage } from './language-context';
 import { toast } from 'sonner';
 import { checkUsernameType } from '../utils.username';
-import { localUpdateCustomer, localValues, renewUserAndCustomer } from '../utils.localStorage';
+import { getLocalCustomer, renewLocalCustomer } from '../utils.localStorage';
 import { apiGetNotificationSettings } from '../httpclient/notification.client';
 
 interface AuthContextType {
@@ -47,7 +47,6 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
           apiGetMe(session.user.id),
           apiGetNotificationSettings(session.user.id)
         ])
-        localUpdateCustomer(res[0].customer);
         setUser(res[0])
       }
     } catch (e) {
@@ -125,8 +124,9 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       setIsLoading(true);
-      await signOut({ callbackUrl: "/" });
+      renewLocalCustomer();
       setUser(null);
+      await signOut({ callbackUrl: "/" });
     } catch (e) {
       console.error(e);
     } finally {
@@ -161,11 +161,10 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
   }, [pathName, user])
 
   useEffect(() => {
-    const customer = localValues().customer;
-    if(!user && !customer?.id) {
-      renewUserAndCustomer()
-    }
-  }, [user])
+    // Generate customer information for guest user to track orders and save notes.
+    // getLocalCustomer only creates a new customer when local storage is empty.
+    getLocalCustomer();
+  }, [])
 
   return (
     <AuthContext.Provider value={{
