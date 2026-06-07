@@ -13,10 +13,11 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { checkUsernameType } from '@/lib/utils.username';
 import { UsernameType } from '@/types';
-import { Brand } from '@/lib/brand';
+import { useBrand } from '@/lib/contexts/setting-context';
 
 export default function RegisterPage() {
   const { t } = useLanguage();
+  const brand = useBrand();
   const { register, loginWithGoogle } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -97,7 +98,7 @@ export default function RegisterPage() {
               <div className="w-10 h-10 bg-[#573e1c] rounded-full flex items-center justify-center">
                 <span className="text-[#efe1c1] font-bold">AP</span>
               </div>
-              <span className="text-[#573e1c] font-bold text-xl">{Brand.name}</span>
+              <span className="text-[#573e1c] font-bold text-xl">{brand.name}</span>
             </div>
             <CardTitle className="text-2xl font-bold text-[#573e1c]">
               {t('auth.register.title')}

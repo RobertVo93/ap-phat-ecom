@@ -5,10 +5,11 @@ import { Heart, Award, Users, Leaf, Star, Target, Globe } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Brand } from '@/lib/brand';
+import { useBrand } from '@/lib/contexts/setting-context';
 
 export default function AboutPage() {
   const { t } = useLanguage();
+  const brand = useBrand();
 
   const values = [
     {
@@ -103,7 +104,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl lg:text-6xl font-bold text-[#efe1c1] mb-6">
-                {t('about.hero.title')} {Brand.name}
+                {t('about.hero.title')} {brand.name}
               </h1>
               <p className="text-xl text-[#d4c5a0] leading-relaxed mb-8">
                 {t('about.hero.subtitle')}

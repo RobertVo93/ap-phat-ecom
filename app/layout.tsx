@@ -10,6 +10,7 @@ import { AuthProvider } from '@/lib/contexts/auth-context';
 import { RewardsProvider } from '@/lib/contexts/rewards-context';
 import { Toaster } from "@/components/ui/sonner"
 import { NotificationProvider } from '@/lib/contexts/notification-context';
+import { SettingProvider } from '@/lib/contexts/setting-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,15 +35,17 @@ export default function RootLayout({
             <NotificationProvider>
               <RewardsProvider>
                 <CartProvider>
-                  <div className="min-h-screen flex flex-col">
-                    <Header />
-                    <main className="flex-1">
-                      {children}
-                    </main>
-                    <Footer />
-                    <FloatingChatbot />
-                    <Toaster />
-                  </div>
+                  <SettingProvider>
+                    <div className="min-h-screen flex flex-col">
+                      <Header />
+                      <main className="flex-1">
+                        {children}
+                      </main>
+                      <Footer />
+                      <FloatingChatbot />
+                      <Toaster />
+                    </div>
+                  </SettingProvider>
                 </CartProvider>
               </RewardsProvider>
             </NotificationProvider>

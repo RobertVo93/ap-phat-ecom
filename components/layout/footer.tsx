@@ -4,10 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Facebook, Youtube } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { Brand } from '@/lib/brand';
+import { useBrand } from '@/lib/contexts/setting-context';
 
 export function Footer() {
   const { t } = useLanguage();
+  const brand = useBrand();
 
   return (
     <footer className="bg-[#573e1c] text-[#efe1c1]">
@@ -19,16 +20,16 @@ export function Footer() {
               <div className="w-8 h-8 bg-[#efe1c1] rounded-full flex items-center justify-center">
                 <span className="text-[#573e1c] font-bold text-sm">AP</span>
               </div>
-              <span className="font-bold text-xl">{t('footer.companyName')}</span>
+              <span className="font-bold text-xl">{brand.name}</span>
             </div>
             <p className="text-[#d4c5a0] text-sm leading-relaxed">
               {t('home.hero.subtitle')}
             </p>
             <div className="flex space-x-4">
-              <Link href={Brand.facebook} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
+              <Link href={brand.facebook} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
                 <Facebook target="_blank" className="w-5 h-5" />
               </Link>
-              <Link href={Brand.youtube} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
+              <Link href={brand.youtube} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
                 <Youtube className="w-5 h-5" />
               </Link>
             </div>
@@ -38,18 +39,18 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">{t('store.contact')}</h3>
             <div className="space-y-3">
-              <a href={`tel:${Brand.phone?.replace(/\s+/g, '')}`} className="flex items-center space-x-3 text-[#d4c5a0] text-sm hover:text-[#efe1c1] transition-colors">
+              <a href={`tel:${brand.phone?.replace(/\s+/g, '')}`} className="flex items-center space-x-3 text-[#d4c5a0] text-sm hover:text-[#efe1c1] transition-colors">
                 <Phone className="w-4 h-4" />
-                <span>{Brand.phone}</span>
+                <span>{brand.phone}</span>
               </a>
-              <a href={`mailto:${Brand.email}`} className="flex items-center space-x-3 text-[#d4c5a0] text-sm hover:text-[#efe1c1] transition-colors">
+              <a href={`mailto:${brand.email}`} className="flex items-center space-x-3 text-[#d4c5a0] text-sm hover:text-[#efe1c1] transition-colors">
                 <Mail className="w-4 h-4" />
-                <span>{Brand.email}</span>
+                <span>{brand.email}</span>
               </a>
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-[#d4c5a0] mt-0.5" />
-                <Link href={Brand.maps[0]} target="_blank" className="text-[#d4c5a0] text-sm hover:text-[#efe1c1] leading-relaxed whitespace-pre-line">
-                  {Brand.address}
+                <Link href={brand.maps[0]} target="_blank" className="text-[#d4c5a0] text-sm hover:text-[#efe1c1] leading-relaxed whitespace-pre-line">
+                  {brand.address}
                 </Link>
               </div>
             </div>

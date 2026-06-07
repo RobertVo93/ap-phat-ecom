@@ -1,4 +1,6 @@
-export const Brand = {
+import type { BrandSettings } from "@/types"
+
+export const Brand: BrandSettings = {
   shortName: "anphatvn",
   maps: ["https://maps.app.goo.gl/sbRGbrhpZAT6nqfm7"],
   phone: "0708 018 926",

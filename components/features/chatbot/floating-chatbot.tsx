@@ -5,38 +5,39 @@ import { MessageCircle, Phone, MapPin, X, Facebook } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Brand } from '@/lib/brand';
+import { useBrand } from '@/lib/contexts/setting-context';
 
 export function FloatingChatbot() {
   const { t } = useLanguage();
+  const brand = useBrand();
   const [isOpen, setIsOpen] = useState(false);
 
   const contactOptions = [
     {
       icon: MessageCircle,
       label: t('chatbot.messenger'),
-      href: `https://m.me/${Brand.shortName}`,
+      href: `https://m.me/${brand.shortName}`,
       color: 'bg-blue-600 hover:bg-blue-700',
       textColor: 'text-white'
     },
     {
       icon: MessageCircle,
       label: t('chatbot.zalo'),
-      href: `https://zalo.me/${Brand.phone?.replace(/\s+/g, '')}`,
+      href: `https://zalo.me/${brand.phone?.replace(/\s+/g, '')}`,
       color: 'bg-blue-500 hover:bg-blue-600',
       textColor: 'text-white'
     },
     {
       icon: Phone,
       label: t('chatbot.phone'),
-      href: `tel:${Brand.phone?.replace(/\s+/g, '')}`,
+      href: `tel:${brand.phone?.replace(/\s+/g, '')}`,
       color: 'bg-green-600 hover:bg-green-700',
       textColor: 'text-white'
     },
     {
       icon: MapPin,
       label: t('chatbot.location'),
-      href: Brand.maps[0],
+      href: brand.maps[0],
       color: 'bg-red-600 hover:bg-red-700',
       textColor: 'text-white'
     }

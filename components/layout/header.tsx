@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { Brand } from "@/lib/brand"
+import { useBrand } from "@/lib/contexts/setting-context"
 import Image from 'next/image';
 import { Badge } from '../ui/badge';
 import { useNotification } from '@/lib/contexts/notification-context';
@@ -24,6 +24,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
+  const brand = useBrand();
   const { getCartItemsCount } = useCart();
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,7 +60,7 @@ export function Header() {
                 />
               </div>
               <span className="text-[#573e1c] font-bold text-xl hidden sm:block">
-                {Brand.name}
+                {brand.name}
               </span>
             </div>
           </Link>
