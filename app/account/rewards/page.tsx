@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 
 export default function RewardsPage() {
+  // TODO: temporary close, will implement later when we have more complete rewards system
   const { language, t } = useLanguage();
   const { user } = useAuth();
   const { loyaltyPoints, vouchers, pointTransactions } = useRewards();

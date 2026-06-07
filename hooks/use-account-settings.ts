@@ -3,6 +3,7 @@
 import { useAuth } from "@/lib/contexts/auth-context";
 import { useLanguage } from "@/lib/contexts/language-context";
 import { useNotification } from "@/lib/contexts/notification-context";
+import { ApiLocaleError, apiChangePassword } from "@/lib/httpclient/user.client";
 import { apiGetNotificationSettings, apiUpdateNotificationSettings } from "@/lib/httpclient/notification.client";
 import { INotificationSettings } from "@/types";
 import { useEffect, useState } from "react";
@@ -102,8 +103,7 @@ export const useAccountSettings = () => {
     }
 
     try {
-      // In real app, validate current password with backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await apiChangePassword(passwordData.currentPassword, passwordData.newPassword);
       setMessage(t('account.passwordChanged'));
       setPasswordData({
         currentPassword: '',
@@ -111,7 +111,7 @@ export const useAccountSettings = () => {
         confirmPassword: ''
       });
     } catch (error) {
-      setMessage(t('account.error'));
+      setMessage(error instanceof ApiLocaleError ? t(error.errorKey) : t('account.error'));
     } finally {
       setIsSaving(false);
     }

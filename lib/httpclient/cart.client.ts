@@ -1,10 +1,9 @@
 import { appendQueryParams } from "@/lib/httpclient";
 import { ICartItem } from "@/types";
 
-export async function syncCartFromBackend(userId: string) {
+export async function getUserCart() {
     try {
-        const res = await fetch(appendQueryParams("/api/carts",
-            { userId }),
+        const res = await fetch(appendQueryParams("/api/carts"),
             { credentials: "include" }
         );
 
@@ -17,12 +16,12 @@ export async function syncCartFromBackend(userId: string) {
     }
 }
 
-export async function addToCart(userId: string, cartItem: ICartItem) {
+export async function addToCart(cartItem: ICartItem) {
     const res = await fetch("/api/carts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ userId, cartItem }),
+        body: JSON.stringify({ cartItem }),
     });
     if (!res.ok) throw new Error("Failed to create");
     return await res.json();
@@ -57,12 +56,11 @@ export async function deleteCartItem(cartItemId: string) {
     return res;
 } 
 
-export async function clearCart(userId: string) {
+export async function clearCart() {
     const res = await fetch(`/api/carts`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ userId }),
     });
     if (!res.ok) throw new Error("Failed to delete");
     return res;

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select"
 import { IAddress, IOrder } from "@/types"
 import { useLanguage } from "@/lib/contexts/language-context"
+import { addressToString } from "@/lib/utils"
 
 interface Props {
   addresses: IAddress[]
@@ -92,7 +93,7 @@ export function AddressSelector({
                   {address.isDefault && ` - ${t("account.default")}`}
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  {address.street}, {address.ward}, {address.city}
+                  {addressToString(address)}
                 </span>
               </div>
             </SelectItem>

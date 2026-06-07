@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, User, Menu, X, Globe, Gift, ClipboardList, Bell } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useCart } from '@/lib/contexts/cart-context';
@@ -26,6 +27,7 @@ export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { getCartItemsCount } = useCart();
   const { user, logout } = useAuth();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { notifications, unreadNumber, onMarkAsRead, } = useNotification();
@@ -41,6 +43,12 @@ export function Header() {
   const handleLogout = () => {
     logout();
   };
+
+  const onSearchKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
+    }
+  }
 
   return (
     <header className="bg-[#efe1c1] shadow-md sticky top-0 z-50">
@@ -86,6 +94,7 @@ export function Header() {
                 placeholder={t('home.search.placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={onSearchKeyDownHandler}
                 className="pl-10 bg-white border-[#8b6a42] focus:border-[#573e1c] text-[#573e1c]"
               />
             </div>
@@ -116,7 +125,7 @@ export function Header() {
               <ShoppingCart className="w-6 h-6" />
               {cartItemsCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                  {cartItemsCount}
+                  {cartItemsCount > 9 ? '9+' : cartItemsCount}
                 </span>
               )}
             </Link>
@@ -201,7 +210,7 @@ export function Header() {
                         {t('nav.orders')}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem asChild className='hidden'>
                       <Link href="/account/rewards">
                         <Gift className="w-4 h-4 mr-2" />
                         {t('rewards.title')}
@@ -246,6 +255,7 @@ export function Header() {
               placeholder={t('home.search.placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={onSearchKeyDownHandler}
               className="pl-10 bg-white border-[#8b6a42] focus:border-[#573e1c] text-[#573e1c]"
             />
           </div>
@@ -269,7 +279,7 @@ export function Header() {
             {user && (
               <Link
                 href="/account/rewards"
-                className="block px-3 py-2 text-[#573e1c] hover:text-[#8b6a42] hover:bg-[#d4c5a0] rounded-md font-medium"
+                className="hidden block px-3 py-2 text-[#573e1c] hover:text-[#8b6a42] hover:bg-[#d4c5a0] rounded-md font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Gift className="w-4 h-4 mr-2 inline" />

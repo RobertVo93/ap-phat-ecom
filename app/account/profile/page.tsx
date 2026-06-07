@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { AvatarUpload } from '@/components/ui/avatar-upload';
 import { useProfile } from '@/hooks/use-profile';
 import { Gender } from '@/types';
+import { formatDate } from '@/lib/utils';
 
 export default function ProfilePage() {
   const {
@@ -84,7 +85,7 @@ export default function ProfilePage() {
 
                 <h3 className="font-semibold text-[#573e1c] text-xl mb-2">{user.fullName}</h3>
                 <p className="text-[#8b6a42] text-sm mb-4">
-                  {t('account.memberSince')} {new Date(user.createdAt!).toLocaleDateString('vi-VN')}
+                  {t('account.memberSince')} {formatDate(user.createdAt!)}
                 </p>
 
                 <AvatarUpload
@@ -147,7 +148,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-[#573e1c]">{t('account.phoneNumber')}</Label>
+                      <Label htmlFor="phone" className="text-[#573e1c]">{t('account.phoneNumber')} *</Label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#8b6a42] w-4 h-4" />
                         <Input
