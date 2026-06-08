@@ -1,3 +1,4 @@
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -5,45 +6,56 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { ICollection } from '@/types';
 
 interface Props {
-    categories: ICollection[]
-    selectedCategory: ICollection | "all"
+    collections: ICollection[]
     priceRange: [number, number]
-    setSearchQuery: (value:string) => void
     setPriceRange: (value: [number, number]) => void
-    setSelectedCategory: (value: "all" | ICollection) => void
 }
 
 export default function FilterContent({
-    categories,
-    selectedCategory,
+    collections,
     priceRange,
-    setSearchQuery,
     setPriceRange,
-    setSelectedCategory,
 }: Props) {
     const { t } = useLanguage();
+    const router = useRouter()
+    const pathname = usePathname()
+    const searchParams = useSearchParams();
+    const selectedCollection = searchParams.get('collection') ?? "";
+
+    const updateCollectionParam = (collectionNumber: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (collectionNumber) {
+            params.set('collection', collectionNumber);
+        } else {
+            params.delete('collection');
+        }
+
+        const queryString = params.toString();
+        router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    }
+
     return (
         <div className="space-y-6">
-            {/* Category Filter */}
+            {/* Collection Filter */}
             <div>
                 <h3 className="font-semibold text-[#573e1c] mb-4 text-lg">{t('product.filter.categories')}</h3>
                 <div className="space-y-3">
-                    {categories.map((category) => (
-                        <div key={category.id} className="flex items-center space-x-3">
+                    {collections.map((collection) => (
+                        <div key={collection.id} className="flex items-center space-x-3">
                             <Checkbox
-                                id={category.id}
-                                checked={selectedCategory !== "all" && selectedCategory.id === category.id}
+                                id={collection.id}
+                                checked={selectedCollection !== "" && selectedCollection === collection.number}
                                 onCheckedChange={(checked) => {
-                                    if (checked) setSelectedCategory(category);
-                                    else setSelectedCategory('all');
+                                    if (checked && collection.number) updateCollectionParam(collection.number);
+                                    else updateCollectionParam('');
                                 }}
                                 className="border-[#8b6a42] data-[state=checked]:bg-[#573e1c] data-[state=checked]:border-[#573e1c]"
                             />
                             <label
-                                htmlFor={category.id}
+                                htmlFor={collection.id}
                                 className="text-[#8b6a42] cursor-pointer hover:text-[#573e1c] transition-colors"
                             >
-                                {category.name}
+                                {collection.name}
                             </label>
                         </div>
                     ))}
@@ -116,9 +128,7 @@ export default function FilterContent({
             <Button
                 variant="outline"
                 onClick={() => {
-                    setSelectedCategory('all');
-                    setPriceRange([0, 100000]);
-                    setSearchQuery('');
+                    router.replace(pathname, { scroll: false });
                 }}
                 className="w-full border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
             >

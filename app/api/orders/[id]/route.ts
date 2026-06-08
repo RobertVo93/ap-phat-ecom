@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ensureDataSource } from "@/lib/database/ensureDataSource";
-import { cancelOrder, getOrderById } from "@/lib/services/orderService";
+import { getUserFromRequest } from "@/lib/auth/request-user";
+import { cancelOrder, getOrderByIdForUser } from "@/lib/services/orderService";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
 export async function GET(_req: NextRequest, { params }: RouteContext) {
+  const user = await getUserFromRequest();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     await ensureDataSource();
     const { id } = await params;
-    const order = await getOrderById(id);
+    const order = await getOrderByIdForUser(id, user.id);
     if (!order) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
@@ -21,10 +25,13 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
 }
 
 export async function PUT(_req: NextRequest, { params }: RouteContext) {
+  const user = await getUserFromRequest();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     await ensureDataSource();
     const { id } = await params;
-    const updated = await cancelOrder(id);
+    const updated = await cancelOrder(id, user.id);
     if (!updated) return NextResponse.json({ error: "Cannot update order" }, { status: 400 });
     return NextResponse.json(updated);
   } catch (error) {

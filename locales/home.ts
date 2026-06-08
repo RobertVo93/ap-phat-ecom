@@ -1,11 +1,15 @@
 export const homeTranslations = {
+  'home.hero.remark': {
+    en: '100% Clean products, no preservatives',
+    vi: '100% Sản phẩm sạch, không chất bảo quản',
+  },
   'home.hero.title': {
-    en: 'Traditional Vietnamese Rice Paper',
-    vi: 'Bánh Tráng Việt Nam Truyền Thống',
+    en: 'Traditional Paper rice cake',
+    vi: 'Bánh Tráng gạo truyền thống',
   },
   'home.hero.subtitle': {
-    en: 'Experience the authentic taste of Vietnamese cuisine',
-    vi: 'Trải nghiệm hương vị ẩm thực Việt Nam đích thực',
+    en: 'Experience crispy and delicious dipping cakes. Retaining the traditional flavor of Binh Dinh rice paper',
+    vi: 'Trải nghiệm các loại bánh nhúng giòn rụm, ngon miệng. Giữ được hương vị truyền thống của bánh tráng gạo nhúng nước Bình Định',
   },
   'home.hero.cta': {
     en: 'Shop Now',
@@ -16,8 +20,8 @@ export const homeTranslations = {
     vi: 'Danh Mục Sản Phẩm',
   },
   'home.categories.description': {
-    en: 'Explore our traditional rice paper and pho noodles with the highest quality',
-    vi: 'Khám phá các loại bánh tráng và bún phở truyền thống với chất lượng cao nhất',
+    en: 'Explore our traditional rice paper with the highest quality',
+    vi: 'Khám phá các loại bánh tráng truyền thống với chất lượng cao nhất',
   },
   'home.categories.products': {
     en: 'products',

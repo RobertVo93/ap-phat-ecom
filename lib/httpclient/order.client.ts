@@ -25,6 +25,13 @@ export async function apiGetOrder(id: string) {
   return res.json();
 }
 
+export async function apiGetGuestOrder(id: string, customerId: string) {
+  const params = new URLSearchParams({ customerId });
+  const res = await fetch(`/api/guest/orders/${id}?${params}`);
+  if (!res.ok) throw new Error("Failed to fetch guest order");
+  return res.json();
+}
+
 export async function apiCancelOrder(id: string) {
   const res = await fetch(`/api/orders/${id}`, {
     method: "PUT",

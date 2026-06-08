@@ -1,26 +1,24 @@
 import { CustomerStatus, CustomerType, ICustomer } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const localValues = () => {
-  const userId = localStorage.getItem("ecom_user_id")
-  const rawCustomer = localStorage.getItem("ecom_customer")
-  const customer = JSON.parse(rawCustomer!) as ICustomer
-
-  return {
-    userId,
-    customer,
+export const getLocalCustomer = (): ICustomer => {
+  let rawCustomer = localStorage.getItem("ecom_customer");
+  try {
+    return rawCustomer ? JSON.parse(rawCustomer) as ICustomer : renewLocalCustomer();
+  }
+  catch (e) {
+    console.error("Failed to parse the customer, generating a new one.", e);
+    return renewLocalCustomer();
   }
 }
 
-export const localUpdateCustomer = (customer: ICustomer) => {
+export const updateLocalCustomer = (customer: ICustomer) => {
   localStorage.setItem("ecom_customer", JSON.stringify(customer))
 }
 
-export const renewUserAndCustomer = () => {
-  const user_id = uuidv4()
-  localStorage.setItem("ecom_user_id", user_id)
+export const renewLocalCustomer = (): ICustomer => {
   const newCustomer: ICustomer = {
-    id: user_id,
+    id: uuidv4(),
     name: "",
     email: "",
     phone: "",
@@ -32,5 +30,6 @@ export const renewUserAndCustomer = () => {
     orders: [],
     totalSpend: 0,
   }
-  localStorage.setItem("ecom_customer", JSON.stringify(newCustomer))
+  updateLocalCustomer(newCustomer);
+  return newCustomer;
 }
