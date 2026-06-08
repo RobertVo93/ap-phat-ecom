@@ -8,8 +8,8 @@ export const checkoutTranslations = {
     vi: 'Thông tin khách hàng',
   },
   'checkout.selectCustomerInfo': {
-    en: 'Select Customer Information',
-    vi: 'Chọn Thông tin khách hàng',
+    en: 'Select delivery address',
+    vi: 'Chọn địa chỉ giao hàng',
   },
   'checkout.deliveryInfo': {
     en: 'Delivery Information',
@@ -45,7 +45,7 @@ export const checkoutTranslations = {
   },
   'checkout.form.city': {
     en: 'City',
-    vi: 'Thành phố',
+    vi: 'Tỉnh/Thành phố',
   },
   'checkout.form.district': {
     en: 'District',

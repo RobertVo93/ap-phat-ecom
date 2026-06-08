@@ -53,11 +53,11 @@ export function CategoriesSection({
               {categories.map((category, index) => (
                 <CarouselItem
                   key={index}
-                  className="basis-1/2 md:basis-1/3 lg:basis-1/4"
+                  className="basis-1/1 md:basis-1/3 lg:basis-1/4"
                 >
                   <Link
                     key={category.id}
-                    href={`/products?category=${category.id}`}
+                    href={`/products?collection=${category.number}`}
                     className="group block"
                   >
                     <Card className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-[#d4c5a0] hover:border-[#573e1c] cursor-pointer relative">

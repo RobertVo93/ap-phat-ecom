@@ -39,6 +39,10 @@ export const cartTranslations = {
     en: 'Shipping',
     vi: 'Phí vận chuyển',
   },
+  'cart.shipping.fee': {
+    en: 'Shipping Fee varies based on the shipping provider',
+    vi: 'Phí vận chuyển tuỳ theo đơn vị vận chuyển'
+  },
   'cart.shipping.free': {
     en: 'Free',
     vi: 'Miễn phí',

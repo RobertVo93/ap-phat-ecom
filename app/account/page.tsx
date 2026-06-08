@@ -12,6 +12,8 @@ import { formatCurrency } from '@/lib/utils.currency';
 import { getOrderStatusColor } from '@/lib/utils.style';
 import { formatDate } from '@/lib/utils.date';
 import Image from 'next/image';
+import { FormattedNumber } from '@/components/ui/formatted-number';
+import { FormattedCurrency } from '@/components/ui/formatted-currency';
 
 export default function AccountPage() {
   const {
@@ -19,7 +21,6 @@ export default function AccountPage() {
     userStats,
     recentOrders,
     t,
-    handleLogout,
   } = useAccount()
 
   if (!user) {
@@ -33,28 +34,6 @@ export default function AccountPage() {
   return (
     <div className="min-h-screen bg-[#f8f5f0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-[#573e1c]">
-                {t('account.dashboard')}
-              </h1>
-              <p className="text-[#8b6a42] mt-2">
-                {t('account.welcome')} <span className='font-bold'>{user.fullName}</span>
-              </p>
-            </div>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="border-[#573e1c] text-[#573e1c] hover:bg-[#573e1c] hover:text-[#efe1c1]"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              {t('nav.logout')}
-            </Button>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Summary */}
           <div className="lg:col-span-1">
@@ -85,22 +64,18 @@ export default function AccountPage() {
                     </div>
                   )}
                   <h3 className="font-semibold text-[#573e1c] text-lg">{user.fullName}</h3>
-                  <p className="text-[#8b6a42] text-sm">{user.email}</p>
-                  <p className="text-[#8b6a42] text-sm">{user.phone}</p>
                 </div>
 
                 <Separator />
 
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">{t('account.totalOrders')}:</span>
-                    <span className="font-semibold text-[#573e1c]">{userStats.totalOrders}</span>
+                    <span className="text-[#8b6a42]">{t('account.phoneNumber')}:</span>
+                    <span className="font-semibold text-[#573e1c]">{user.phone}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8b6a42]">{t('account.totalSpent')}:</span>
-                    <span className="font-semibold text-[#573e1c]">
-                      {formatCurrency(userStats.totalSpent)}
-                    </span>
+                    <span className="text-[#8b6a42]">{t('account.email')}:</span>
+                    <span className="font-semibold text-[#573e1c]">{user.email}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#8b6a42]">{t('account.memberSince')}:</span>
@@ -108,6 +83,18 @@ export default function AccountPage() {
                       {formatDate(user.createdAt!)}
                     </span>
                   </div>
+                  {user.customer?.company && (
+                    <div className="flex justify-between">
+                      <span className="text-[#8b6a42]">{t('account.company')}:</span>
+                      <span className="font-semibold text-[#573e1c]">{user.customer.company}</span>
+                    </div>
+                  )}
+                  {user.customer?.location && (
+                    <div className="flex justify-between">
+                      <span className="text-[#8b6a42]">{t('account.location')}:</span>
+                      <span className="font-semibold text-[#573e1c]">{user.customer.location}</span>
+                    </div>
+                  )}
                 </div>
 
                 <Separator />
@@ -154,26 +141,32 @@ export default function AccountPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
-                  <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {userStats.totalOrders}
-                  </div>
+                  <FormattedNumber
+                    as='div'
+                    value={userStats.totalAddresses}
+                    className="text-2xl font-bold text-[#573e1c] mb-1"
+                  />
+                  <div className="text-sm text-[#8b6a42]">{t('account.savedAddresses')}</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white border-[#d4c5a0]">
+                <CardContent className="p-6 text-center">
+                  <FormattedNumber
+                    as='div'
+                    value={userStats.totalOrders}
+                    className="text-2xl font-bold text-[#573e1c] mb-1"
+                  />
                   <div className="text-sm text-[#8b6a42]">{t('account.totalOrders')}</div>
                 </CardContent>
               </Card>
               <Card className="bg-white border-[#d4c5a0]">
                 <CardContent className="p-6 text-center">
-                  <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {formatCurrency(userStats.totalSpent)}
-                  </div>
+                  <FormattedCurrency
+                    as='div'
+                    value={userStats.totalSpent}
+                    className="text-2xl font-bold text-[#573e1c] mb-1"
+                  />
                   <div className="text-sm text-[#8b6a42]">{t('account.totalSpent')}</div>
-                </CardContent>
-              </Card>
-              <Card className="bg-white border-[#d4c5a0]">
-                <CardContent className="p-6 text-center">
-                  <div className="text-2xl font-bold text-[#573e1c] mb-1">
-                    {userStats.totalAddresses}
-                  </div>
-                  <div className="text-sm text-[#8b6a42]">{t('account.savedAddresses')}</div>
                 </CardContent>
               </Card>
             </div>

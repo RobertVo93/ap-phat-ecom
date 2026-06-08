@@ -27,7 +27,6 @@ export const useOrders = () => {
 
   const apiParams = useMemo(() => {
     return {
-      customerId: user?.id,
       searchTerm: debouncedSearchTerm,
       status: statusFilter === "all" ? undefined : statusFilter,
     };

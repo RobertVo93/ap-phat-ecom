@@ -9,11 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Brand } from '@/lib/brand';
+import { useBrand } from '@/lib/contexts/setting-context';
 import Link from 'next/link';
 
 export default function ContactPage() {
   const { t } = useLanguage();
+  const brand = useBrand();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,19 +50,19 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: t('contact.info.phone'),
-      details: [Brand.phone],
+      details: [brand.phone],
       description: t('contact.info.phone.hours')
     },
     {
       icon: Mail,
       title: t('contact.info.email'),
-      details: [Brand.email],
+      details: [brand.email],
       description: t('contact.info.email.response')
     },
     {
       icon: MapPin,
       title: t('contact.info.address'),
-      details: [Brand.address],
+      details: [brand.address],
       description: t('contact.info.address.main')
     },
     {
@@ -252,7 +253,7 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <Link 
-                  href={Brand.maps[0]} 
+                  href={brand.maps[0]}
                   target="_blank" 
                   className="block w-full h-[300px]"
                 >

@@ -31,8 +31,8 @@ export async function getAllProducts({
   const repo = AppDataSource.getRepository(ProductEntity);
   const qb = repo.createQueryBuilder("product");
 
-  // Join customer
-  qb.leftJoinAndSelect("product.collections", "collection");
+  // Join collection only for filtering, without selecting collection data
+  qb.leftJoin("product.collections", "collection");
 
   // Filtering
   if (filters.collectionId) qb.andWhere("collection.id = :collectionId", { collectionId: filters.collectionId });

@@ -4,107 +4,54 @@ import React from 'react';
 import Link from 'next/link';
 import { Phone, Mail, MapPin, Facebook, Youtube } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
-import { Brand } from '@/lib/brand';
+import { useBrand } from '@/lib/contexts/setting-context';
 
 export function Footer() {
   const { t } = useLanguage();
+  const brand = useBrand();
 
   return (
     <footer className="bg-[#573e1c] text-[#efe1c1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-[#efe1c1] rounded-full flex items-center justify-center">
                 <span className="text-[#573e1c] font-bold text-sm">AP</span>
               </div>
-              <span className="font-bold text-xl">{t('footer.companyName')}</span>
+              <span className="font-bold text-xl">{brand.name}</span>
             </div>
             <p className="text-[#d4c5a0] text-sm leading-relaxed">
               {t('home.hero.subtitle')}
             </p>
             <div className="flex space-x-4">
-              <Link href={Brand.facebook} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
+              <Link href={brand.facebook} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
                 <Facebook target="_blank" className="w-5 h-5" />
               </Link>
-              <Link href={Brand.youtube} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
+              <Link href={brand.youtube} target="_blank" className="text-[#efe1c1] hover:text-[#d4c5a0] transition-colors">
                 <Youtube className="w-5 h-5" />
               </Link>
             </div>
-          </div>
-
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">{t('nav.products')}</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/products?category=rice-paper" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('footer.categories.ricePaper')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?category=pho-noodles" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('footer.categories.phoNoodles')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?category=vermicelli" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('footer.categories.vermicelli')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/products" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('common.viewAll')}
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Customer Service */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-lg">{t('nav.account')}</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/account/orders" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('account.orders')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/account/profile" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('account.profile')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/store-locations" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('store.locations')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
-                  {t('nav.contact')}
-                </Link>
-              </li>
-            </ul>
           </div>
 
           {/* Contact Info */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">{t('store.contact')}</h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Phone className="w-4 h-4 text-[#d4c5a0]" />
-                <span className="text-[#d4c5a0] text-sm">{Brand.phone}</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Mail className="w-4 h-4 text-[#d4c5a0]" />
-                <span className="text-[#d4c5a0] text-sm">{Brand.email}</span>
-              </div>
+              <a href={`tel:${brand.phone?.replace(/\s+/g, '')}`} className="flex items-center space-x-3 text-[#d4c5a0] text-sm hover:text-[#efe1c1] transition-colors">
+                <Phone className="w-4 h-4" />
+                <span>{brand.phone}</span>
+              </a>
+              <a href={`mailto:${brand.email}`} className="flex items-center space-x-3 text-[#d4c5a0] text-sm hover:text-[#efe1c1] transition-colors">
+                <Mail className="w-4 h-4" />
+                <span>{brand.email}</span>
+              </a>
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-[#d4c5a0] mt-0.5" />
-                <span className="text-[#d4c5a0] text-sm leading-relaxed whitespace-pre-line">
-                  {Brand.address}
-                </span>
+                <Link href={brand.maps[0]} target="_blank" className="text-[#d4c5a0] text-sm hover:text-[#efe1c1] leading-relaxed whitespace-pre-line">
+                  {brand.address}
+                </Link>
               </div>
             </div>
           </div>
@@ -116,10 +63,10 @@ export function Footer() {
               {t('footer.copyright')}
             </p>
             <div className="flex space-x-6">
-              <Link href="/privacy" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
+              <Link href="/" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
                 {t('footer.privacyPolicy')}
               </Link>
-              <Link href="/terms" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
+              <Link href="/" className="text-[#d4c5a0] hover:text-[#efe1c1] transition-colors text-sm">
                 {t('footer.termsOfService')}
               </Link>
             </div>

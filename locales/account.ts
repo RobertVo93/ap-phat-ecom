@@ -184,8 +184,20 @@ export const accountTranslations = {
     vi: 'Họ và tên *',
   },
   'account.phoneNumber': {
-    en: 'Phone Number *',
-    vi: 'Số điện thoại *',
+    en: 'Phone Number',
+    vi: 'Số điện thoại',
+  },
+  'account.email': {
+    en: 'Email',
+    vi: 'Email',
+  },
+  'account.location': {
+    en: 'Location',
+    vi: 'Địa chỉ',
+  },
+  'account.company': {
+    en: 'Company',
+    vi: 'Công ty',
   },
   'account.gender': {
     en: 'Gender *',
@@ -232,8 +244,8 @@ export const accountTranslations = {
     vi: '• Định dạng: JPG, PNG, GIF',
   },
   'account.avatarCrop': {
-    en: '• Image will be cropped to square',
-    vi: '• Ảnh sẽ được cắt thành hình vuông',
+    en: '• Image will be cropped to circle',
+    vi: '• Ảnh sẽ được cắt thành hình tròn',
   },
   'account.manageSecurity': {
     en: 'Manage security and notification settings',
@@ -291,7 +303,7 @@ export const accountTranslations = {
     en: 'Receive notifications via SMS',
     vi: 'Nhận thông báo qua SMS',
   },
-  'account.email': {
+  'account.emailMessages': {
     en: 'Email Messages',
     vi: 'Tin nhắn Email',
   },
@@ -352,32 +364,32 @@ export const accountTranslations = {
     vi: 'Thêm và quản lý địa chỉ giao hàng của bạn',
   },
   'account.addNewAddress': {
-    en: 'Add New Address',
-    vi: 'Thêm địa chỉ mới',
+    en: 'Add',
+    vi: 'Thêm',
   },
   'account.editAddress': {
-    en: 'Edit Address',
-    vi: 'Chỉnh sửa địa chỉ',
+    en: 'Edit',
+    vi: 'Chỉnh sửa',
   },
   'account.streetAddress': {
-    en: 'Street Address *',
-    vi: 'Địa chỉ *',
+    en: 'Street Address',
+    vi: 'Địa chỉ',
   },
   'account.streetPlaceholder': {
     en: 'House number, street name',
     vi: 'Số nhà, tên đường',
   },
   'account.ward': {
-    en: 'Ward *',
-    vi: 'Phường/Xã *',
+    en: 'Ward',
+    vi: 'Phường/Xã',
   },
   'account.district': {
-    en: 'District *',
-    vi: 'Quận/Huyện *',
+    en: 'District',
+    vi: 'Quận/Huyện',
   },
   'account.city': {
-    en: 'City *',
-    vi: 'Tỉnh/Thành phố *',
+    en: 'City',
+    vi: 'Tỉnh/Thành phố',
   },
   'account.setAsDefault': {
     en: 'Set as default address',
@@ -455,6 +467,22 @@ export const accountTranslations = {
     en: 'New password must be at least 6 characters',
     vi: 'Mật khẩu mới phải có ít nhất 6 ký tự',
   },
+  'account.passwordChange.invalidCurrentPassword': {
+    en: 'Current password is incorrect',
+    vi: 'Mật khẩu hiện tại không chính xác',
+  },
+  'account.passwordChange.passwordLoginUnavailable': {
+    en: 'Password login is not available for this account',
+    vi: 'Tài khoản này không hỗ trợ đăng nhập bằng mật khẩu',
+  },
+  'account.passwordChange.userNotFound': {
+    en: 'User not found',
+    vi: 'Không tìm thấy người dùng',
+  },
+  'account.passwordChange.unauthorized': {
+    en: 'Please log in to change your password',
+    vi: 'Vui lòng đăng nhập để đổi mật khẩu',
+  },
   'account.mustFillTheForm': {
     en: 'You must complete the entire form.',
     vi: 'Bạn phải điền hết phiếu.'
@@ -492,8 +520,8 @@ export const accountTranslations = {
     vi: 'Xem trước ảnh đại diện',
   },
   'account.avatar.cropAvatar': {
-    en: 'The image will be cropped into a square and resized appropriately',
-    vi: 'Ảnh sẽ được cắt thành hình vuông và thay đổi kích thước phù hợp',
+    en: 'The image will be cropped into a circle and resized appropriately',
+    vi: 'Ảnh sẽ được cắt thành hình tròn và thay đổi kích thước phù hợp',
   },
   'account.avatar.reSelect': {
     en: 'Choose again',
