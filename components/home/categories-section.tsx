@@ -22,7 +22,7 @@ interface Props {
 export function CategoriesSection({
   categories
 }: Props) {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
 
   // Add badges to first 3 categories for demo
   const getBadge = (index: number) => {
@@ -52,11 +52,10 @@ export function CategoriesSection({
             <CarouselContent>
               {categories.map((category, index) => (
                 <CarouselItem
-                  key={index}
+                  key={category.id}
                   className="basis-1/1 md:basis-1/3 lg:basis-1/4"
                 >
                   <Link
-                    key={category.id}
                     href={`/products?collection=${category.number}`}
                     className="group block"
                   >
