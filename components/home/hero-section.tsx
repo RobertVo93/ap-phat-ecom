@@ -1,5 +1,6 @@
 import React from 'react';
 import { Award } from 'lucide-react';
+import { HOME_PAGE_CONTENT, SITE_CONTENT } from '@/constants';
 import { HeroSectionAction } from './hero-section-action';
 
 export function HeroSection() {
@@ -11,13 +12,13 @@ export function HeroSection() {
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#573e1c]/10 rounded-full text-[#573e1c] text-sm font-medium mb-4">
                 <Award className="w-4 h-4" />
-                <span>100% Sản phẩm sạch, không chất bảo quản</span>
+                <span>{HOME_PAGE_CONTENT.hero.badge}</span>
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold text-[#573e1c] leading-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
-                Bánh Tráng gạo truyền thống
+                {HOME_PAGE_CONTENT.hero.title}
               </h1>
               <p className="text-xl text-[#8b6a42] leading-relaxed max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-                Trải nghiệm các loại bánh nhúng giòn rụm, ngon miệng. Giữ được hương vị truyền thống của bánh tráng gạo nhúng nước Bình Định
+                {HOME_PAGE_CONTENT.hero.description}
               </p>
             </div>
             <HeroSectionAction />
@@ -27,8 +28,8 @@ export function HeroSection() {
             <div className="relative z-10 group">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#573e1c]/20 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img
-                src='/AP-logo.jpg'
-                alt="Bánh Tráng gạo truyền thống"
+                src={SITE_CONTENT.defaultOgImage}
+                alt={HOME_PAGE_CONTENT.hero.imageAlt}
                 className="relative rounded-2xl shadow-2xl w-full h-[380px] lg:h-[540px] object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>

@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ICartItem } from '@/types';
 import { formatCurrency, formatNumberWithCommas } from '@/lib/utils';
-import { CartQuantityControl } from '@/components/cart/cart-quantity-control';
+import { QuantitySelector } from '@/components/common/quantity-selector';
 
 interface CartItemCardProps {
   item: ICartItem;
@@ -58,10 +58,9 @@ export function CartItemCard({
             </div>
 
             <div className="flex flex-col lg:flex-row justify-between items-center mt-2 lg:mt-0">
-              <CartQuantityControl
-                cartItemId={cartItemId}
+              <QuantitySelector
                 quantity={quantity}
-                onQuantityChange={onQuantityChange}
+                onQuantityChange={(newValue) => onQuantityChange(cartItemId, newValue)}
                 disabled={isActionDisabled}
               />
               <div className="w-full text-right mt-2">

@@ -6,6 +6,7 @@ import { useLanguage } from '@/lib/contexts/language-context';
 import { Card } from '@/components/ui/card';
 import { ICollection } from '@/types';
 import { Badge } from '@/components/ui/badge';
+import { HOME_PAGE_CONTENT } from '@/constants';
 import {
   Carousel,
   CarouselContent,
@@ -26,9 +27,9 @@ export function CategoriesSection({
 
   // Add badges to first 3 categories for demo
   const getBadge = (index: number) => {
-    if (index === 0) return { text: 'Popular', variant: 'default' as const };
-    if (index === 1) return { text: 'New', variant: 'secondary' as const };
-    if (index === 2) return { text: 'Hot', variant: 'destructive' as const };
+    if (index === 0) return { text: HOME_PAGE_CONTENT.categories.badges.popular, variant: 'default' as const };
+    if (index === 1) return { text: HOME_PAGE_CONTENT.categories.badges.new, variant: 'secondary' as const };
+    if (index === 2) return { text: HOME_PAGE_CONTENT.categories.badges.hot, variant: 'destructive' as const };
     return null;
   };
 
@@ -89,7 +90,7 @@ export function CategoriesSection({
                           </h3>
                           <div className="flex items-center gap-2 text-sm opacity-90 group-hover:opacity-100 transition-opacity">
                             <span className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-                              {category.products?.length || 0} sản phẩm
+                              {category.products?.length || 0} {HOME_PAGE_CONTENT.categories.productCountSuffix}
                             </span>
                           </div>
                         </div>
