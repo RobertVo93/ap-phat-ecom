@@ -28,10 +28,7 @@ export async function addCartItem(userId: string, item: ICartItem) {
   const cartItemRepo = AppDataSource.getRepository(CartItemEntity);
   const productRepo = AppDataSource.getRepository(ProductEntity);
 
-  const cart = await cartRepo.findOne({
-    where: { userId },
-    relations: ["items", "items.product"],
-  });
+  const cart = await cartRepo.findOne({ where: { userId } });
   if (!cart) return null;
 
   const product = await productRepo.findOne({
@@ -39,22 +36,27 @@ export async function addCartItem(userId: string, item: ICartItem) {
   });
   if (!product) return null;
 
-  let cartItem = cart.items?.find((i) => i.product?.id === product.id);
+  const cartItem = await cartItemRepo.findOne({
+    where: {
+      cart: { id: cart.id },
+      product: { id: product.id },
+    },
+  });
   const newTotalQuantity = Math.min((cartItem?.quantity || 0) + (item.quantity || 1), MAX_CART_ITEM_QUANTITY);
 
   if (cartItem) {
-    cartItem.quantity = newTotalQuantity;
-    cartItem.subtotal = (cartItem.price! || product.price!) * newTotalQuantity;
-    await cartItemRepo.save(cartItem);
+    await cartItemRepo.update(cartItem.id, {
+      quantity: newTotalQuantity,
+      subtotal: (cartItem.price! || product.price!) * newTotalQuantity,
+    });
   } else {
-    cartItem = cartItemRepo.create({
-      cart,
-      product,
+    await cartItemRepo.insert({
+      cart: { id: cart.id } as CartEntity,
+      product: { id: product.id } as ProductEntity,
       quantity: newTotalQuantity,
       price: product.price,
       subtotal: product.price! * newTotalQuantity,
     });
-    await cartItemRepo.save(cartItem);
   }
 }
 

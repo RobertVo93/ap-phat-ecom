@@ -1,7 +1,21 @@
 import { AppDataSource } from "@/lib/database/typeorm";
 import { CollectionEntity } from "@/lib/database/entities/collection.entity";
 import { ProductEntity } from "@/lib/database/entities";
-import { ProductSortBy } from "@/types";
+import { IProduct, ProductSortBy, ProductStatus } from "@/types";
+
+/**
+ * Get featured products in homepage loading
+ * @returns 
+ */
+export async function getFeaturedProducts(): Promise<IProduct[]> {
+  const repo = AppDataSource.getRepository(ProductEntity);
+
+  return repo.find({
+    where: { status: ProductStatus.active },
+    order: { createdAt: 'DESC' },
+    take: 5,
+  });
+}
 
 export async function getAllProducts({
   page = 1,
