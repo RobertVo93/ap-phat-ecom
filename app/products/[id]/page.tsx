@@ -2,7 +2,7 @@ import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProductDetailClient } from '@/components/product/product-detail-client';
-import { PRODUCT_DETAIL_PAGE_CONTENT, SITE_CONTENT } from '@/constants';
+import { env, PRODUCT_DETAIL_PAGE_CONTENT, SITE_CONTENT } from '@/constants';
 import { ensureDataSource } from '@/lib/database/ensureDataSource';
 import { getProductById } from '@/lib/services/productService';
 import { IProduct, ProductStatus } from '@/types';
@@ -11,7 +11,7 @@ type ProductDetailPageProps = {
   params: Promise<{ id: string }>;
 };
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_ZONE || SITE_CONTENT.defaultUrl;
+const siteUrl = env.BASE_ZONE || SITE_CONTENT.defaultUrl;
 
 const serializeForClient = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
 

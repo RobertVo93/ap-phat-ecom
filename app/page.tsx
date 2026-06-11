@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import { CategoriesSection } from '@/components/home/categories-section';
 import { FeaturedProducts } from '@/components/home/featured-products';
 import { HeroSection } from '@/components/home/hero-section';
-import { HOME_PAGE_CONTENT, SITE_CONTENT } from '@/constants';
+import { env, HOME_PAGE_CONTENT, SITE_CONTENT } from '@/constants';
 import { getHomePageData } from '@/lib/services/homePageService';
 
 export const revalidate = 300;
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_ZONE || SITE_CONTENT.defaultUrl;
+const siteUrl = env.BASE_ZONE || SITE_CONTENT.defaultUrl;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: HOME_PAGE_CONTENT.metadata.title,
