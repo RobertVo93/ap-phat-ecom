@@ -28,11 +28,12 @@ export async function POST(req: Request) {
         await addCartItem(user.id, data.cartItem)
         return NextResponse.json({ status: 2001 });
     } catch (error) {
+        console.error("Error adding item to cart:", error);
         return NextResponse.json({ error: 'Lỗi server' }, { status: 500 });
     }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE() {
   try {
     const user = await getUserFromRequest();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -41,6 +42,7 @@ export async function DELETE(req: Request) {
     await clearCart(user.id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+    console.error("Error clearing the cart:", error);
     return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
   }
 } 

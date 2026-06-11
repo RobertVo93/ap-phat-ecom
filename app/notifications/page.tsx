@@ -16,7 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useNotificationPage } from "@/hooks/use-notification-page";
 import { useLanguage } from "@/lib/contexts/language-context";
 import { formatCurrency } from "@/lib/utils.currency";
@@ -57,9 +56,6 @@ export default function NotificationPage() {
               <h1 className="text-3xl font-bold text-[#573e1c]">
                 {t("noti.notifications")}
               </h1>
-              <p className="text-[#8b6a42] mt-2">
-                {t("noti.trackNotifications")}
-              </p>
             </div>
 
             {notifications.length > 0 && (
@@ -89,12 +85,6 @@ export default function NotificationPage() {
                       <Bell className="w-5 h-5 mr-2" />
                       {t(`noti.order.${noti.title}`)}
                     </CardTitle>
-
-                    {!noti.isRead && (
-                      <Badge className="bg-blue-500 text-white">
-                        {t("noti.unread")}
-                      </Badge>
-                    )}
                   </div>
 
                   <p className="text-sm text-[#8b6a42] mt-1">
