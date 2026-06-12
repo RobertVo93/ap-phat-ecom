@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json( user );
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching current user:", err);
     return NextResponse.json({ user: null, error: "Failed to fetch user" });
   }
 }

@@ -9,7 +9,7 @@ export async function PUT(req: NextRequest) {
     await updateCartItemQuantity(cartItemId, quantity);
     return NextResponse.json({ status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating cart item quantity:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
@@ -21,6 +21,7 @@ export async function DELETE(req: NextRequest) {
     await deleteCartItem(cartItemId);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+    console.error("Error deleting cart item:", error);
     return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
   }
 } 

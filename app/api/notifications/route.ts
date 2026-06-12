@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
     const result = await getAllNotificationsService({ userId, offset, limit });
     return NextResponse.json(result);
   } catch (error) {
+    console.error("Error fetching notifications:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch notifications";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

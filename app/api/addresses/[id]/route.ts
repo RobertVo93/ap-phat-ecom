@@ -16,6 +16,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     if (!updated) return NextResponse.json({ error: "Cannot update address" }, { status: 400 });
     return NextResponse.json(updated);
   } catch (error) {
+    console.error("Error updating user address:", error);
     return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
   }
 }
@@ -28,6 +29,7 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
     if (!result) return NextResponse.json({ error: "Cannot delete address" }, { status: 400 });
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+    console.error("Error deleting user address:", error);
     return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
   }
 } 

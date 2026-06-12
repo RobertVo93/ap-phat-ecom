@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     const result = await userService.getUserStats(userId);
     return NextResponse.json(result);
   } catch (error) {
+    console.error("Error fetching user stats:", error);
     return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
   }
 }
