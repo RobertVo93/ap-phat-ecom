@@ -71,7 +71,7 @@ export async function updateCartItemQuantity(
   if (!cartItem) return null;
 
   if (quantity <= 0) {
-    await cartItemRepo.remove(cartItem);
+    await cartItemRepo.delete(cartItem.id);
   } else {
     cartItem.quantity = Math.min(quantity, MAX_CART_ITEM_QUANTITY);
     cartItem.subtotal = (cartItem.price || 0) * cartItem.quantity;
