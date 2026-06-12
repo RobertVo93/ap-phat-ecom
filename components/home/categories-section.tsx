@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { Card } from '@/components/ui/card';
 import { ICollection } from '@/types';
@@ -14,6 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { ImageIcon } from 'lucide-react';
 
 
 interface Props {
@@ -73,12 +75,18 @@ export function CategoriesSection({
                         </div>
                       )}
 
-                      <div className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden bg-gradient-to-br from-[#efe1c1] to-[#d4c5a0]">
-                        <img
-                          src={category.image}
-                          alt={category.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
-                        />
+                      <div className="relative w-48 lg:w-64 h-48 lg:h-64 overflow-hidden bg-gradient-to-br from-[#efe1c1] to-[#d4c5a0]">
+                        {category.image ?
+                          <Image
+                            src={category.image!}
+                            alt={category.name!}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          /> :
+                          <div className="w-full h-full flex flex-col items-center justify-center">
+                            <ImageIcon className="w-48 lg:w-64 h-48 lg:h-64 text-gray-400" />
+                          </div>
+                        }
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
 
                         {/* Hover overlay effect */}
