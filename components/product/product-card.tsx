@@ -78,7 +78,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <span className="font-bold text-[#573e1c] text-lg">
-                {formatCurrency(product.price!)}
+                {formatCurrency(product.price!)} / {t(`product.unit.${product.unit}`)}
               </span>
             </div>
 
