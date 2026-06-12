@@ -1,5 +1,4 @@
 import { AppDataSource } from "@/lib/database/typeorm";
-import { CollectionEntity } from "@/lib/database/entities/collection.entity";
 import { ProductEntity } from "@/lib/database/entities";
 import { IProduct, ProductSortBy, ProductStatus } from "@/types";
 
@@ -9,12 +8,16 @@ import { IProduct, ProductSortBy, ProductStatus } from "@/types";
  */
 export async function getFeaturedProducts(): Promise<IProduct[]> {
   const repo = AppDataSource.getRepository(ProductEntity);
+  const qb = repo.createQueryBuilder("product");
 
-  return repo.find({
-    where: { status: ProductStatus.active },
-    order: { createdAt: 'DESC' },
-    take: 5,
-  });
+  // Join collection only for filtering, without selecting collection data
+  qb.leftJoin("product.collections", "collection");
+  qb.andWhere("collection.saleable = :saleable", { saleable: true })
+  qb.andWhere("product.status = :status", { status: ProductStatus.active });
+  qb.orderBy(`product.createdAt`, "DESC");
+  qb.take(5)
+  const data = await qb.getMany();
+  return data
 }
 
 export async function getAllProducts({
@@ -47,6 +50,7 @@ export async function getAllProducts({
 
   // Join collection only for filtering, without selecting collection data
   qb.leftJoin("product.collections", "collection");
+  qb.andWhere("collection.saleable = :saleable", { saleable: true })
 
   // Filtering
   if (filters.collectionId) qb.andWhere("collection.id = :collectionId", { collectionId: filters.collectionId });
@@ -84,11 +88,6 @@ export async function getAllProducts({
 
   const [data, total] = await qb.getManyAndCount();
   return { data, total, page, limit };
-}
-
-export async function getCollectionById(id: string) {
-  const repo = AppDataSource.getRepository(CollectionEntity);
-  return repo.findOneBy({ id });
 }
 
 export async function getProductById(id: string) {
