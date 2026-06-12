@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FormattedNumber } from '@/components/ui/formatted-number';
 import { MAX_CART_ITEM_QUANTITY } from '@/constants';
@@ -15,10 +15,8 @@ interface QuantitySelectorProps {
   disabled?: boolean;
   id?: string;
   className?: string;
+  showDelete?: boolean
 }
-
-const DEBOUNCE_DELAY_MS = 500;
-type QuantityChangeSource = 'button' | 'input' | null;
 
 const clampQuantity = (value: number, min: number, max: number): number => {
   if (!Number.isFinite(value)) return min;
@@ -31,39 +29,24 @@ const clampQuantity = (value: number, min: number, max: number): number => {
 export function QuantitySelector({
   quantity,
   onQuantityChange,
-  min = 0,
+  min = 1,
   max = MAX_CART_ITEM_QUANTITY,
   disabled = false,
   id,
   className,
+  showDelete,
 }: QuantitySelectorProps) {
   const sanitizedQuantity = useMemo(
     () => clampQuantity(quantity, min, max),
     [max, min, quantity]
   );
   const [localQuantity, setLocalQuantity] = useState<number | ''>(sanitizedQuantity);
-  const [changeSource, setChangeSource] = useState<QuantityChangeSource>(null);
 
   useEffect(() => {
     setLocalQuantity(sanitizedQuantity);
-    setChangeSource(null);
   }, [sanitizedQuantity]);
 
-  useEffect(() => {
-    if (changeSource !== 'button') return;
-    if (localQuantity === '') return;
-    if (localQuantity === sanitizedQuantity) return;
-
-    const timeoutId = window.setTimeout(() => {
-      onQuantityChange(localQuantity);
-      setChangeSource(null);
-    }, DEBOUNCE_DELAY_MS);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [changeSource, localQuantity, onQuantityChange, sanitizedQuantity]);
-
-  const updateLocalQuantity = (value: number, source: QuantityChangeSource) => {
-    setChangeSource(source);
+  const updateInputQuantity = (value: number) => {
     setLocalQuantity(clampQuantity(value, min, max));
   };
 
@@ -71,23 +54,46 @@ export function QuantitySelector({
     const nextQuantity = clampQuantity(value, min, max);
 
     setLocalQuantity(nextQuantity);
-    setChangeSource(null);
 
     if (sanitizedQuantity !== nextQuantity) {
       onQuantityChange(nextQuantity);
     }
   };
 
+  const handleDecreaseClick = () => {
+    if (localQuantity === '') {
+      commitQuantity(min);
+      return;
+    }
+
+    if (localQuantity <= min) {
+      onQuantityChange(0);
+      return;
+    }
+
+    commitQuantity(localQuantity - 1);
+  };
+
+  const handleIncreaseClick = () => {
+    commitQuantity(localQuantity === '' ? min : localQuantity + 1);
+  };
+
+  const showDeleteButton = showDelete && localQuantity === min;
+
   return (
     <div className={cn('flex items-center border border-[#8b6a42] rounded-lg max-h-[40px]', className)}>
       <Button
         variant="ghost"
         size="sm"
-        disabled={disabled || localQuantity === '' || localQuantity <= min}
-        onClick={() => updateLocalQuantity(localQuantity === '' ? min : localQuantity - 1, 'button')}
-        className="text-[#573e1c] hover:bg-[#efe1c1]"
+        disabled={disabled || localQuantity === ''}
+        onClick={handleDecreaseClick}
+        className={cn(
+          'text-[#573e1c] hover:bg-[#efe1c1]',
+          showDeleteButton && 'text-red-600 hover:text-red-700 hover:bg-red-50'
+        )}
+        aria-label={showDeleteButton ? 'Remove item' : 'Decrease quantity'}
       >
-        <Minus className="w-4 h-4" />
+        {showDeleteButton ? <Trash2 className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
       </Button>
       <FormattedNumber
         as="input"
@@ -95,9 +101,8 @@ export function QuantitySelector({
         value={localQuantity}
         min={min}
         max={max}
-        onValueChange={(value) => updateLocalQuantity(value, 'input')}
+        onValueChange={updateInputQuantity}
         onEmptyValue={() => {
-          setChangeSource('input');
           setLocalQuantity('');
         }}
         onBlur={() => {
@@ -106,9 +111,7 @@ export function QuantitySelector({
             return;
           }
 
-          if (changeSource === 'input') {
-            commitQuantity(localQuantity);
-          }
+          commitQuantity(localQuantity);
         }}
         allowEmpty
         disabled={disabled}
@@ -118,8 +121,9 @@ export function QuantitySelector({
         variant="ghost"
         size="sm"
         disabled={disabled || localQuantity === '' || localQuantity >= max}
-        onClick={() => updateLocalQuantity(localQuantity === '' ? min : localQuantity + 1, 'button')}
+        onClick={handleIncreaseClick}
         className="text-[#573e1c] hover:bg-[#efe1c1]"
+        aria-label="Increase quantity"
       >
         <Plus className="w-4 h-4" />
       </Button>

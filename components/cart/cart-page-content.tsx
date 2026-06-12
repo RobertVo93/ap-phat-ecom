@@ -12,7 +12,6 @@ export function CartPageContent() {
   const {
     items,
     updateQuantity,
-    removeFromCart,
     getCartTotal,
     getCartItemsCount,
   } = useCart();
@@ -34,7 +33,6 @@ export function CartPageContent() {
           <CartItemsList
             items={items}
             onQuantityChange={updateQuantity}
-            onRemove={removeFromCart}
           />
           <CartOrderSummary
             subtotal={subtotal}
