@@ -61,7 +61,7 @@ export function Header() {
               <div className="w-8 h-8 bg-[#573e1c] rounded-full flex items-center justify-center">
                 <Image
                   alt='an phat food'
-                  src='/AP-logo.jpg'
+                  src='/AP-logo-nobg.png'
                   width={32}
                   height={32}
                   className="object-cover"

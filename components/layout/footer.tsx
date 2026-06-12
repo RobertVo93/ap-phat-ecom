@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Phone, Mail, MapPin, Facebook, Youtube } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/language-context';
 import { useBrand } from '@/lib/contexts/setting-context';
@@ -18,7 +19,15 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-[#efe1c1] rounded-full flex items-center justify-center">
-                <span className="text-[#573e1c] font-bold text-sm">AP</span>
+                <div className="w-8 h-8 bg-[#573e1c] rounded-full flex items-center justify-center">
+                  <Image
+                    alt='an phat food'
+                    src='/AP-logo-nobg.png'
+                    width={32}
+                    height={32}
+                    className="object-cover"
+                  />
+                </div>
               </div>
               <span className="font-bold text-xl">{brand.name}</span>
             </div>
