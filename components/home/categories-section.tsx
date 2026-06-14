@@ -49,33 +49,31 @@ export function CategoriesSection({
             {t('home.categories.description')}
           </p>
         </div>
-
-        <div className='w-full px-[5%]'>
-          <Carousel className="w-full" opts={{ loop: categories.length > 4 }}>
+        
+        <div className='w-full flex justify-center px-[5%]'>
+          <Carousel className="w-full lg:w-1/2" opts={{ loop: categories.length > 4 }}>
             <CarouselContent>
               {categories.map((category, index) => (
                 <CarouselItem
                   key={category.id}
-                  className="basis-1/1 md:basis-1/3 lg:basis-1/4"
+                  className="basis-1/2 animate-in fade-in slide-in-from-bottom-8 duration-700"
                 >
                   <Link
                     href={`/products?collection=${category.number}`}
                     className="group block"
                   >
                     <Card className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-[#d4c5a0] hover:border-[#573e1c] cursor-pointer relative">
-                      {/* Badge */}
-                      {getBadge(index) && (
-                        <div className="absolute top-3 right-3 z-20">
-                          <Badge
-                            variant={getBadge(index)!.variant}
-                            className="shadow-md animate-in fade-in zoom-in duration-300"
-                          >
-                            {getBadge(index)!.text}
-                          </Badge>
-                        </div>
-                      )}
-
-                      <div className="relative w-48 lg:w-64 h-48 lg:h-64 overflow-hidden bg-gradient-to-br from-[#efe1c1] to-[#d4c5a0]">
+                      <div className="relative aspect-square overflow-hidden">
+                        {getBadge(index) && (
+                          <div className="absolute top-3 right-3 z-20">
+                            <Badge
+                              variant={getBadge(index)!.variant}
+                              className="shadow-md animate-in fade-in zoom-in duration-300"
+                            >
+                              {getBadge(index)!.text}
+                            </Badge>
+                          </div>
+                        )}
                         {category.image ?
                           <Image
                             src={category.image!}
@@ -89,7 +87,6 @@ export function CategoriesSection({
                         }
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
 
-                        {/* Hover overlay effect */}
                         <div className="absolute inset-0 bg-[#573e1c]/0 group-hover:bg-[#573e1c]/10 transition-colors duration-300"></div>
 
                         <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
