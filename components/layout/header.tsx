@@ -51,6 +51,10 @@ export function Header() {
     }
   }
 
+  const handleToggleLanguage = () => {
+    setLanguage(language === 'vi' ? 'en' : 'vi');
+  }
+
   return (
     <header className="bg-[#efe1c1] shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,23 +107,18 @@ export function Header() {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-[#573e1c] hover:bg-[#d4c5a0]">
-                  <Globe className="w-4 h-4 mr-1" />
-                  {language.toUpperCase()}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setLanguage('vi')}>
-                  Tiếng Việt
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('en')}>
-                  English
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Language Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-[#573e1c] hover:bg-[#d4c5a0]"
+              onClick={handleToggleLanguage}
+              aria-label={language === 'vi' ? 'Switch to English' : 'Chuyển sang tiếng Việt'}
+              title={language === 'vi' ? 'Switch to English' : 'Chuyển sang tiếng Việt'}
+            >
+              <Globe className="w-4 h-4 mr-1" />
+              {language.toUpperCase()}
+            </Button>
 
             {/* Cart */}
             <Link href="/cart" className="relative p-2 text-[#573e1c] hover:text-[#8b6a42] transition-colors">
