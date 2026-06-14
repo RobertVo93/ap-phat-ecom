@@ -11,3 +11,22 @@ export async function getAllCollections() {
   const data = await qb.getMany();
   return data;
 }
+
+export async function getSaleableCollectionsForFilter() {
+  const repo = AppDataSource.getRepository(CollectionEntity);
+
+  return repo.createQueryBuilder("collection")
+    .select([
+      "collection.id",
+      "collection.number",
+      "collection.name",
+      "collection.description",
+      "collection.status",
+      "collection.image",
+      "collection.saleable",
+    ])
+    .where("collection.status = :status", { status: CollectionStatus.active })
+    .andWhere("collection.saleable = :saleable", { saleable: true })
+    .orderBy("collection.name", "ASC")
+    .getMany();
+}

@@ -48,3 +48,8 @@ export const PRODUCT_DETAIL_PAGE_CONTENT = {
     newCondition: 'https://schema.org/NewCondition',
   },
 } as const
+
+export const PRODUCTS_PAGE_CONTENT = {
+  title: 'Sản phẩm',
+  description: 'Khám phá các sản phẩm bánh tráng gạo truyền thống Bình Định từ Cơ sở bánh tráng An Phát.'
+} as const
