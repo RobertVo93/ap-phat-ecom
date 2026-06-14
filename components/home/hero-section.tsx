@@ -25,16 +25,12 @@ export function HeroSection() {
           </div>
 
           <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000">
-            <div className="relative z-10 group">
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#573e1c]/20 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <img
-                src={SITE_CONTENT.defaultOgImage}
-                alt={HOME_PAGE_CONTENT.hero.imageAlt}
-                className="relative rounded-2xl shadow-2xl w-full h-[380px] lg:h-[540px] object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-            <div className="absolute -top-4 -right-4 w-full h-full bg-[#573e1c] rounded-2xl -z-10 transition-transform duration-500 group-hover:translate-x-2 group-hover:-translate-y-2"></div>
-            <div className="absolute -bottom-4 -left-4 w-full h-full bg-[#8b6a42] rounded-2xl -z-20 transition-transform duration-500 delay-100 group-hover:-translate-x-2 group-hover:translate-y-2"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#573e1c]/20 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <img
+              src={SITE_CONTENT.defaultOgImage}
+              alt={HOME_PAGE_CONTENT.hero.imageAlt}
+              className="relative rounded-2xl shadow-2xl w-full h-[380px] lg:h-[540px] object-cover transition-transform duration-500 group-hover:scale-105"
+            />
           </div>
         </div>
       </div>
