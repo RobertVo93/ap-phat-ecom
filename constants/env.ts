@@ -1,6 +1,6 @@
 export const env = {
   // Base Zone
-  NEXT_PUBLIC_BASE_ZONE: process.env.NEXT_PUBLIC_BASE_ZONE || '',
+  BASE_ZONE: process.env.NEXT_PUBLIC_BASE_ZONE || '',
   NEXT_PUBLIC_TAX_RATE: process.env.NEXT_PUBLIC_TAX_RATE || '0',
   // NEXT_PUBLIC_BASE_ZONE: '',
   

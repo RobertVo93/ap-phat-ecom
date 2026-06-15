@@ -3,7 +3,8 @@ import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { Gender, UserRole } from "@/types/enums";
 import { INotification, IUser } from "@/types";
 import type { ICustomer } from "@/types";
-import { NotificationEntity, CustomerEntity } from "@/lib/database/entities";
+import { NotificationEntity } from "./notification.entity";
+import { CustomerEntity } from "./customer.entity";
 
 @Entity({ name: "users" })
 export class UserEntity extends BaseEntity implements IUser {

@@ -20,6 +20,7 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
     }
     return NextResponse.json(order);
   } catch (error) {
+    console.error("Error fetching order by id:", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
@@ -35,6 +36,7 @@ export async function PUT(_req: NextRequest, { params }: RouteContext) {
     if (!updated) return NextResponse.json({ error: "Cannot update order" }, { status: 400 });
     return NextResponse.json(updated);
   } catch (error) {
+    console.error("Error cancelling order:", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

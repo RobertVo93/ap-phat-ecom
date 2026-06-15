@@ -21,7 +21,9 @@ async function createOrderWithCustomer(
   resolveCustomer: (manager: EntityManager) => Promise<CustomerEntity>
 ) {
   const transactionResult = await AppDataSource.transaction(async (manager) => {
+    console.log("[orderService.createOrderWithCustomer]-data", data)
     const customer = await resolveCustomer(manager);
+    console.log("[orderService.createOrderWithCustomer]Step0-customer", customer)
 
     // 1. create order
     const order = manager.create(OrderEntity, {
@@ -29,11 +31,13 @@ async function createOrderWithCustomer(
       customer
     });
     const savedOrder = await manager.save(OrderEntity, order);
+    console.log("[orderService.createOrderWithCustomer]Step1-savedOrder", savedOrder)
 
     // 2. notification settings
     const settings = await manager.findOne(NotificationSettingsEntity, {
       where: { user: { id: customer.user?.id } }
     });
+    console.log("[orderService.createOrderWithCustomer]Step2-settings", settings)
 
     // 3. create notification (dedup safe)
     let savedNotification: NotificationEntity | null = null;
@@ -65,6 +69,8 @@ async function createOrderWithCustomer(
         }
       }
     }
+    console.log("[orderService.createOrderWithCustomer]Step3-savedNotification", savedNotification)
+
 
     return {
       order: savedOrder,

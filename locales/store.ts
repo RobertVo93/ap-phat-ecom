@@ -15,6 +15,174 @@ export const storeTranslations = {
     en: 'Contact',
     vi: 'Liên hệ',
   },
+  'store.locations.hero.subtitle': {
+    en: 'Find the nearest {brand} store. We are available at convenient locations to serve you better.',
+    vi: 'Tìm cửa hàng {brand} gần bạn nhất. Chúng tôi có mặt tại nhiều địa điểm để phục vụ bạn tốt nhất.',
+  },
+  'store.locations.hero.storeCount': {
+    en: '{count} stores nationwide',
+    vi: '{count} cửa hàng trên toàn quốc',
+  },
+  'store.locations.list.title': {
+    en: 'Store List',
+    vi: 'Danh sách cửa hàng',
+  },
+  'store.locations.mainStoreName': {
+    en: 'Main Store - Phu My, Binh Dinh',
+    vi: 'Cửa hàng chính - Phù Mỹ, Bình Định',
+  },
+  'store.locations.mainStoreAddress': {
+    en: 'Chu Van An, Hamlet 5, Hoi Khanh Village, Phu My Commune, Binh Dinh Province',
+    vi: 'Chu Văn An, Xóm 5, Thôn Hội Khánh, Xã Phù Mỹ, Tỉnh Bình Định',
+  },
+  'store.locations.mainStoreHours': {
+    en: 'Monday - Sunday: 7:00 AM - 9:00 PM',
+    vi: 'Thứ 2 - Chủ nhật: 7:00 - 21:00',
+  },
+  'store.locations.details.phone': {
+    en: 'Phone',
+    vi: 'Điện thoại',
+  },
+  'store.locations.details.email': {
+    en: 'Email',
+    vi: 'Email',
+  },
+  'store.locations.details.openingHours': {
+    en: 'Opening Hours',
+    vi: 'Giờ mở cửa',
+  },
+  'store.locations.details.directions': {
+    en: 'Directions',
+    vi: 'Chỉ đường',
+  },
+  'store.locations.details.call': {
+    en: 'Call',
+    vi: 'Gọi điện',
+  },
+  'store.locations.features.title': {
+    en: 'Store Amenities',
+    vi: 'Tiện ích cửa hàng',
+  },
+  'store.locations.features.parking.title': {
+    en: 'Parking',
+    vi: 'Bãi đậu xe',
+  },
+  'store.locations.features.parking.description': {
+    en: 'Free motorcycle and car parking',
+    vi: 'Chỗ đậu xe máy và ô tô miễn phí',
+  },
+  'store.locations.features.publicTransport.title': {
+    en: 'Public Transport',
+    vi: 'Giao thông công cộng',
+  },
+  'store.locations.features.publicTransport.description': {
+    en: 'Near main bus routes',
+    vi: 'Gần các tuyến xe buýt chính',
+  },
+  'store.locations.features.metro.title': {
+    en: 'Metro',
+    vi: 'Tàu điện ngầm',
+  },
+  'store.locations.features.metro.description': {
+    en: '200m from the metro station',
+    vi: 'Cách ga tàu điện 200m',
+  },
+  'store.locations.services.title': {
+    en: 'In-store Services',
+    vi: 'Dịch vụ tại cửa hàng',
+  },
+  'store.locations.services.consulting': {
+    en: 'Free product consultation',
+    vi: 'Tư vấn sản phẩm miễn phí',
+  },
+  'store.locations.services.delivery': {
+    en: 'Home delivery service',
+    vi: 'Dịch vụ giao hàng tận nơi',
+  },
+  'store.locations.services.wholesale': {
+    en: 'Wholesale with preferred pricing',
+    vi: 'Bán sỉ với giá ưu đãi',
+  },
+  'store.locations.services.returns': {
+    en: '7-day returns',
+    vi: 'Đổi trả trong 7 ngày',
+  },
+  'store.locations.services.payments': {
+    en: 'Multiple payment methods',
+    vi: 'Thanh toán đa dạng',
+  },
+  'store.locations.services.giftWrap': {
+    en: 'Gift wrapping',
+    vi: 'Đóng gói quà tặng',
+  },
+  'store.locations.offers.title': {
+    en: 'Special In-store Offers',
+    vi: 'Ưu đãi đặc biệt tại cửa hàng',
+  },
+  'store.locations.offers.firstDiscount.title': {
+    en: '10% Off',
+    vi: 'Giảm 10%',
+  },
+  'store.locations.offers.firstDiscount.description': {
+    en: 'For first-time customers',
+    vi: 'Cho khách hàng mua lần đầu',
+  },
+  'store.locations.offers.freeShipping.title': {
+    en: 'Free Shipping',
+    vi: 'Miễn phí giao hàng',
+  },
+  'store.locations.offers.freeShipping.description': {
+    en: 'For orders from 100,000 VND',
+    vi: 'Đơn hàng từ 100.000đ',
+  },
+  'store.locations.offers.viewMore': {
+    en: 'View More Offers',
+    vi: 'Xem thêm ưu đãi',
+  },
+  'store.locations.comingSoon.title': {
+    en: 'Coming Soon Stores',
+    vi: 'Cửa hàng sắp khai trương',
+  },
+  'store.locations.comingSoon.subtitle': {
+    en: 'We are expanding to serve you better',
+    vi: 'Chúng tôi đang mở rộng để phục vụ bạn tốt hơn',
+  },
+  'store.locations.comingSoon.hcm.location': {
+    en: 'District 7, Ho Chi Minh City',
+    vi: 'Quận 7, TP.HCM',
+  },
+  'store.locations.comingSoon.hcm.eta': {
+    en: 'Expected: March 2024',
+    vi: 'Dự kiến: Tháng 3/2024',
+  },
+  'store.locations.comingSoon.hanoi.location': {
+    en: 'Hanoi',
+    vi: 'Hà Nội',
+  },
+  'store.locations.comingSoon.hanoi.eta': {
+    en: 'Expected: May 2024',
+    vi: 'Dự kiến: Tháng 5/2024',
+  },
+  'store.locations.comingSoon.danang.location': {
+    en: 'Da Nang',
+    vi: 'Đà Nẵng',
+  },
+  'store.locations.comingSoon.danang.eta': {
+    en: 'Expected: July 2024',
+    vi: 'Dự kiến: Tháng 7/2024',
+  },
+  'store.locations.comingSoon.openingSoon': {
+    en: 'Opening Soon',
+    vi: 'Sắp khai trương',
+  },
+  'store.locations.comingSoon.underConstruction': {
+    en: 'Under Construction',
+    vi: 'Đang xây dựng',
+  },
+  'store.locations.comingSoon.planning': {
+    en: 'Planning',
+    vi: 'Đang lên kế hoạch',
+  },
   'contact.hero.subtitle': {
     en: 'We are always ready to listen and support you. Contact us for the best product or service consultation.',
     vi: 'Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn. Hãy liên hệ với chúng tôi để được tư vấn về sản phẩm hoặc dịch vụ tốt nhất.',

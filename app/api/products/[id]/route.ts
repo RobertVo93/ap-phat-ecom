@@ -16,6 +16,7 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
     }
     return NextResponse.json(product);
   } catch (error) {
+    console.error("Error fetching product by id:", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

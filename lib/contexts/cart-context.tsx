@@ -13,10 +13,10 @@ import { clearCart as apiClearCart } from "@/lib/httpclient/cart.client"
 
 interface CartContextType {
   items: ICartItem[];
-  addToCart: (product: IProduct, quantity?: number) => void;
-  removeFromCart: (cartItemId: string) => void;
-  updateQuantity: (cartItemId: string, quantity: number) => void;
-  clearCart: () => void;
+  addToCart: (product: IProduct, quantity?: number) => Promise<void>;
+  removeFromCart: (cartItemId: string) => Promise<void>;
+  updateQuantity: (cartItemId: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
   getCartTotal: () => number;
   getCartItemsCount: () => number;
 }

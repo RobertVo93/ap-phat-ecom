@@ -16,6 +16,7 @@ export async function PATCH(_req: NextRequest, { params }: RouteContext) {
     const result = await markAsReadService(notificationId);
     return NextResponse.json(result);
   } catch (error) {
+    console.error("Error marking notification as read:", error);
     return NextResponse.json({ error }, { status: 500 });
   }
 }

@@ -4,4 +4,3 @@ export * from './cart-item-card';
 export * from './cart-items-list';
 export * from './cart-order-summary';
 export * from './cart-page-content';
-export * from './cart-quantity-control';

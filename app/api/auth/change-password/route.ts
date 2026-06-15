@@ -35,6 +35,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Error changing user password:", error);
     if (error instanceof Error) {
       if (error.message === "INVALID_CURRENT_PASSWORD") {
         return NextResponse.json(

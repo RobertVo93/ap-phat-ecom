@@ -151,7 +151,7 @@ function _AuthProviderContent({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       if (pathName === '/login' || pathName === "/register") {
-        router.replace('/account');
+        router.replace('/');
       }
     } else {
       if (pathName === '/account') {

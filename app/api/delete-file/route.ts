@@ -18,6 +18,7 @@ export async function DELETE(req: NextRequest) {
     await deleteFileFromS3(url);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+    console.error("Error deleting file from S3:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : String(error) },
       { status: 500 }

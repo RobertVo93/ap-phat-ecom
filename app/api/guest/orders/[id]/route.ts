@@ -23,6 +23,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 
     return NextResponse.json(order);
   } catch (error) {
+    console.error("Error fetching guest order:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : String(error) },
       { status: 500 }

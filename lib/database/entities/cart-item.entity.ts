@@ -1,7 +1,9 @@
 import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
-import { CartEntity, ProductEntity } from "@/lib/database/entities";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { ICartItem } from "@/types";
+import type { ICart, IProduct } from "@/types";
+import { CartEntity } from "./cart.entity";
+import { ProductEntity } from "./product.entity";
 
 @Entity({ name: "cart_items" })
 export class CartItemEntity extends BaseEntity implements ICartItem{
@@ -16,9 +18,9 @@ export class CartItemEntity extends BaseEntity implements ICartItem{
 
     @ManyToOne(() => CartEntity, cart => cart.items)
     @JoinColumn({ name: "cart_id" })
-    cart?: CartEntity;
+    cart?: ICart;
 
     @ManyToOne(() => ProductEntity)
     @JoinColumn({ name: "product_id" })
-    product?: ProductEntity;
+    product?: IProduct;
 } 
