@@ -8,6 +8,7 @@ export interface ICollection extends IBase {
   description?: string
   status?: CollectionStatus
   image?: string
+  saleable?: boolean
 
   products?: IProduct[]
 }

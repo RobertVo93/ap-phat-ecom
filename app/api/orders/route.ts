@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error("Error fetching orders:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch orders";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json(created, { status: 201 });
   } catch (error) {
+    console.error("Error creating order:", error);
     return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
   }
 }

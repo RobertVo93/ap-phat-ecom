@@ -16,6 +16,7 @@ export async function PATCH(req: NextRequest) {
     
     return NextResponse.json(result);
   } catch (error) {
+    console.error("Error marking all notifications as read:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to mark all as read";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

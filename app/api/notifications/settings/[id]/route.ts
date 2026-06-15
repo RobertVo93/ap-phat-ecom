@@ -15,6 +15,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     if (!updated) return NextResponse.json({ error: "Cannot update notification settings" }, { status: 400 });
     return NextResponse.json(updated);
   } catch (error) {
+    console.error("Error updating notification settings:", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

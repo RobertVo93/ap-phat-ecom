@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
+    console.error("Error getting the user addresses:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch addresses";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
     const created = await createUserAddress(customerId, data);
     return NextResponse.json(created, { status: 201 });
   } catch (error) {
+    console.error("Error creating a new user address:", error);
     return NextResponse.json({ error: (error instanceof Error ? error.message : String(error)) }, { status: 500 });
   }
 }

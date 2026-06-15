@@ -3,21 +3,25 @@
 import { Input } from "@/components/ui/input"
 import { cn, formatNumberWithCommas, formatSystemNumber, parseSystemNumberInput } from "@/lib/utils"
 import { Language } from "@/types"
+import { FocusEventHandler } from "react"
 
 type FormattedNumberBaseProps = {
 	className?: string
 	locale?: Language
-	value?: number
+	value?: number | ""
 }
 
 type FormattedNumberInputProps = FormattedNumberBaseProps & {
 	as: "input"
 	onValueChange: (value: number) => void
+	onEmptyValue?: () => void
+	onBlur?: FocusEventHandler<HTMLInputElement>
 	placeholder?: string
 	id?: string
 	disabled?: boolean
 	min?: number
 	max?: number
+	allowEmpty?: boolean
 }
 
 type FormattedNumberDivProps = FormattedNumberBaseProps & {
@@ -47,9 +51,16 @@ export function FormattedNumber(props: FormattedNumberProps) {
 				type="text"
 				className={props.className}
 				placeholder={props.placeholder}
-				value={!props.value ? (props.min ?? "0") : formatNumberWithCommas(props.value)}
+				value={props.allowEmpty && props.value === "" ? "" : !props.value ? (props.min ?? "0") : formatNumberWithCommas(props.value)}
+				onBlur={props.onBlur}
 				onChange={(e) => {
 					const rawValue = e.target.value.trim()
+
+					if (props.allowEmpty && rawValue === "") {
+						props.onEmptyValue?.()
+						return
+					}
+
 					const parsedValue = parseSystemNumberInput(rawValue)
 					props.onValueChange(clampValue(parsedValue, props.min, props.max))
 				}}
@@ -59,14 +70,14 @@ export function FormattedNumber(props: FormattedNumberProps) {
 	else if (props.as === "span") {
 		return (
 			<span className={cn("text-base md:text-sm", props.className)}>
-				{formatSystemNumber(props.value ?? 0, locale)}
+				{formatSystemNumber(typeof props.value === "number" ? props.value : 0, locale)}
 			</span>
 		)
 	}
 
 	return (
-		<div className={cn("w-full text-base md:text-sm", props.className)}>
-			{formatSystemNumber(props.value ?? 0, locale)}
+	<div className={cn("w-full text-base md:text-sm", props.className)}>
+			{formatSystemNumber(typeof props.value === "number" ? props.value : 0, locale)}
 		</div>
 	)
 }

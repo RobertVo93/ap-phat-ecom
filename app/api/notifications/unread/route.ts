@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
     const result = await getUnreadCountService(userId!);
     return NextResponse.json(result);
   } catch (error) {
+    console.error("Error fetching unread notification count:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch notifications";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

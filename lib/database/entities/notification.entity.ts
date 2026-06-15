@@ -1,8 +1,8 @@
 import { Entity, Column, ManyToOne, JoinColumn, Index } from "typeorm";
 import { BaseEntity } from "@/lib/database/entities/base.entity";
-import { UserEntity } from "@/lib/database/entities";
 import { NotificationType } from "@/types/enums";
 import type { INotification, IUser } from "@/types";
+import { UserEntity } from "./user.entity";
 
 @Entity({ name: "notifications" })
 @Index("IDX_NOTIF_DEDUPLICATION", ["userId", "type", "deduplicationKey"], { unique: true, where: '"deduplicationKey" IS NOT NULL' })

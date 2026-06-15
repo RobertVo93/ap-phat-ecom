@@ -1,13 +1,13 @@
 import { MomoAccountInfo, PaymentAccountInfo } from '@/components/checkout/checkout-types';
 
 export const bankInfo: PaymentAccountInfo = {
-  bankName: 'Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)',
-  accountNumber: '0123456789',
-  accountName: 'CONG TY TNHH AN PHAT FOOD',
-  branch: 'Chi nhánh Sài Gòn',
+  bankName: 'Techcombank - Ngân hàng TMCP Kỹ thương Việt Nam',
+  accountNumber: '1506199377',
+  accountName: 'VO HOANG AN',
+  branch: 'Chi nhánh Techcombank',
 };
 
 export const momoInfo: MomoAccountInfo = {
-  phoneNumber: '0901234567',
-  accountName: 'An Phat Food',
+  phoneNumber: '0338705850',
+  accountName: 'Võ Hoàng An',
 };

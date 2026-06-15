@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     const publicUrl = `https://${env.S3_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/${key}`
     return NextResponse.json({ url, key, publicUrl })
   } catch (error) {
+    console.error("Error creating signed upload URL:", error);
     return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }
 } 
