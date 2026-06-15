@@ -30,6 +30,13 @@ const buildProductDescription = (product: IProduct): string => {
   return `${product.name} tại ${SITE_CONTENT.name}. ${PRODUCT_DETAIL_PAGE_CONTENT.defaultDescriptionSuffix}`;
 };
 
+const buildProductImages = (product: IProduct): string[] => {
+  const images = [product.image, ...(product.subImages || [])]
+    .filter((image): image is string => typeof image === 'string' && image.trim().length > 0);
+
+  return images.length > 0 ? Array.from(new Set(images)) : [`${siteUrl}${SITE_CONTENT.defaultOgImage}`];
+};
+
 export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   const product = await getProduct(id);
@@ -99,7 +106,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     '@type': PRODUCT_DETAIL_PAGE_CONTENT.schema.productType,
     name: product.name,
     description: buildProductDescription(product),
-    image: product.image ? [product.image] : [`${siteUrl}${SITE_CONTENT.defaultOgImage}`],
+    image: buildProductImages(product),
     sku: product.sku,
     brand: {
       '@type': PRODUCT_DETAIL_PAGE_CONTENT.schema.brandType,

@@ -15,6 +15,7 @@ export interface IProduct extends IBase {
   status?: ProductStatus
   supplier?: string
   image?: string
+  subImages?: string[]
 
   collections?: ICollection[]
 }
