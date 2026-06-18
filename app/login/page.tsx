@@ -145,7 +145,7 @@ export default function LoginPage() {
                   </Label>
                 </div>
                 <Link
-                  href="/auth/forgot-password"
+                  href="/forgot-password"
                   className="text-sm text-[#573e1c] hover:text-[#8b6a42] underline"
                 >
                   {t('auth.login.forgotPassword')}
