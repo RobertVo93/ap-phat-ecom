@@ -2,11 +2,18 @@ import { ProductSortBy, ProductStatus, ProductUnit } from "@/types/enums";
 import { IBase, IBaseFilters } from "./base.interface";
 import { ICollection } from "./collection.interface";
 
+export interface ProductTierPrice {
+  minQuantity: number
+  maxQuantity?: number
+  price: number
+}
+
 export interface IProduct extends IBase {
   name?: string
   unit?: ProductUnit
   description?: string
   price?: number
+  tierPrices?: ProductTierPrice[]
   cost?: number
   stock?: number
   minStock?: number

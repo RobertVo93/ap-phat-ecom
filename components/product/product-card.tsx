@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { IProduct } from '@/types';
 import { formatCurrency } from '@/lib/utils';
+import { getSortedTierPrices } from '@/lib/product-pricing';
 
 interface ProductCardProps {
   product: IProduct;
@@ -19,6 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const { t } = useLanguage();
   const { addToCart } = useCart();
   const [isAdding, setIsAdding] = useState(false);
+  const firstTierPrice = getSortedTierPrices(product.tierPrices)[0];
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -81,6 +83,11 @@ export function ProductCard({ product }: ProductCardProps) {
                 {formatCurrency(product.price!)} / {t(`product.unit.${product.unit}`)}
               </span>
             </div>
+            {firstTierPrice && (
+              <p className="text-xs font-medium text-[#8b6a42]">
+                {t('product.fromQuantity').replace('{quantity}', String(firstTierPrice.minQuantity))}: {formatCurrency(firstTierPrice.price)} / {t(`product.unit.${product.unit}`)}
+              </p>
+            )}
 
             <Button
               onClick={handleAddToCart}

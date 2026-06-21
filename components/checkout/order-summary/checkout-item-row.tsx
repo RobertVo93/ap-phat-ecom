@@ -7,8 +7,9 @@ interface CheckoutItemRowProps {
 }
 
 export function CheckoutItemRow({ item }: CheckoutItemRowProps) {
-  const itemPrice = item.product?.price || 0;
+  const itemPrice = item.price ?? item.product?.price ?? 0;
   const quantity = item.quantity ?? 0;
+  const subtotal = item.subtotal ?? itemPrice * quantity;
 
   return (
     <div className="flex items-center space-x-3">
@@ -30,7 +31,7 @@ export function CheckoutItemRow({ item }: CheckoutItemRowProps) {
         </p>
       </div>
       <div className="text-sm font-semibold text-[#573e1c]">
-        {formatCurrency(itemPrice * quantity)}
+        {formatCurrency(subtotal)}
       </div>
     </div>
   );
