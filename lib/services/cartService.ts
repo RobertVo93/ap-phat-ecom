@@ -4,6 +4,7 @@ import { CartItemEntity } from "@/lib/database/entities/cart-item.entity";
 import { ICartItem } from "@/types";
 import { ProductEntity } from "../database/entities";
 import { MAX_CART_ITEM_QUANTITY } from "@/constants";
+import { getProductPriceByQuantity } from "@/lib/product-pricing";
 
 export async function getCartByUser(userId: string) {
   const cartRepo = AppDataSource.getRepository(CartEntity);
@@ -18,6 +19,34 @@ export async function getCartByUser(userId: string) {
         items: [],
       })
     );
+  }
+
+  if (cart.items?.length) {
+    const changedItems = cart.items.reduce<CartItemEntity[]>((items, item) => {
+      const quantity = item.quantity || 0;
+      const price = getProductPriceByQuantity(item.product || {}, quantity);
+      const subtotal = price * quantity;
+
+      if (item.id && (item.price !== price || item.subtotal !== subtotal)) {
+        items.push(Object.assign(new CartItemEntity(), { id: item.id, price, subtotal }));
+      }
+
+      return items;
+    }, []);
+
+    if (changedItems.length) {
+      await AppDataSource.transaction(async (manager) => {
+        await manager.getRepository(CartItemEntity).save(changedItems);
+      });
+
+      changedItems.forEach((changedItem) => {
+        const item = cart.items?.find((cartItem) => cartItem.id === changedItem.id);
+        if (!item) return;
+
+        item.price = changedItem.price;
+        item.subtotal = changedItem.subtotal;
+      });
+    }
   }
 
   return cart;
@@ -43,19 +72,21 @@ export async function addCartItem(userId: string, item: ICartItem) {
     },
   });
   const newTotalQuantity = Math.min((cartItem?.quantity || 0) + (item.quantity || 1), MAX_CART_ITEM_QUANTITY);
+  const price = getProductPriceByQuantity(product, newTotalQuantity);
 
   if (cartItem) {
     await cartItemRepo.update(cartItem.id, {
       quantity: newTotalQuantity,
-      subtotal: (cartItem.price! || product.price!) * newTotalQuantity,
+      price,
+      subtotal: price * newTotalQuantity,
     });
   } else {
     await cartItemRepo.insert({
       cart: { id: cart.id } as CartEntity,
       product: { id: product.id } as ProductEntity,
       quantity: newTotalQuantity,
-      price: product.price,
-      subtotal: product.price! * newTotalQuantity,
+      price,
+      subtotal: price * newTotalQuantity,
     });
   }
 }
@@ -67,14 +98,18 @@ export async function updateCartItemQuantity(
 ) {
   const cartItemRepo = AppDataSource.getRepository(CartItemEntity);
 
-  const cartItem = await cartItemRepo.findOne({ where: { id: cartItemId } })
+  const cartItem = await cartItemRepo.findOne({
+    where: { id: cartItemId },
+    relations: ["product"],
+  })
   if (!cartItem) return null;
 
   if (quantity <= 0) {
     await cartItemRepo.delete(cartItem.id);
   } else {
     cartItem.quantity = Math.min(quantity, MAX_CART_ITEM_QUANTITY);
-    cartItem.subtotal = (cartItem.price || 0) * cartItem.quantity;
+    cartItem.price = getProductPriceByQuantity(cartItem.product || {}, cartItem.quantity);
+    cartItem.subtotal = cartItem.price * cartItem.quantity;
     await cartItemRepo.save(cartItem);
   }
 }

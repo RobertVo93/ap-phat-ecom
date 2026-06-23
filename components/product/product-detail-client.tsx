@@ -11,6 +11,7 @@ import { ProductDetailTable } from './product-detail-table';
 import { Card, CardContent } from '@/components/ui/card';
 import { QuantitySelector } from '@/components/common/quantity-selector';
 import { ProductImageGallery } from '@/components/product/product-image-gallery';
+import { getProductPriceByQuantity, getSortedTierPrices } from '@/lib/product-pricing';
 
 interface ProductDetailClientProps {
   product: IProduct;
@@ -20,6 +21,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const { t } = useLanguage();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const selectedPrice = getProductPriceByQuantity(product, quantity);
+  const tierPrices = getSortedTierPrices(product.tierPrices);
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
@@ -57,9 +60,27 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
                 <div className="flex items-center space-x-4 mb-6">
                   <span className="text-3xl font-bold text-[#573e1c]">
-                    {formatCurrency(product.price!)}
+                    {formatCurrency(selectedPrice)}
                   </span>
                 </div>
+                {tierPrices.length > 0 && (
+                  <div className="mb-6 space-y-2 rounded-lg border border-[#d4c5a0] bg-[#fffaf0] p-4">
+                    <p className="font-semibold text-[#573e1c]">{t('product.wholesalePrices')}</p>
+                    <div className="space-y-2">
+                      {tierPrices.map((tier, index) => (
+                        <div key={index} className="flex items-center justify-between text-sm">
+                          <span>
+                            {tier.minQuantity}
+                            {tier.maxQuantity ? ` - ${tier.maxQuantity}` : '+'}
+                          </span>
+                          <span className="font-semibold text-[#573e1c]">
+                            {formatCurrency(tier.price)} / {t(`product.unit.${product.unit}`)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Stock Status */}
                 <div className="mb-6">

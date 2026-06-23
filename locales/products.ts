@@ -15,6 +15,14 @@ export const productTranslations = {
     en: 'Price',
     vi: 'Giá',
   },
+  'product.wholesalePrices': {
+    en: 'Wholesale prices',
+    vi: 'Giá sỉ',
+  },
+  'product.fromQuantity': {
+    en: 'From {quantity}',
+    vi: 'Từ {quantity}',
+  },
   'product.originalPrice': {
     en: 'Original Price',
     vi: 'Giá gốc',

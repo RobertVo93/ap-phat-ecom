@@ -3,7 +3,8 @@ import { BaseEntity } from "@/lib/database/entities/base.entity";
 import { ProductStatus, ProductUnit } from "@/types/enums";
 import { 
   ICollection,
-  IProduct 
+  IProduct,
+  ProductTierPrice,
 } from "@/types";
 import { CollectionEntity } from "./collection.entity";
 
@@ -20,6 +21,9 @@ export class ProductEntity extends BaseEntity implements IProduct {
 
   @Column({ type: "float", nullable: true })
   price?: number;
+
+  @Column({ name: "tier_prices", type: "jsonb", nullable: true })
+  tierPrices?: ProductTierPrice[];
 
   @Column({ type: "float", nullable: true })
   cost?: number;

@@ -34,6 +34,7 @@ function mapCartItemsToOrderItems(cartItems: ICartItem[]): IOrderItem[] {
     quantity: item.quantity ?? 0,
     unitCost: item.price ?? 0,
     totalCost: item.subtotal ?? (item.price ?? 0) * (item.quantity ?? 0),
+    tierPrices: item.product?.tierPrices,
     product: item.product
   }));
 }
