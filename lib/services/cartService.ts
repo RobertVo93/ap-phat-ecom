@@ -8,7 +8,6 @@ import { getProductPriceByQuantity } from "@/lib/product-pricing";
 
 export async function getCartByUser(userId: string) {
   const cartRepo = AppDataSource.getRepository(CartEntity);
-  const cartItemRepo = AppDataSource.getRepository(CartItemEntity);
   let cart = await cartRepo.findOne({ where: { userId }, relations: ["items", "items.product"] })
 
   if (!cart) {
@@ -23,17 +22,31 @@ export async function getCartByUser(userId: string) {
   }
 
   if (cart.items?.length) {
-    await Promise.all(cart.items.map(async (item) => {
+    const changedItems = cart.items.reduce<CartItemEntity[]>((items, item) => {
       const quantity = item.quantity || 0;
       const price = getProductPriceByQuantity(item.product || {}, quantity);
       const subtotal = price * quantity;
 
-      if (item.price !== price || item.subtotal !== subtotal) {
-        await cartItemRepo.update(item.id!, { price, subtotal });
-        item.price = price;
-        item.subtotal = subtotal;
+      if (item.id && (item.price !== price || item.subtotal !== subtotal)) {
+        items.push(Object.assign(new CartItemEntity(), { id: item.id, price, subtotal }));
       }
-    }));
+
+      return items;
+    }, []);
+
+    if (changedItems.length) {
+      await AppDataSource.transaction(async (manager) => {
+        await manager.getRepository(CartItemEntity).save(changedItems);
+      });
+
+      changedItems.forEach((changedItem) => {
+        const item = cart.items?.find((cartItem) => cartItem.id === changedItem.id);
+        if (!item) return;
+
+        item.price = changedItem.price;
+        item.subtotal = changedItem.subtotal;
+      });
+    }
   }
 
   return cart;

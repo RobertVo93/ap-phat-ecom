@@ -8,7 +8,7 @@ export function getProductPriceByQuantity(
   product: PricingProduct,
   quantity: number,
 ) {
-  const tiers = getSortedTierPrices(product.tierPrices);
+  const tiers = getOrderedTierPrices(product.tierPrices);
   const matchingTier = tiers.find((tier) => {
     const withinMin = quantity >= tier.minQuantity;
     const withinMax = tier.maxQuantity === undefined || quantity <= tier.maxQuantity;
@@ -18,9 +18,15 @@ export function getProductPriceByQuantity(
   return matchingTier?.price ?? product.price ?? product.unitCost ?? 0;
 }
 
-export function getSortedTierPrices(tierPrices?: ProductTierPrice[]) {
+export function getOrderedTierPrices(tierPrices?: ProductTierPrice[]) {
   return (tierPrices || [])
     .filter((tier) => tier.minQuantity > 0 && tier.price >= 0)
-    .slice()
-    .sort((a, b) => a.minQuantity - b.minQuantity);
+    .filter((tier) => {
+      const order = (tier as Partial<ProductTierPrice>).order;
+      return order === undefined || order > 0;
+    });
+}
+
+export function getSortedTierPrices(tierPrices?: ProductTierPrice[]) {
+  return getOrderedTierPrices(tierPrices);
 }

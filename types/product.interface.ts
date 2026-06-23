@@ -6,6 +6,7 @@ export interface ProductTierPrice {
   minQuantity: number
   maxQuantity?: number
   price: number
+  order: number
 }
 
 export interface IProduct extends IBase {
