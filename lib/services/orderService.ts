@@ -24,11 +24,13 @@ async function createOrderWithCustomer(
     console.log("[orderService.createOrderWithCustomer]-data", data)
     const customer = await resolveCustomer(manager);
     console.log("[orderService.createOrderWithCustomer]Step0-customer", customer)
+    const warehouseId = await getPrimaryWarehouseId(manager);
 
     // 1. create order
     const order = manager.create(OrderEntity, {
       ...data,
-      customer
+      customer,
+      warehouseId,
     });
     const savedOrder = await manager.save(OrderEntity, order);
     console.log("[orderService.createOrderWithCustomer]Step1-savedOrder", savedOrder)
@@ -94,6 +96,20 @@ async function createOrderWithCustomer(
   }
 
   return transactionResult.order;
+}
+
+async function getPrimaryWarehouseId(manager: EntityManager): Promise<string> {
+  const warehouses: Array<{ id: string }> = await manager.query(
+    `SELECT "id" FROM "warehouses" WHERE "main" = $1 ORDER BY "created_at" ASC LIMIT 1`,
+    [true],
+  );
+  const warehouseId = warehouses[0]?.id;
+
+  if (!warehouseId) {
+    throw new Error("Primary warehouse not found");
+  }
+
+  return warehouseId;
 }
 
 async function resolveGuestCustomer(manager: EntityManager, data: Partial<IOrder>) {
