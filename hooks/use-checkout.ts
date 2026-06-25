@@ -31,6 +31,9 @@ const defaultOrderData: Partial<IOrder> = {
 function mapCartItemsToOrderItems(cartItems: ICartItem[]): IOrderItem[] {
   return cartItems.map((item) => ({
     id: item.product?.id,
+    number: item.product?.sku,
+    name: item.product?.name,
+    unit: item.product?.unit,
     quantity: item.quantity ?? 0,
     unitCost: item.price ?? 0,
     totalCost: item.subtotal ?? (item.price ?? 0) * (item.quantity ?? 0),
