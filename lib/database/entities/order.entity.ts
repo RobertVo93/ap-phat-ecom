@@ -50,6 +50,9 @@ export class OrderEntity extends BaseEntity implements IOrder {
     phone?: string;
   };
 
+  @Column({ name: "warehouse_id", type: "uuid", nullable: true })
+  warehouseId?: string;
+
   //////Related fields//////
   @ManyToOne(() => CustomerEntity, (customer: CustomerEntity) => customer.orders, { nullable: true })
   @JoinColumn({ name: "customer_id" })
