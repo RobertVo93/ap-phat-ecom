@@ -7,8 +7,9 @@ interface OrderItemRowProps {
 }
 
 export function OrderItemRow({ item }: OrderItemRowProps) {
-  const itemPrice = item.product?.price || 0;
+  const itemPrice = item.unitCost ?? item.product?.price ?? 0;
   const quantity = item.quantity ?? 0;
+  const totalCost = item.totalCost ?? itemPrice * quantity;
 
   return (
     <div className="flex items-center space-x-3">
@@ -30,7 +31,7 @@ export function OrderItemRow({ item }: OrderItemRowProps) {
         </p>
       </div>
       <div className="text-sm font-semibold text-[#573e1c]">
-        {formatCurrency(itemPrice * quantity)}
+        {formatCurrency(totalCost)}
       </div>
     </div>
   );
