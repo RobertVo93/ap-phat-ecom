@@ -18,7 +18,8 @@ export function CartItemCard({
 }: CartItemCardProps) {
   const cartItemId = item.id ?? '';
   const quantity = item.quantity ?? 0;
-  const itemPrice = item.product?.price ?? 0;
+  const itemPrice = item.price ?? item.product?.price ?? 0;
+  const subtotal = item.subtotal ?? itemPrice * quantity;
   const productName = item.product?.name ?? '';
   const isActionDisabled = cartItemId.length === 0;
   const [isUpdating, setIsUpdating] = useState(false);
@@ -76,7 +77,7 @@ export function CartItemCard({
                   {formatCurrency(itemPrice)} x {formatNumberWithCommas(quantity)}
                 </div>
                 <div className="font-bold text-[#573e1c] text-lg">
-                  {formatCurrency(itemPrice * quantity)}
+                  {formatCurrency(subtotal)}
                 </div>
               </div>
             </div>

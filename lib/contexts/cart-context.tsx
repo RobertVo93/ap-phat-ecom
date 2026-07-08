@@ -10,6 +10,7 @@ import {
 } from '../httpclient/cart.client';
 import { useAuth } from './auth-context';
 import { clearCart as apiClearCart } from "@/lib/httpclient/cart.client"
+import { getProductPriceByQuantity } from '@/lib/product-pricing';
 
 interface CartContextType {
   items: ICartItem[];
@@ -27,6 +28,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const [items, setItems] = useState<ICartItem[]>([]);
   const [mounted, setMounted] = useState(false);
+
+  const priceCartItem = (item: ICartItem, quantity = item.quantity || 0): ICartItem => {
+    const price = getProductPriceByQuantity(item.product || {}, quantity);
+
+    return {
+      ...item,
+      quantity,
+      price,
+      subtotal: price * quantity,
+    };
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -50,7 +62,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           if (savedCart) {
             try {
               const parsed = JSON.parse(savedCart);
-              if (Array.isArray(parsed)) setItems(parsed);
+              if (Array.isArray(parsed)) setItems(parsed.map((item) => priceCartItem(item)));
             } catch (err) {
               console.warn('Failed to parse cart from localStorage', err);
             }
@@ -70,10 +82,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = async (product: IProduct, quantity: number = 1) => {
     if (user) {
+      const price = getProductPriceByQuantity(product, quantity);
       const cartItem: ICartItem = {
         product,
         quantity,
-        price: product.price,
+        price,
+        subtotal: price * quantity,
       };
       await apiAddToCart(cartItem);
       const res = await getUserCart();
@@ -84,15 +98,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (existingItem) {
           return prevItems.map(item =>
             item.product?.id === product.id
-              ? {
-                ...item,
-                quantity: (item.quantity || 0) + quantity,
-                subtotal: ((item.quantity || 0) + quantity) * (item.price || product.price || 0),
-              }
+              ? (() => {
+                const newQuantity = (item.quantity || 0) + quantity;
+                return priceCartItem({ ...item, product }, newQuantity);
+              })()
               : item
           );
         } else {
-          const price = product.price || 0;
+          const price = getProductPriceByQuantity(product, quantity);
           const newId = `local-${product.id}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
           return [
             ...prevItems,
@@ -123,7 +136,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         prevItems
           .map(item =>
             item.id === cartItemId
-              ? { ...item, quantity, subtotal: quantity * (item.price || 0) }
+              ? (() => {
+                return priceCartItem(item, quantity)
+              })()
               : item
           )
           .filter(item => (item.id === cartItemId ? quantity > 0 : true))
@@ -145,7 +160,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const getCartTotal = () =>
-    items.reduce((total, item) => total + (item.product?.price || 0) * (item.quantity || 0), 0);
+    items.reduce((total, item) => total + (item.subtotal ?? (item.price || 0) * (item.quantity || 0)), 0);
 
   const getCartItemsCount = () =>
     items.reduce((count, item) => count + (item.quantity || 0), 0);
