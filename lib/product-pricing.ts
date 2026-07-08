@@ -24,6 +24,16 @@ export function getOrderedTierPrices(tierPrices?: ProductTierPrice[]) {
     .filter((tier) => {
       const order = (tier as Partial<ProductTierPrice>).order;
       return order === undefined || order > 0;
+    })
+    .sort((a, b) => {
+      const aOrder = (a as Partial<ProductTierPrice>).order;
+      const bOrder = (b as Partial<ProductTierPrice>).order;
+
+      if (aOrder !== undefined && bOrder !== undefined && aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+
+      return a.minQuantity - b.minQuantity;
     });
 }
 

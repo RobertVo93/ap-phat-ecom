@@ -20,7 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const { t } = useLanguage();
   const { addToCart } = useCart();
   const [isAdding, setIsAdding] = useState(false);
-  const firstTierPrice = getSortedTierPrices(product.tierPrices)[0];
+  const firstTierPrice = getSortedTierPrices(product.tierPrices).find((tier) => tier.minQuantity > 1);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();

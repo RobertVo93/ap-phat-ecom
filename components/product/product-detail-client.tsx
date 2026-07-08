@@ -22,7 +22,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const selectedPrice = getProductPriceByQuantity(product, quantity);
-  const tierPrices = getSortedTierPrices(product.tierPrices);
+  const tierPrices = getSortedTierPrices(product.tierPrices).filter((tier) => tier.minQuantity > 1);
 
   const handleAddToCart = () => {
     addToCart(product, quantity);

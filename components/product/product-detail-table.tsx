@@ -16,7 +16,7 @@ interface Props {
 
 export function ProductDetailTable({ product }: Props) {
   const { t } = useLanguage();
-  const tierPrices = getSortedTierPrices(product.tierPrices);
+  const tierPrices = getSortedTierPrices(product.tierPrices).filter((tier) => tier.minQuantity > 1);
 
   return (
     <Card className='mt-10 p-5'>

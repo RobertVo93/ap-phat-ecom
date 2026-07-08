@@ -1,6 +1,6 @@
 import { IBase, IBaseFilters } from "./base.interface";
 import { OrderStatus, PaymentMethod, PaymentStatus } from "@/types/enums";
-import { ICustomer, IProduct, ProductTierPrice } from "@/types"
+import { ICustomer, IProduct } from "@/types"
 
 export interface IOrder extends IBase {
   number?: string
@@ -28,7 +28,6 @@ export interface IOrderItem {
   quantity?: number
   totalCost?: number
   unitCost?: number
-  tierPrices?: ProductTierPrice[]
   product?: IProduct
 }
 
