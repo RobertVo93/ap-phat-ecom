@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { CategoriesSection } from '@/components/home/categories-section';
 import { FeaturedProducts } from '@/components/home/featured-products';
+import { AdCarousel } from '@/components/home/ad-carousel';
 import { HeroSection } from '@/components/home/hero-section';
 import { env, HOME_PAGE_CONTENT, SITE_CONTENT } from '@/constants';
 import { getHomePageData } from '@/lib/services/homePageService';
@@ -40,13 +41,14 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const { categories, featuredProducts } = await getHomePageData();
+  const { categories, featuredProducts, advertisements } = await getHomePageData();
 
   return (
     <main className="min-h-screen">
       <HeroSection />
       <CategoriesSection categories={categories} />
       <FeaturedProducts featuredProducts={featuredProducts} />
+      <AdCarousel slides={advertisements} />
     </main>
   );
 }
