@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card"
 import { useLanguage } from "@/lib/contexts/language-context";
 import { formatCurrency } from "@/lib/utils.currency";
 import { getSortedTierPrices } from "@/lib/product-pricing";
+import { ProductDescription } from "./product-description";
 
 interface Props {
   product: IProduct
@@ -20,7 +21,9 @@ export function ProductDetailTable({ product }: Props) {
 
   return (
     <Card className='mt-10 p-5'>
-        <Table>
+      <ProductDescription description={product.description} />
+        {/* TODO: uncomment this after get OCOP*/}
+        {/* <Table>
           <TableBody className="text-md text-[#8b6a42]">
             <TableRow>
               <TableCell className="font-bold">{t("product.name")}</TableCell>
@@ -55,10 +58,12 @@ export function ProductDetailTable({ product }: Props) {
             </TableRow>
             <TableRow>
               <TableCell className="font-bold">{t("product.description")}</TableCell>
-              <TableCell>{product.description}</TableCell>
+              <TableCell className="min-w-0">
+                <ProductDescription description={product.description} />
+              </TableCell>
             </TableRow>
           </TableBody>
-        </Table>
+        </Table> */}
     </Card>
 
   )
