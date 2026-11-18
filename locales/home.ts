@@ -1,4 +1,10 @@
 export const homeTranslations = {
+  'home.ads.label': { en: 'An Phat highlights', vi: 'Hình ảnh An Phát' },
+  'home.ads.carousel': { en: 'Image carousel', vi: 'Bộ sưu tập ảnh' },
+  'home.ads.choose': { en: 'Choose an image', vi: 'Chọn hình ảnh' },
+  'home.ads.show': { en: 'Show image', vi: 'Xem ảnh' },
+  'home.ads.previous': { en: 'Previous image', vi: 'Ảnh trước' },
+  'home.ads.next': { en: 'Next image', vi: 'Ảnh tiếp theo' },
   'home.hero.remark': {
     en: '100% Clean products, no preservatives',
     vi: '100% Sản phẩm sạch, không chất bảo quản',
